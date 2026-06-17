@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Java Basics Assessment</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f4f6f9;padding:20px}
+.container{max-width:1000px;margin:auto;background:#fff;padding:25px;border-radius:10px}
+.question{border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:8px}
+button{padding:10px 20px;margin:10px}
+.correct{color:green}.incorrect{color:red}
+#result{display:none;padding:15px;background:#eef7ee;margin-top:15px}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Java Basics Assessment</h1>
+<form id="quiz"></form>
+<button onclick="submitQuiz()" type="button">Submit</button>
+<button onclick="location.reload()" type="button">Retake</button>
+<div id="result"></div>
+</div>
+<script>
+const questions=[
+["Which data type stores whole numbers?",["String","int","float","boolean"],1],
+["Keyword used to create an object?",["class","object","new","create"],2],
+["Which operator checks equality?",["=","==","!=","+="],1],
+["Which loop executes at least once?",["for","while","do-while","foreach"],2],
+["Keyword used for inheritance?",["implements","extends","inherit","super"],1],
+["Entry point of Java program?",["start()","execute()","run()","main()"],3],
+["Access modifier visible everywhere?",["private","protected","public","default"],2],
+["Exception when dividing by zero?",["IOException","ArithmeticException","SQLException","NullPointerException"],1],
+["Keyword used to handle exception?",["catch","throws","throw","final"],0],
+["Collection storing key-value pairs?",["List","Set","Map","Queue"],2]
+];
+let form=document.getElementById('quiz');
+questions.forEach((q,i)=>{
+form.innerHTML+=`<div class='question'><h3>${i+1}. ${q[0]}</h3>
+${q[1].map((o,j)=>`<label><input type='radio' name='q${i}' value='${j}'> ${o}</label><br>`).join('')}
+<div id='f${i}'></div></div>`;
+});
+function submitQuiz(){
+let score=0;
+questions.forEach((q,i)=>{
+let s=document.querySelector(`input[name=q${i}]:checked`);
+let f=document.getElementById('f'+i);
+if(s && Number(s.value)===q[2]){score++;f.innerHTML='✔ Correct';f.className='correct';}
+else{f.innerHTML='✘ Incorrect';f.className='incorrect';}
+});
+let p=(score/questions.length*100).toFixed(1);
+let r=document.getElementById('result');
+r.style.display='block';
+r.innerHTML=`<h2>Score ${score}/${questions.length}</h2><h3>${p}%</h3>`;
+}
+</script>
+</body>
+</html>

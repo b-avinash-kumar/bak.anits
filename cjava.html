@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Java Fundamentals Course</title>
+<style>
+body{font-family:Arial,sans-serif;line-height:1.6;margin:0;background:#f4f6f9;color:#222}
+header{background:#1f4e79;color:#fff;padding:20px;text-align:center}
+nav{background:#163a5c;padding:10px;position:sticky;top:0}
+nav a{color:white;text-decoration:none;margin:8px;display:inline-block}
+.container{max-width:1200px;margin:auto;padding:20px}
+section{background:white;margin:15px 0;padding:20px;border-radius:10px}
+h2{color:#1f4e79}
+pre{background:#272822;color:#f8f8f2;padding:12px;overflow:auto;border-radius:6px}
+.tip{background:#e8f5e9;padding:10px;border-left:5px solid green}
+.warn{background:#fff3cd;padding:10px;border-left:5px solid orange}
+button{padding:8px 12px;cursor:pointer}
+.hidden{display:none}
+footer{text-align:center;padding:20px;background:#1f4e79;color:white}
+</style>
+<script>
+function toggle(id){
+ const e=document.getElementById(id);
+ e.classList.toggle('hidden');
+}
+</script>
+</head>
+<body>
+<header>
+<h1>Complete Java Fundamentals Course</h1>
+<p>Beginner to Intermediate Java Programming</p>
+</header>
+
+<nav>
+<a href="#intro">Introduction</a>
+<a href="#syntax">Syntax</a>
+<a href="#datatypes">Data Types</a>
+<a href="#operators">Operators</a>
+<a href="#control">Control Flow</a>
+<a href="#methods">Methods</a>
+<a href="#oop">OOP</a>
+<a href="#collections">Collections</a>
+<a href="#exceptions">Exceptions</a>
+<a href="#fileio">File I/O</a>
+<a href="#best">Best Practices</a>
+</nav>
+
+<div class="container">
+
+<section id="intro">
+<h2>1. Introduction to Java</h2>
+<p>Java is a platform-independent, object-oriented programming language used in enterprise software, Android apps, web applications, cloud systems, and more.</p>
+<div class="tip"><b>Why Java?</b> Write Once, Run Anywhere (WORA).</div>
+</section>
+
+<section id="syntax">
+<h2>2. Java Program Structure</h2>
+<pre>
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello Java");
+    }
+}
+</pre>
+<p><b>Output:</b> Hello Java</p>
+<button onclick="toggle('s1')">Show Explanation</button>
+<div id="s1" class="hidden">
+<p>Every Java application starts from the main() method. The JVM executes code from this entry point.</p>
+</div>
+</section>
+
+<section id="datatypes">
+<h2>3. Data Types and Variables</h2>
+<pre>
+int age = 25;
+double salary = 50000.75;
+char grade = 'A';
+boolean active = true;
+String name = "Avinash";
+</pre>
+<p>Variables store data in memory. Java is strongly typed, so each variable requires a datatype.</p>
+<h3>Practice</h3>
+<p>Create variables for your name, age and city.</p>
+</section>
+
+<section id="operators">
+<h2>4. Operators and Expressions</h2>
+<pre>
+int a = 10;
+int b = 5;
+
+System.out.println(a+b);
+System.out.println(a-b);
+System.out.println(a*b);
+System.out.println(a/b);
+</pre>
+<p>Operators perform calculations and comparisons.</p>
+</section>
+
+<section id="control">
+<h2>5. Control Flow</h2>
+
+<h3>If-Else</h3>
+<pre>
+int marks = 80;
+
+if(marks >= 50){
+    System.out.println("Pass");
+}else{
+    System.out.println("Fail");
+}
+</pre>
+
+<h3>For Loop</h3>
+<pre>
+for(int i=1;i<=5;i++){
+    System.out.println(i);
+}
+</pre>
+
+<div class="warn">
+Common Mistake: Infinite loops occur when loop conditions never become false.
+</div>
+</section>
+
+<section id="methods">
+<h2>6. Methods</h2>
+<pre>
+public static int add(int a,int b){
+    return a+b;
+}
+</pre>
+<p>Methods improve code reusability and modularity.</p>
+</section>
+
+<section id="oop">
+<h2>7. Object-Oriented Programming</h2>
+
+<h3>Class and Object</h3>
+<pre>
+class Student{
+   String name;
+   void display(){
+      System.out.println(name);
+   }
+}
+</pre>
+
+<h3>Encapsulation</h3>
+<pre>
+class Employee{
+   private int salary;
+
+   public void setSalary(int salary){
+      this.salary = salary;
+   }
+
+   public int getSalary(){
+      return salary;
+   }
+}
+</pre>
+
+<h3>Inheritance</h3>
+<pre>
+class Animal{
+   void sound(){
+      System.out.println("Animal Sound");
+   }
+}
+
+class Dog extends Animal{
+}
+</pre>
+
+<h3>Polymorphism</h3>
+<pre>
+class Animal{
+   void sound(){
+      System.out.println("Animal");
+   }
+}
+
+class Dog extends Animal{
+   void sound(){
+      System.out.println("Bark");
+   }
+}
+</pre>
+
+<div class="tip">
+OOP helps build scalable and maintainable applications.
+</div>
+</section>
+
+<section id="collections">
+<h2>8. Arrays and Collections</h2>
+
+<h3>Array</h3>
+<pre>
+int[] nums = {10,20,30};
+</pre>
+
+<h3>ArrayList</h3>
+<pre>
+ArrayList<String> names = new ArrayList<>();
+names.add("Java");
+names.add("Spring");
+</pre>
+
+<p>Collections dynamically manage groups of objects.</p>
+</section>
+
+<section id="exceptions">
+<h2>9. Exception Handling</h2>
+<pre>
+try{
+   int x = 10/0;
+}
+catch(Exception e){
+   System.out.println(e.getMessage());
+}
+finally{
+   System.out.println("Cleanup");
+}
+</pre>
+
+<p>Exception handling prevents unexpected program termination.</p>
+</section>
+
+<section id="fileio">
+<h2>10. File I/O Basics</h2>
+<pre>
+FileWriter fw = new FileWriter("data.txt");
+fw.write("Hello Java");
+fw.close();
+</pre>
+
+<pre>
+BufferedReader br =
+ new BufferedReader(new FileReader("data.txt"));
+
+System.out.println(br.readLine());
+br.close();
+</pre>
+
+<p>File I/O allows programs to persist data.</p>
+</section>
+
+<section>
+<h2>11. Java Built-in APIs</h2>
+<ul>
+<li>java.lang</li>
+<li>java.util</li>
+<li>java.io</li>
+<li>java.time</li>
+<li>java.sql</li>
+</ul>
+</section>
+
+<section id="best">
+<h2>12. Best Practices</h2>
+<ul>
+<li>Use meaningful variable names.</li>
+<li>Follow camelCase naming.</li>
+<li>Handle exceptions properly.</li>
+<li>Keep methods small and focused.</li>
+<li>Write reusable code.</li>
+<li>Comment complex logic.</li>
+</ul>
+</section>
+
+<section>
+<h2>Final Coding Challenge</h2>
+<p>Create a Student Management Program using classes, objects, ArrayList, methods, exception handling and file storage.</p>
+</section>
+
+</div>
+
+<footer>
+<p>Java Fundamentals Course - Self Contained HTML Learning Resource</p>
+</footer>
+</body>
+</html>
