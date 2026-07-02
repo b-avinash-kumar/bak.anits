@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 3 Lab - HTML Tables & Images</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:#f4f7fb;color:#333;display:flex}
+nav{width:260px;background:#1f3c88;color:#fff;height:100vh;position:fixed;overflow:auto;padding:20px}
+nav h2{margin-bottom:15px}
+nav a{display:block;color:#fff;text-decoration:none;padding:10px;border-radius:6px;margin:4px 0}
+nav a:hover{background:#4062bb}
+main{margin-left:280px;padding:30px;max-width:1000px}
+section{background:#fff;padding:25px;border-radius:10px;margin-bottom:25px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+h1,h2{color:#1f3c88}
+pre{background:#272822;color:#f8f8f2;padding:15px;border-radius:8px;overflow:auto}
+code{font-family:Consolas,monospace}
+table.demo{border-collapse:collapse;width:100%;margin-top:15px}
+.demo,.demo th,.demo td{border:1px solid #444}
+.demo th,.demo td{padding:8px;text-align:center}
+.note{background:#eef7ff;border-left:5px solid #1f3c88;padding:12px;margin:12px 0}
+@media(max-width:800px){
+body{display:block}
+nav{position:relative;width:100%;height:auto}
+main{margin-left:0}
+}
+</style>
+</head>
+<body>
+<nav>
+<h2>Day 3 Lab</h2>
+<a href="#intro">Introduction</a>
+<a href="#tables">HTML Tables</a>
+<a href="#tags">Table Tags</a>
+<a href="#merge">Colspan & Rowspan</a>
+<a href="#images">Images</a>
+<a href="#practice">Lab Practice</a>
+<a href="#summary">Summary</a>
+</nav>
+
+<main>
+
+<section id="intro">
+<h1>Day 3 Lab - HTML Tables and Images</h1>
+<p>This lesson introduces HTML tables for organizing data into rows and columns and the HTML image element for displaying pictures on webpages.</p>
+<div class="note">
+<strong>Learning Outcomes</strong>
+<ul>
+<li>Create HTML tables.</li>
+<li>Use &lt;thead&gt;, &lt;tr&gt;, &lt;th&gt; and &lt;td&gt;.</li>
+<li>Merge cells using colspan and rowspan.</li>
+<li>Display local and online images.</li>
+</ul>
+</div>
+</section>
+
+<section id="tables">
+<h2>HTML Tables</h2>
+<p>Tables display information in rows and columns.</p>
+<ul>
+<li>&lt;table&gt; : Creates a table</li>
+<li>&lt;thead&gt; : Header section</li>
+<li>&lt;th&gt; : Header cell</li>
+<li>&lt;tr&gt; : Table row</li>
+<li>&lt;td&gt; : Table data</li>
+</ul>
+
+<pre><code>&lt;table border="1"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;ENO&lt;/th&gt;
+      &lt;th&gt;ENAME&lt;/th&gt;
+      &lt;th&gt;ESAL&lt;/th&gt;
+      &lt;th&gt;EADDR&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tr&gt;
+    &lt;td&gt;100&lt;/td&gt;
+    &lt;td&gt;DURGA&lt;/td&gt;
+    &lt;td&gt;1000&lt;/td&gt;
+    &lt;td&gt;Hyd&lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;</code></pre>
+
+<table class="demo">
+<tr><th>ENO</th><th>ENAME</th><th>ESAL</th><th>EADDR</th></tr>
+<tr><td>100</td><td>DURGA</td><td>1000</td><td>Hyd</td></tr>
+<tr><td>200</td><td>SUNNY</td><td>2000</td><td>Mumbai</td></tr>
+<tr><td>300</td><td>Bunny</td><td>3000</td><td>Chennai</td></tr>
+</table>
+</section>
+
+<section id="merge">
+<h2>Merging Cells</h2>
+<p><strong>colspan</strong> merges columns (left to right).</p>
+<pre><code>&lt;th colspan="2"&gt;Student Details&lt;/th&gt;</code></pre>
+
+<table class="demo">
+<tr><th colspan="2">Student Details</th></tr>
+<tr><td>Name</td><td>Alex</td></tr>
+</table>
+
+<br>
+
+<p><strong>rowspan</strong> merges rows (top to bottom).</p>
+<pre><code>&lt;td rowspan="2"&gt;Alex&lt;/td&gt;</code></pre>
+
+<table class="demo">
+<tr><td rowspan="2">Alex</td><td>Maths</td></tr>
+<tr><td>Science</td></tr>
+</table>
+</section>
+
+<section id="images">
+<h2>Images in HTML</h2>
+<p>Images are displayed using the &lt;img&gt; tag.</p>
+
+<table class="demo">
+<tr><th>Attribute</th><th>Purpose</th></tr>
+<tr><td>src</td><td>Image path or URL</td></tr>
+<tr><td>alt</td><td>Alternative text</td></tr>
+<tr><td>width</td><td>Image width</td></tr>
+<tr><td>height</td><td>Image height</td></tr>
+</table>
+
+<pre><code>&lt;img src="flower.jpg" alt="Flower"&gt;
+
+&lt;img src="flower.jpg"
+     alt="Flower"
+     width="300"
+     height="200"&gt;
+
+&lt;img src="https://example.com/image.jpg"
+     alt="Online Image"&gt;
+
+&lt;a href="https://www.google.com"&gt;
+   &lt;img src="google.png" alt="Google"&gt;
+&lt;/a&gt;</code></pre>
+
+<div class="note">
+<b>Path Types</b>
+<ul>
+<li><b>Relative Path</b> - Image in the current project folder.</li>
+<li><b>Absolute Path</b> - Complete URL from the Internet.</li>
+</ul>
+</div>
+</section>
+
+<section id="practice">
+<h2>Lab Practice</h2>
+<ol>
+<li>Create an education details table.</li>
+<li>Create a student details table using colspan.</li>
+<li>Create a timetable using rowspan.</li>
+<li>Insert a local profile image.</li>
+<li>Insert an online image.</li>
+<li>Create a clickable image.</li>
+</ol>
+</section>
+
+<section id="summary">
+<h2>Summary</h2>
+<ul>
+<li>Tables organize information.</li>
+<li>thead, tr, th and td build table structure.</li>
+<li>colspan merges columns.</li>
+<li>rowspan merges rows.</li>
+<li>img displays images using src, alt, width and height.</li>
+</ul>
+</section>
+
+</main>
+</body>
+</html>
