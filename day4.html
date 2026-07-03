@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 4 - HTML Learning Material</title>
+<style>
+body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f4f7fb;color:#333;line-height:1.7}
+header{background:#0d47a1;color:#fff;padding:30px 20px;text-align:center}
+main{max-width:1100px;margin:auto;padding:20px}
+section{background:#fff;margin:20px 0;padding:25px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+h2{color:#0d47a1;border-bottom:3px solid #1976d2;padding-bottom:8px}
+h3{color:#1565c0}
+pre{background:#263238;color:#fff;padding:15px;border-radius:8px;overflow:auto}
+code{font-family:Consolas,monospace}
+table{width:100%;border-collapse:collapse;margin-top:15px}
+th{background:#1976d2;color:#fff}
+th,td{border:1px solid #ccc;padding:10px;text-align:left}
+.note{background:#fff3cd;border-left:5px solid #ffc107;padding:15px}
+.tip{background:#e8f5e9;border-left:5px solid #2e7d32;padding:15px}
+@media(max-width:768px){body{font-size:15px}header h1{font-size:28px}}
+</style>
+</head>
+<body>
+<header>
+<h1>HTML Day 4 Learning Material</h1>
+<p>Frames, IFrames and HTML Forms</p>
+</header>
+
+<main>
+
+<section>
+<h2>Learning Outcomes</h2>
+<ul>
+<li>Understand HTML Frames and why they are deprecated.</li>
+<li>Learn the purpose and usage of the &lt;iframe&gt; tag.</li>
+<li>Create HTML forms using different input controls.</li>
+<li>Understand GET vs POST methods.</li>
+<li>Use common HTML form elements effectively.</li>
+</ul>
+</section>
+
+<section>
+<h2>1. Frames</h2>
+<p>Frames divide a browser window into multiple sections, each displaying a different HTML page.</p>
+<p>The <code>&lt;frameset&gt;</code> and <code>&lt;frame&gt;</code> tags were traditionally used to create frames.</p>
+
+<h3>Vertical Frames</h3>
+<pre><code>&lt;frameset cols="30%,70%"&gt;
+    &lt;frame src="menu.html"&gt;
+    &lt;frame src="content.html"&gt;
+&lt;/frameset&gt;</code></pre>
+
+<h3>Horizontal Frames</h3>
+<pre><code>&lt;frameset rows="30%,70%"&gt;
+    &lt;frame src="top.html"&gt;
+    &lt;frame src="bottom.html"&gt;
+&lt;/frameset&gt;</code></pre>
+
+<div class="note">
+<strong>Note:</strong> Frames are deprecated. HTML5 introduced the <code>&lt;iframe&gt;</code> tag as a modern replacement.
+</div>
+</section>
+
+<section>
+<h2>2. IFrame</h2>
+<p>The <code>&lt;iframe&gt;</code> (Inline Frame) embeds another webpage, document, map, video, PDF or other content inside the current webpage.</p>
+
+<table>
+<tr><th>Attribute</th><th>Purpose</th></tr>
+<tr><td>src</td><td>URL of content</td></tr>
+<tr><td>width</td><td>Iframe width</td></tr>
+<tr><td>height</td><td>Iframe height</td></tr>
+<tr><td>title</td><td>Accessibility description</td></tr>
+<tr><td>allowfullscreen</td><td>Enable fullscreen videos</td></tr>
+</table>
+
+<h3>Syntax</h3>
+<pre><code>&lt;iframe src="page.html"&gt;&lt;/iframe&gt;</code></pre>
+
+<h3>Examples</h3>
+<pre><code>&lt;iframe src="about.html" width="500" height="300"&gt;&lt;/iframe&gt;
+
+&lt;iframe src="https://www.example.com"
+width="600" height="400"&gt;&lt;/iframe&gt;
+
+&lt;iframe width="560" height="315"
+src="https://www.youtube.com/embed/VIDEO_ID"&gt;&lt;/iframe&gt;
+
+&lt;iframe src="GOOGLE_MAPS_EMBED_URL"
+width="600" height="450"&gt;&lt;/iframe&gt;</code></pre>
+</section>
+
+<section>
+<h2>3. HTML Forms</h2>
+<p>Forms collect user input and send it to a web server for processing.</p>
+
+<h3>Syntax</h3>
+<pre><code>&lt;form action="" method=""&gt;
+    ...
+&lt;/form&gt;</code></pre>
+
+<h3>Form Attributes</h3>
+<table>
+<tr><th>Attribute</th><th>Purpose</th></tr>
+<tr><td>action</td><td>Destination page</td></tr>
+<tr><td>method</td><td>GET or POST</td></tr>
+<tr><td>name</td><td>Backend reference name</td></tr>
+<tr><td>required</td><td>Makes field mandatory</td></tr>
+</table>
+
+<h3>GET vs POST</h3>
+<table>
+<tr><th>GET</th><th>POST</th></tr>
+<tr><td>Visible in URL</td><td>Hidden from URL</td></tr>
+<tr><td>Less secure</td><td>More secure</td></tr>
+<tr><td>Limited data</td><td>Large data</td></tr>
+<tr><td>Default method</td><td>Common for forms</td></tr>
+</table>
+</section>
+
+<section>
+<h2>4. Input Tag</h2>
+<p>The <code>&lt;input&gt;</code> tag is used to collect user input.</p>
+
+<pre><code>&lt;input type="" name="" value=""&gt;</code></pre>
+
+<h3>Common Input Types</h3>
+<ul>
+<li>text</li>
+<li>email</li>
+<li>password</li>
+<li>checkbox</li>
+<li>radio</li>
+<li>submit</li>
+<li>reset</li>
+<li>button</li>
+<li>tel</li>
+<li>textarea</li>
+</ul>
+
+<h3>Examples</h3>
+
+<h4>Text Box</h4>
+<pre><code>&lt;input type="text" name="username"&gt;</code></pre>
+
+<h4>Password</h4>
+<pre><code>&lt;input type="password" name="pwd"&gt;</code></pre>
+
+<h4>Radio Button</h4>
+<pre><code>&lt;input type="radio" name="gender" value="Male"&gt; Male
+&lt;input type="radio" name="gender" value="Female"&gt; Female</code></pre>
+
+<h4>Checkbox</h4>
+<pre><code>&lt;input type="checkbox" name="java"&gt; Java
+&lt;input type="checkbox" name="python"&gt; Python</code></pre>
+
+<h4>Submit Button</h4>
+<pre><code>&lt;input type="submit" value="Submit"&gt;</code></pre>
+
+<h4>Reset Button</h4>
+<pre><code>&lt;input type="reset" value="Reset"&gt;</code></pre>
+
+<h4>Button</h4>
+<pre><code>&lt;input type="button" value="Click Me"&gt;</code></pre>
+
+<h4>Dropdown</h4>
+<pre><code>&lt;select name="city"&gt;
+    &lt;option&gt;Visakhapatnam&lt;/option&gt;
+    &lt;option&gt;Hyderabad&lt;/option&gt;
+    &lt;option&gt;Chennai&lt;/option&gt;
+&lt;/select&gt;</code></pre>
+
+<h4>Textarea</h4>
+<pre><code>&lt;textarea rows="4" cols="30"&gt;
+Enter your address
+&lt;/textarea&gt;</code></pre>
+</section>
+
+<section>
+<h2>5. HTML Input Type Reference</h2>
+<table>
+<tr><th>Input Type</th><th>Purpose</th><th>Example</th></tr>
+<tr><td>text</td><td>Single-line text</td><td>&lt;input type="text"&gt;</td></tr>
+<tr><td>password</td><td>Password</td><td>&lt;input type="password"&gt;</td></tr>
+<tr><td>email</td><td>Email</td><td>&lt;input type="email"&gt;</td></tr>
+<tr><td>tel</td><td>Phone</td><td>&lt;input type="tel"&gt;</td></tr>
+<tr><td>date</td><td>Date picker</td><td>&lt;input type="date"&gt;</td></tr>
+<tr><td>time</td><td>Time picker</td><td>&lt;input type="time"&gt;</td></tr>
+<tr><td>datetime-local</td><td>Date & Time</td><td>&lt;input type="datetime-local"&gt;</td></tr>
+<tr><td>number</td><td>Numeric</td><td>&lt;input type="number"&gt;</td></tr>
+<tr><td>url</td><td>Website</td><td>&lt;input type="url"&gt;</td></tr>
+<tr><td>search</td><td>Search</td><td>&lt;input type="search"&gt;</td></tr>
+<tr><td>file</td><td>Upload</td><td>&lt;input type="file"&gt;</td></tr>
+<tr><td>radio</td><td>Radio</td><td>&lt;input type="radio"&gt;</td></tr>
+<tr><td>checkbox</td><td>Checkbox</td><td>&lt;input type="checkbox"&gt;</td></tr>
+<tr><td>submit</td><td>Submit</td><td>&lt;input type="submit"&gt;</td></tr>
+<tr><td>reset</td><td>Reset</td><td>&lt;input type="reset"&gt;</td></tr>
+<tr><td>button</td><td>Button</td><td>&lt;input type="button"&gt;</td></tr>
+<tr><td>color</td><td>Color Picker</td><td>&lt;input type="color"&gt;</td></tr>
+<tr><td>range</td><td>Slider</td><td>&lt;input type="range"&gt;</td></tr>
+</table>
+
+<div class="tip">
+<strong>Tip:</strong> Prefer HTML5 input types such as email, tel, date, color and range to improve validation and user experience.
+</div>
+</section>
+
+<footer style="text-align:center;padding:20px;color:#666">
+HTML Day 4 Study Notes
+</footer>
+
+</main>
+</body>
+</html>
