@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>R Programming - Week 1 Learning Material</title>
+<style>
+body{font-family:Segoe UI,Arial,sans-serif;background:#f4f7fb;color:#222;margin:0;line-height:1.7}
+header{background:#1f4e79;color:#fff;padding:30px;text-align:center}
+main{max-width:1100px;margin:auto;padding:20px}
+section{background:#fff;margin:20px 0;padding:20px;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+h2{color:#1f4e79;border-bottom:2px solid #d9e8f6;padding-bottom:6px}
+pre{background:#272822;color:#f8f8f2;padding:15px;overflow:auto;border-radius:6px}
+code{font-family:Consolas,monospace}
+table{width:100%;border-collapse:collapse}
+th,td{border:1px solid #ccc;padding:8px;text-align:left}
+th{background:#1f4e79;color:#fff}
+.note{background:#eef8ff;border-left:5px solid #1f4e79;padding:10px}
+footer{text-align:center;padding:20px;color:#666}
+@media(max-width:700px){body{font-size:15px}header{padding:20px}}
+</style>
+</head>
+<body>
+<header><h1>R Programming - Week 1</h1><p>Introduction, Installation and Student Survey Analysis</p></header>
+<main>
+<section><h2>1. What is R?</h2>
+<p>R is an open-source programming language and software environment developed for statistical computing, graphics, reporting and data analysis. It was created by Ross Ihaka and Robert Gentleman and is maintained by the R Development Core Team.</p>
+<ul>
+<li>Statistical analysis and reporting</li>
+<li>Data cleaning and visualization</li>
+<li>Cross-platform (Windows, Linux, macOS)</li>
+<li>Extensible through thousands of CRAN packages</li>
+<li>Integrates with C, C++, Python, Java and others</li>
+</ul>
+<div class="note"><strong>Learning Objectives</strong><br>Define R, explain its features and describe why it is widely used in research and industry.</div>
+<h3>Example</h3>
+<pre><code>2 + 3
+
+marks &lt;- c(78,85,90,67)
+marks
+mean(marks)
+
+x &lt;- c(1,2,3,4)
+y &lt;- c(2,4,6,8)
+plot(x,y,type="b",main="Simple Line Plot")</code></pre>
+</section>
+
+<section><h2>2. Why Use R?</h2>
+<ul>
+<li>Free and open source (GNU GPL)</li>
+<li>Excellent statistical computing</li>
+<li>Professional graphics</li>
+<li>Interactive data exploration</li>
+<li>Large package ecosystem</li>
+<li>Object-oriented programming support</li>
+</ul>
+<h3>Industry Usage</h3>
+<ul>
+<li>Twitter – user experience analytics</li>
+<li>Ford – social media analysis</li>
+<li>The New York Times – data journalism</li>
+<li>Google – internal analytics and style guide</li>
+<li>Microsoft – enterprise R distributions</li>
+</ul>
+<h3>Common Misconceptions</h3>
+<ul>
+<li>R is more than a statistics package.</li>
+<li>Beginners can learn R easily.</li>
+<li>Vectors and data frames reduce the need for complex loops.</li>
+</ul>
+</section>
+
+<section><h2>3. Installing R and RStudio</h2>
+<ol>
+<li>Visit https://www.r-project.org</li>
+<li>Open CRAN.</li>
+<li>Download R for Windows.</li>
+<li>Install using default settings.</li>
+<li>Download RStudio (Posit).</li>
+<li>Install and launch RStudio.</li>
+</ol>
+<pre><code>print("R is installed and working!")
+R.version.string
+2+2
+getwd()</code></pre>
+<div class="note"><strong>Remember:</strong> RStudio is an IDE. R must be installed first.</div>
+</section>
+
+<section>
+<h2>4. Student Survey Analysis Workflow</h2>
+<p><strong>Workflow:</strong></p>
+<p>Load Data → Clean Data → Calculate Statistics → Create Graphs → Interpret Results</p>
+<h3>Sample Dataset</h3>
+<table>
+<tr><th>ID</th><th>Gender</th><th>Attendance</th><th>Theory</th><th>Lab</th><th>Rating</th></tr>
+<tr><td>101</td><td>Male</td><td>92</td><td>84</td><td>90</td><td>5</td></tr>
+<tr><td>102</td><td>Female</td><td>88</td><td>76</td><td>82</td><td>4</td></tr>
+<tr><td>103</td><td>Male</td><td>65</td><td>58</td><td>62</td><td>3</td></tr>
+<tr><td>104</td><td>Female</td><td>NA</td><td>81</td><td>85</td><td>5</td></tr>
+<tr><td>105</td><td>Male</td><td>95</td><td>91</td><td>94</td><td>5</td></tr>
+</table>
+
+<h3>Step 0 - Load Data</h3>
+<pre><code>setwd("C:/Users/Student/Documents")
+getwd()
+survey &lt;- read.csv("student_survey.csv")
+head(survey)</code></pre>
+
+<h3>Step 1 - Clean Data</h3>
+<pre><code>is.na(survey$Attendance)
+sum(is.na(survey$Attendance))
+avg_attendance &lt;- mean(survey$Attendance,na.rm=TRUE)
+survey$Attendance[is.na(survey$Attendance)] &lt;- avg_attendance</code></pre>
+
+<h3>Step 2 - Statistics</h3>
+<pre><code>mean(survey$TheoryMarks)
+mean(survey$LabMarks)
+mean(survey$CourseRating)
+sd(survey$TheoryMarks)
+summary(survey)</code></pre>
+
+<h3>Step 3 - Visualization (ggplot2)</h3>
+<pre><code>install.packages("ggplot2")
+library(ggplot2)
+
+ggplot(survey,aes(x=Gender,y=TheoryMarks))+
+stat_summary(fun=mean,geom="bar")
+
+ggplot(survey,aes(x=TheoryMarks))+geom_histogram(binwidth=5)
+
+ggplot(survey,aes(x=Gender,y=TheoryMarks))+geom_boxplot()
+
+ggplot(survey,aes(x=Attendance,y=TheoryMarks))+geom_point(size=3)</code></pre>
+
+<h3>Step 4 - Interpretation</h3>
+<ul>
+<li>Missing attendance replaced using average.</li>
+<li>Average theory marks ≈ 80.</li>
+<li>Average course rating = 4.3/5.</li>
+<li>Higher attendance generally corresponds to higher theory marks.</li>
+<li>No major outliers observed.</li>
+</ul>
+</section>
+
+<section>
+<h2>Summary</h2>
+<p>Week 1 introduced R, explained why it is popular, demonstrated installation of R and RStudio, and completed a practical data analysis workflow including importing CSV data, cleaning missing values, computing statistics, visualizing results with ggplot2, and interpreting findings.</p>
+</section>
+</main>
+<footer>Prepared as Week 1 R Programming Learning Material</footer>
+</body>
+</html>
