@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 1 - Day 5 | HTML5 Learning Material</title>
+<style>
+body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f4f7fb;color:#222;line-height:1.7}
+header{background:#123c69;color:#fff;padding:30px;text-align:center}
+nav{position:sticky;top:0;background:#1d4e89;padding:10px}
+nav a{color:#fff;text-decoration:none;margin:8px;font-size:14px}
+main{max-width:1100px;margin:auto;padding:20px}
+section{background:#fff;margin:20px 0;padding:25px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+h2{color:#123c69;border-left:6px solid #2d89ef;padding-left:10px}
+table{width:100%;border-collapse:collapse;margin:15px 0}
+th,td{border:1px solid #bbb;padding:10px}
+th{background:#123c69;color:#fff}
+pre{background:#272822;color:#f8f8f2;padding:15px;overflow:auto;border-radius:8px}
+.note{background:#eef7ff;border-left:5px solid #2d89ef;padding:12px}
+footer{background:#123c69;color:#fff;text-align:center;padding:20px;margin-top:30px}
+code{font-family:Consolas,monospace}
+@media(max-width:768px){body{font-size:16px}nav{text-align:center}}
+</style>
+</head>
+<body>
+<header>
+<h1>HTML5 Learning Material - Unit 1 (Day 5)</h1>
+<p>Introducing HTML5, Semantic Elements & Multimedia</p>
+</header>
+<nav>
+<a href="#intro">Introduction</a>
+<a href="#problems">Problems</a>
+<a href="#semantic">Semantic HTML</a>
+<a href="#structure">Structure</a>
+<a href="#elements">Elements</a>
+<a href="#media">Open Media</a>
+<a href="#audio">Audio/Video</a>
+
+</nav>
+<main>
+
+<section id="intro">
+<h2>Introducing HTML5</h2>
+<p>HTML5 was developed by observing how developers actually built web pages. Instead of enforcing strict rules, HTML5 embraced practical web development.</p>
+<div class="note">
+<strong>Real-world analogy:</strong> Just as a university updates its rules based on how students actually take notes, HTML5 evolved based on real developer practices.
+</div>
+</section>
+
+<section id="problems">
+<h2>Problems with Older HTML</h2>
+<ol>
+<li>Different browsers behaved differently.</li>
+<li>Many websites used non-standard tags.</li>
+<li>Multimedia required Flash plugins.</li>
+<li>Heavy use of &lt;div&gt; tags.</li>
+<li>Limited form input types.</li>
+<li>Strict XHTML rules were difficult to follow.</li>
+</ol>
+
+<h3>HTML5 Reality</h3>
+<ul>
+<li>Browsers already handled imperfect HTML.</li>
+<li>Developers wanted built-in multimedia.</li>
+<li>Semantic elements replaced meaningless div structures.</li>
+</ul>
+
+<pre><code>&lt;p&gt;Hello
+&lt;p&gt;World
+</code></pre>
+</section>
+
+<section id="semantic">
+<h2>Semantic HTML</h2>
+<p>Semantic tags describe the purpose of the content.</p>
+
+<table>
+<tr><th>Bad</th><th>Good</th></tr>
+<tr><td>&lt;div id="header"&gt;</td><td>&lt;header&gt;</td></tr>
+<tr><td>&lt;div id="menu"&gt;</td><td>&lt;nav&gt;</td></tr>
+<tr><td>&lt;div id="content"&gt;</td><td>&lt;section&gt;</td></tr>
+<tr><td>&lt;div id="footer"&gt;</td><td>&lt;footer&gt;</td></tr>
+</table>
+</section>
+
+<section id="structure">
+<h2>Document Structure</h2>
+
+<h3>Before HTML5</h3>
+<pre><code>&lt;body&gt;
+ &lt;div id="header"&gt;&lt;/div&gt;
+ &lt;div id="menu"&gt;&lt;/div&gt;
+ &lt;div id="content"&gt;&lt;/div&gt;
+ &lt;div id="footer"&gt;&lt;/div&gt;
+&lt;/body&gt;
+</code></pre>
+
+<h3>HTML5 Structure</h3>
+<pre><code>&lt;body&gt;
+ &lt;header&gt;Website Title&lt;/header&gt;
+ &lt;nav&gt;Menu&lt;/nav&gt;
+ &lt;section&gt;Content&lt;/section&gt;
+ &lt;footer&gt;Footer&lt;/footer&gt;
+&lt;/body&gt;
+</code></pre>
+</section>
+
+<section id="elements">
+<h2>Major HTML5 Structural Elements</h2>
+
+<h3>&lt;header&gt;</h3>
+<pre><code>&lt;header&gt;
+ &lt;h1&gt;ANITS&lt;/h1&gt;
+&lt;/header&gt;
+</code></pre>
+
+<h3>&lt;nav&gt;</h3>
+<pre><code>&lt;nav&gt;
+ &lt;a href="#"&gt;Home&lt;/a&gt;
+ &lt;a href="#"&gt;About&lt;/a&gt;
+&lt;/nav&gt;
+</code></pre>
+
+<h3>&lt;section&gt;</h3>
+<pre><code>&lt;section&gt;
+ &lt;h2&gt;Computer Science Department&lt;/h2&gt;
+ &lt;p&gt;Information here&lt;/p&gt;
+&lt;/section&gt;
+</code></pre>
+
+<h3>&lt;article&gt;</h3>
+<pre><code>&lt;article&gt;
+ &lt;h1&gt;Sports&lt;/h1&gt;
+ &lt;section&gt;
+   &lt;h2&gt;Cricket&lt;/h2&gt;
+ &lt;/section&gt;
+&lt;/article&gt;
+</code></pre>
+
+<h3>&lt;aside&gt;</h3>
+<pre><code>&lt;aside&gt;
+ Latest News
+&lt;/aside&gt;
+</code></pre>
+
+<h3>&lt;footer&gt;</h3>
+<pre><code>&lt;footer&gt;
+ Copyright 2026
+&lt;/footer&gt;
+</code></pre>
+
+<h3>Section vs Article</h3>
+<table>
+<tr><th>Section</th><th>Article</th></tr>
+<tr><td>Groups related content.</td><td>Independent self-contained content.</td></tr>
+<tr><td>Can contain multiple sections.</td><td>Can contain sections, images, headings.</td></tr>
+</table>
+</section>
+
+<section id="media">
+<h2>Open Media Effort</h2>
+<p>HTML5 removed the dependency on Flash by introducing native audio and video support.</p>
+
+<table>
+<tr><th>Before HTML5</th><th>HTML5</th></tr>
+<tr><td>Flash required</td><td>No Flash</td></tr>
+<tr><td>Plugin installation</td><td>Built-in support</td></tr>
+<tr><td>Poor mobile support</td><td>Excellent mobile support</td></tr>
+<tr><td>Security issues</td><td>More secure</td></tr>
+<tr><td>Complex embedding</td><td>Simple tags</td></tr>
+</table>
+</section>
+
+<section id="audio">
+<h2>Audio Element</h2>
+<pre><code>&lt;audio controls&gt;
+ &lt;source src="song.mp3" type="audio/mpeg"&gt;
+&lt;/audio&gt;
+</code></pre>
+
+<h2>Video Element</h2>
+<pre><code>&lt;video width="500" controls&gt;
+ &lt;source src="movie.mp4" type="video/mp4"&gt;
+&lt;/video&gt;
+</code></pre>
+</section>
+
+
+
+</main>
+<footer>
+HTML5 Learning Notes - Unit 1 Day 5
+</footer>
+</body>
+</html>
