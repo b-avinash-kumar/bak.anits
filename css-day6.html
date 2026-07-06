@@ -1,0 +1,176 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>CSS Learning Material - Unit 1</title>
+<style>
+body{font-family:Arial,Helvetica,sans-serif;margin:0;background:#f4f7fb;color:#222;line-height:1.7}
+header{background:linear-gradient(135deg,#0d47a1,#1976d2);color:#fff;padding:40px 20px;text-align:center}
+nav{position:sticky;top:0;background:#fff;border-bottom:1px solid #ccc;padding:10px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+nav a{text-decoration:none;color:#0d47a1;font-weight:bold}
+main{max-width:1100px;margin:auto;padding:20px}
+section{background:#fff;margin:20px 0;padding:25px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+h2{color:#0d47a1;border-left:6px solid #1976d2;padding-left:10px}
+table{width:100%;border-collapse:collapse;margin:15px 0}
+th,td{border:1px solid #bbb;padding:10px}
+th{background:#1976d2;color:#fff}
+pre{background:#272822;color:#f8f8f2;padding:15px;overflow:auto;border-radius:8px}
+.note{background:#fff8e1;border-left:5px solid #ff9800;padding:10px}
+footer{text-align:center;padding:20px;background:#0d47a1;color:#fff}
+@media(max-width:700px){nav{justify-content:flex-start}}
+</style>
+</head>
+<body>
+<header>
+<h1>Cascading Style Sheets (CSS) - Unit 1</h1>
+<p>Professional Learning Notes</p>
+</header>
+<nav>
+<a href="#intro">Introduction</a>
+<a href="#ways">Ways to Apply CSS</a>
+<a href="#selectors">Selectors</a>
+<a href="#properties">Properties</a>
+<a href="#display">Display</a>
+<a href="#position">Position</a>
+<a href="#table">Tables</a>
+<a href="#background">Background</a>
+</nav>
+<main>
+
+<section id="intro">
+<h2>Introduction to CSS</h2>
+<p>CSS (Cascading Style Sheets) describes how HTML elements are displayed. HTML provides structure while CSS provides presentation.</p>
+<ul>
+<li>Improves webpage appearance</li>
+<li>Separates content from presentation</li>
+<li>Reduces code duplication</li>
+<li>Easy maintenance</li>
+<li>Faster development</li>
+<li>Consistent design</li>
+</ul>
+<div class="note"><b>Analogy:</b> HTML = Bricks & Walls, CSS = Paint & Decoration.</div>
+</section>
+
+<section id="ways">
+<h2>Ways to Apply CSS</h2>
+<ol>
+<li>Inline CSS</li>
+<li>Internal CSS</li>
+<li>External CSS (Recommended)</li>
+</ol>
+<pre><code>&lt;h1 style="color:red"&gt;Inline CSS&lt;/h1&gt;
+
+&lt;style&gt;
+h1{color:blue;}
+&lt;/style&gt;
+
+&lt;link rel="stylesheet" href="style.css"&gt;</code></pre>
+<h3>Basic CSS Syntax</h3>
+<pre><code>selector{
+ property:value;
+}</code></pre>
+</section>
+
+<section id="selectors">
+<h2>Basic CSS Selectors</h2>
+<table>
+<tr><th>Selector</th><th>Example</th><th>Purpose</th></tr>
+<tr><td>Element</td><td>h1{color:red;}</td><td>Styles all matching elements</td></tr>
+<tr><td>ID</td><td>#special{...}</td><td>Styles unique element</td></tr>
+<tr><td>Class</td><td>.box{...}</td><td>Styles multiple elements</td></tr>
+</table>
+<p><b>Span</b> is an inline element used to style a small portion of text.</p>
+<pre><code>&lt;p&gt;This is a &lt;span style="color:red;"&gt;red&lt;/span&gt; word.&lt;/p&gt;</code></pre>
+</section>
+
+<section id="properties">
+<h2>Important CSS Properties</h2>
+<table>
+<tr><th>Property</th><th>Purpose</th></tr>
+<tr><td>color</td><td>Text color</td></tr>
+<tr><td>background-color</td><td>Background color</td></tr>
+<tr><td>font-size</td><td>Text size</td></tr>
+<tr><td>font-family</td><td>Font family</td></tr>
+<tr><td>text-align</td><td>Alignment</td></tr>
+<tr><td>border</td><td>Border</td></tr>
+<tr><td>width/height</td><td>Dimensions</td></tr>
+<tr><td>margin/padding</td><td>Spacing</td></tr>
+<tr><td>display</td><td>Layout</td></tr>
+<tr><td>position</td><td>Positioning</td></tr>
+<tr><td>border-radius</td><td>Rounded corners</td></tr>
+</table>
+<h3>Colors</h3>
+<ul><li>Named colors</li><li>RGB</li><li>RGBA</li><li>Hexadecimal (#RRGGBB - most common)</li></ul>
+<pre><code>h1{
+ color:white;
+ background:blue;
+ border:solid red 5px;
+ border-radius:10px;
+}</code></pre>
+</section>
+
+<section id="display">
+<h2>Display Property</h2>
+<p>Defines how an element is displayed.</p>
+<table>
+<tr><th>Value</th><th>Description</th></tr>
+<tr><td>block</td><td>New line, full width</td></tr>
+<tr><td>inline</td><td>Same line</td></tr>
+<tr><td>inline-block</td><td>Inline with width/height</td></tr>
+<tr><td>none</td><td>Hidden</td></tr>
+<tr><td>flex</td><td>One-dimensional layout</td></tr>
+<tr><td>grid</td><td>Two-dimensional layout</td></tr>
+</table>
+</section>
+
+<section id="position">
+<h2>Position Property</h2>
+<table>
+<tr><th>Value</th><th>Purpose</th></tr>
+<tr><td>static</td><td>Default</td></tr>
+<tr><td>relative</td><td>Relative to original position</td></tr>
+<tr><td>absolute</td><td>Relative to nearest positioned ancestor</td></tr>
+<tr><td>fixed</td><td>Fixed during scrolling</td></tr>
+<tr><td>sticky</td><td>Acts normal then sticks</td></tr>
+</table>
+<div class="note">Removing an element from the normal flow means other elements occupy its original space.</div>
+</section>
+
+<section id="table">
+<h2>List & Table Properties</h2>
+<p><b>list-style-type:</b> disc, circle, square, none</p>
+<pre><code>ul{
+ list-style-type:square;
+}</code></pre>
+<p><b>border-collapse</b> merges adjacent table borders.</p>
+<pre><code>table{
+ border-collapse:collapse;
+}</code></pre>
+</section>
+
+<section id="background">
+<h2>Background Images</h2>
+<pre><code>body{
+ background-image:url("image.jpg");
+ background-repeat:no-repeat;
+ background-size:cover;
+}</code></pre>
+<ul>
+<li>cover - fills screen</li>
+<li>contain - entire image visible</li>
+<li>100% 100% - stretches image</li>
+</ul>
+<h3>Other Properties</h3>
+<pre><code>img{ border:groove 10px blue; }
+button{ cursor:pointer; }
+.hidden{ visibility:hidden; }</code></pre>
+</section>
+
+</main>
+<footer>
+CSS Unit 1 Learning Material
+</footer>
+</body>
+</html>
