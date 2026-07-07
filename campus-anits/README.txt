@@ -1,0 +1,1 @@
+Copy your uploaded logo.jpeg into images/logo.jpeg before opening index.html
