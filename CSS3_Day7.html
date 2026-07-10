@@ -1,0 +1,74 @@
+<!DOCTYPE html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>CSS3</title><style>body{font-family:Segoe UI,Arial;background:#f5f7fb;margin:0;line-height:1.7}header{background:#0f4c81;color:#fff;padding:30px;text-align:center}main{max-width:1100px;margin:auto;padding:20px}section{background:#fff;margin:20px 0;padding:20px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.08)}pre{background:#272822;color:#f8f8f2;padding:12px;border-radius:8px;overflow:auto}</style></head><body><header><h1>CSS3 Proprietary and Emerging Features</h1></header><main><section><h2>CSS3 Proprietary and Emerging Features Reference</h2><p>Before CSS3, web designers wanted:</p><p>Rounded corners</p><p>Shadows</p><p>Gradients</p><p>Animations</p><p>Transformations</p><p>But CSS couldn&#x27;t do these easily.</p><pre><code>To create a rounded button, developers often used:</code></pre><p>Images</p><p>JavaScript</p><p>Complex HTML</p><p>CSS3 solved this problem.</p></section><section><h2>What is CSS3?</h2><p>CSS3 is the newer version of CSS that introduced:</p><p>Better visual effects</p><p>Animations</p><p>Transitions</p><p>Rounded corners</p><p>Gradients</p><p>Transformations</p><p>Responsive design features</p></section><section><h2>What Does &quot;Proprietary&quot; Mean?</h2><p>When CSS3 was new:</p><p>Different browsers implemented features differently</p><p>Example:</p><p>Google Chrome
+Mozilla Firefox
+Safari
+Opera
+Internet Explorer</p><p>Each browser created its own version.</p></section><section><h2>Vendor Prefixes</h2><p>To support experimental CSS3 features, browsers used prefixes.</p><p>Example:</p><pre><code>-webkit-border-radius:10px;
+-moz-border-radius:10px;
+border-radius:10px;</code></pre><p>Around 2009–2013, CSS3 was still experimental.</p><p>Browsers implemented features differently:</p><pre><code>-webkit-border-radius:10px;   /* Chrome, Safari */
+-moz-border-radius:10px;      /* Firefox */
+-ms-transform:rotate(20deg);  /* Internet Explorer */
+-o-transform:rotate(20deg);   /* Opera */</code></pre><p>After CSS3 standards stabilized, browsers adopted the standard property.</p><pre><code>Do we ever use prefixes today?</code></pre><p>Rarely, but yes.</p><p>Some newer or less common features may still need prefixes for older browser support.</p></section><section><h2>Present-Day Practice</h2><p>Most common CSS3 features now work without prefixes:</p></section><section><h2>1. Rounded Corners (border-radius)</h2><p>Problem Before CSS3</p><pre><code>Developers used images to make it rounded.</code></pre><p>CSS3 Solution</p><pre><code>&lt;button&gt;Submit&lt;/button&gt;
+button{
+    border-radius:20px;
+}</code></pre><p>Real Example</p><p>Used in:</p><pre><code>Login buttons </code></pre><p>Registration forms </p><pre><code>Bootstrap buttons</code></pre><pre><code>&lt;button&gt;Submit&lt;/button&gt;
+&lt;style&gt;
+button{border-radius:20px;padding:10px 20px;background:#1976d2;color:white;border:none;}
+&lt;/style&gt;</code></pre></section><section><h2>2. Shadow</h2><pre><code>Box Shadow (box-shadow)</code></pre><p>Without Shadow looks flat</p><p>With Shadow</p><pre><code>div{
+    box-shadow:5px 5px 10px gray; 
+}
+Text Shadow (text-shadow)
+&lt;h1&gt;ANITS&lt;/h1&gt;
+h1{
+    text-shadow:3px 3px 5px gray;
+}</code></pre><p>Usage</p><p>Website logos </p><p>Titles </p><p>Banners</p><p>Opacity (Transparency)</p><p>Fully Visible</p><pre><code>img{
+    opacity:1;
+}</code></pre><p>Output</p><p>100% visible. </p><p>Half Transparent</p><pre><code>img{
+    opacity:0.5;
+}</code></pre><p>Output</p><p>50% visible.</p><p>Real Example</p><p>Advertisement banners.</p><p>Background images.</p><p>Watermarks.</p><p>Gradients Problem</p><pre><code>If we need a background image for any text then we need to use background-image with image.</code></pre><p>CSS3 Solution</p><pre><code>div{
+background: linear-gradient(red,yellow);
+}</code></pre><p>Smooth color change.</p><p>Real Example</p><p>Login pages.</p><p>Navigation bars.</p><pre><code>Buttons.</code></pre><p>Transformations</p><p>Transform means changing an object&#x27;s appearance.</p><p>Rotate</p><pre><code>img{ 
+transform:rotate(335deg);
+}</code></pre><p>Before</p><p>□</p><p>After</p><p>◇</p><p>Scale</p><pre><code>img{
+transform:scale(2);
+}</code></pre><p>Makes image twice as large.</p><p>Translate </p><pre><code>div{
+transform:
+translate(100px,50px);
+}</code></pre><p>Moves element.</p><p>Transitions              </p><pre><code>Without transition:</code></pre><p>Mouse hover </p><p>↓</p><p>Instant Color Change</p><p>Example:</p><pre><code>button{              
+background:red;
+transition:2s;      RED  T R A N S I T I O N 2 Seconds GREENYELLOW     
+}
+button:hover{
+background:green;
+}</code></pre><p>Smooth change.</p><p>Real Example</p><pre><code>Buttons.</code></pre><p>Menus.</p><p>Animations</p><pre><code>CSS animations allow elements to change their style gradually over time without using JavaScript.</code></pre><p>Syntax</p><pre><code>@keyframes animation-name {
+    from {
+        /* Initial style */
+    }
+    to {
+        /* Final style */
+    }
+}
+
+selector {
+    animation: animation-name duration timing-function delay iteration-count direction;
+}
+@keyframes move{
+from{
+left:0px;
+}
+to{
+left:300px;
+}
+}
+div{</code></pre><p>position:relative;</p><pre><code>animation:move 3s;
+}</code></pre><p>□</p><p>  □</p><p>     □</p><p>        □</p><p>Moves across screen.</p><p>Real Example</p><p>Loading bars.</p><p>Notifications.</p><p>Advertisements.</p><p>Media Queries</p><pre><code>A media query is a CSS feature that allows you to apply different styles based on the screen size, device type, or screen orientation. It is the foundation of responsive web design, enabling web pages to adapt to desktops, tablets, and mobile phones.</code></pre><p>Syntax</p><pre><code>@media media-type and (condition) {
+    /* CSS rules */
+}</code></pre><pre><code>&lt;div class=&#x27;card&#x27;&gt;Card&lt;/div&gt;
+&lt;style&gt;.card{padding:20px;box-shadow:5px 5px 10px gray;}&lt;/style&gt;</code></pre></section><section><h2>Common Media Query Breakpoints</h2><p>Most important CSS3 feature.</p><p>Problem</p><pre><code>Website looks good on desktop.</code></pre><p>Bad on mobile.</p><p>Solution</p><pre><code>@media screen and
+(max-width:600px)
+{
+body{
+background:yellow;
+}
+}</code></pre><p>Meaning:</p><p>Screen width &lt; 600px
+Apply these styles</p><p>Real Example</p><p>Open Amazon on:</p><p>Mobile </p><p>Tablet </p><pre><code>Laptop 
+Layout changes automatically.</code></pre><p>That is media query.</p><pre><code>@media screen and (max-width:600px){body{background:yellow;}}</code></pre></section></main></body></html>
