@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Getting Started with JavaScript - Learning Material</title>
+<style>
+body{font-family:Segoe UI,Arial,sans-serif;margin:0;background:#f4f7fb;color:#222;line-height:1.7}
+header{background:#1f4e79;color:#fff;padding:30px 20px; text-align: center;}
+header h1{margin:0}
+.container{max-width:1100px;margin:auto;padding:20px}
+nav{background:#fff;border-left:5px solid #1f4e79;padding:15px;margin:20px 0;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+section{background:#fff;padding:25px;margin:20px 0;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+h2{color:#1f4e79;border-bottom:2px solid #d9e8f5;padding-bottom:6px}
+h3{color:#155a8a}
+pre{background:#272822;color:#f8f8f2;padding:15px;overflow:auto;border-radius:6px}
+code{font-family:Consolas,monospace}
+.note{background:#fff8dc;border-left:5px solid #f0ad4e;padding:12px;margin:15px 0}
+table{border-collapse:collapse;width:100%}
+th,td{border:1px solid #ccc;padding:10px}
+th{background:#1f4e79;color:white}
+footer{text-align:center;padding:20px;color:#666}
+@media(max-width:700px){body{font-size:15px}header{padding:20px}}
+</style>
+</head>
+<body>
+<header>
+<h1>Getting Started with JavaScript</h1>
+<p>Unit-2</p>
+</header>
+<div class="container">
+<nav>
+<h2>Contents</h2>
+<ol>
+<li>Learning Outcomes</li>
+<li>Overview</li>
+<li>JavaScript Introduction</li>
+<li>Why Learn JavaScript</li>
+<li>Environment Setup</li>
+<li>Installing Node.js</li>
+<li>Browser Understanding</li>
+<li>Browser Console</li>
+<li>Adding JavaScript to HTML</li>
+<li>Code Style</li>
+<li>Prompt</li>
+<li>Math.random()</li>
+<li>Chapter Project</li>
+<li>Browser vs Node.js Notes</li>
+</ol>
+</nav>
+
+<section>
+<h2>Learning Outcomes</h2>
+<ul>
+<li>Design webpages and perform webpage validation.</li>
+<li>Test and debug JavaScript web applications.</li>
+</ul>
+<h3>Overview</h3>
+<p>This chapter introduces JavaScript as the programming language used to create interactive web applications. It explains client-side and server-side JavaScript, setting up the development environment, using browser developer tools, embedding JavaScript into HTML, writing readable code, taking user input, generating random numbers, and completing a small project.</p>
+</section>
+
+<section>
+<h2>1. What is JavaScript?</h2>
+<p>JavaScript is a programming language that runs on both the client side (browser) and server side (Node.js). Modern interactive websites depend heavily on JavaScript.</p>
+<ul>
+<li>Cookie popups</li>
+<li>Dropdown menus</li>
+<li>Chat widgets</li>
+<li>Product filters</li>
+<li>Animations</li>
+<li>Interactive interfaces</li>
+</ul>
+<h3>Client Side</h3>
+<p>Runs in the user's browser and provides immediate feedback.</p>
+<h3>Server Side</h3>
+<p>Runs on remote servers handling business logic and databases.</p>
+</section>
+
+<section>
+<h2>2. Why Learn JavaScript?</h2>
+<ul>
+<li>Created in 1995.</li>
+<li>Built into all modern browsers.</li>
+<li>Used for frontend and backend development.</li>
+<li>Supports procedural, functional and object-oriented programming.</li>
+<li>Huge ecosystem including React, Vue.js, Angular, jQuery and Node.js.</li>
+<li>Large developer community.</li>
+</ul>
+</section>
+
+<section>
+<h2>3. Setting Up Environment</h2>
+<h3>IDE Features</h3>
+<ul>
+<li>Syntax Highlighting</li>
+<li>Code Completion</li>
+<li>Debugger</li>
+<li>Extensions</li>
+</ul>
+<p>Popular editors: Visual Studio Code, Atom, Sublime Text, WebStorm.</p>
+<h3>Browsers</h3>
+<p>Chrome and Firefox are recommended.</p>
+
+<h3>Installing Node.js</h3>
+<ol>
+<li>Download LTS version.</li>
+<li>Run installer.</li>
+<li>Finish installation.</li>
+<li>Verify using:</li>
+</ol>
+<pre><code>node -v
+npm -v</code></pre>
+<p>If npm execution policy error occurs:</p>
+<pre><code>Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser</code></pre>
+
+<pre><code>// log.js
+console.log("Hello III CSE-A, Enjoy Java Script");
+
+node log.js</code></pre>
+</section>
+
+<section>
+<h2>4. HTML, CSS and JavaScript</h2>
+<table>
+<tr><th>Technology</th><th>Purpose</th></tr>
+<tr><td>HTML</td><td>Structure</td></tr>
+<tr><td>CSS</td><td>Presentation</td></tr>
+<tr><td>JavaScript</td><td>Behavior</td></tr>
+</table>
+<pre><code>&lt;html&gt;
+ &lt;body&gt;
+ Hello World!
+ &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>ECMAScript (ES6) is the standard specification for JavaScript.</p>
+</section>
+
+<section>
+<h2>5. Browser Console</h2>
+<pre><code>console.log("Hello world!");
+console.error("Error");
+console.table(data);</code></pre>
+<p>Developer tools can usually be opened using <strong>F12</strong>.</p>
+</section>
+
+<section>
+<h2>6. Adding JavaScript to HTML</h2>
+<h3>Inline Script</h3>
+<pre><code>&lt;script&gt;
+alert("Hi there!");
+&lt;/script&gt;</code></pre>
+
+<h3>Structured HTML</h3>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Sample&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+Content
+&lt;script&gt;
+console.log("Hi there!");
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+<h3>External JavaScript</h3>
+<pre><code>&lt;script src="app.js"&gt;&lt;/script&gt;</code></pre>
+
+<div class="note">
+Relative paths are preferred for project portability.
+</div>
+</section>
+
+<section>
+<h2>7. Coding Style</h2>
+<pre><code>let status="new";
+let scared=true;
+
+if(status==="new"){
+ console.log("Welcome to JavaScript!");
+ if(scared){
+   console.log("Don't worry.");
+ }else{
+   console.log("You're brave!");
+ }
+}else{
+ console.log("Welcome back!");
+}</code></pre>
+
+<h3>Comments</h3>
+<pre><code>// Single-line comment
+
+/*
+Multi-line
+comment
+*/</code></pre>
+
+<p>Always use proper indentation and terminate statements using semicolons.</p>
+</section>
+
+<section>
+<h2>8. User Input</h2>
+<pre><code>let response = prompt("Hi! How are you?");
+console.log(response);</code></pre>
+</section>
+
+<section>
+<h2>9. Random Numbers</h2>
+<pre><code>console.log(Math.random());
+
+console.log(Math.random()*100);
+
+console.log(Math.floor(Math.random()*100));</code></pre>
+<p>Math.random() returns values between 0 (inclusive) and 1 (exclusive).</p>
+</section>
+
+<section>
+<h2>10. Chapter Project</h2>
+<h3>index.html</h3>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Chapter Project&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;My First JavaScript Project&lt;/h1&gt;
+&lt;script src="app.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+<h3>app.js</h3>
+<pre><code>/*
+This script logs the author's name.
+*/
+console.log("Your Name Here");</code></pre>
+
+<h3>Browser vs Node.js</h3>
+<table>
+<tr><th>Feature</th><th>Browser</th><th>Node.js</th></tr>
+<tr><td>prompt()</td><td>Built-in</td><td>Not available</td></tr>
+<tr><td>prompt-sync</td><td>Not supported</td><td>Supported</td></tr>
+<tr><td>require()</td><td>Not available</td><td>Available</td></tr>
+<tr><td>console.log()</td><td>Browser Console</td><td>Terminal</td></tr>
+</table>
+</section>
+
+<footer>
+&copy 2026 bakumar.online
+</footer>
+</div>
+</body>
+</html>
