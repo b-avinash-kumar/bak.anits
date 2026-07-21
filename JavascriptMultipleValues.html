@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JavaScript Multiple Values</title>
+<style>
+body{font-family:Segoe UI,Arial,sans-serif;background:#f4f7fb;color:#222;line-height:1.7;margin:0}
+header{background:#1f4e79;color:#fff;padding:30px;text-align:center}
+main{max-width:1100px;margin:auto;padding:25px}
+h2{color:#1f4e79;border-left:6px solid #1f4e79;padding-left:10px;margin-top:35px}
+pre{background:#1e1e1e;color:#f8f8f2;padding:15px;border-radius:8px;overflow:auto}
+code{font-family:Consolas,monospace}
+p{background:#fff;padding:8px 12px;border-radius:6px;color:#1f4e79}
+footer{text-align:center;padding:20px;color:#666}
+@media(max-width:768px){body{font-size:16px}header{padding:20px}}
+</style>
+</head>
+<body>
+<header>
+<h1>JavaScript Multiple Values</h1>
+<p>Arrays, Objects, Array Methods - Complete Learning Notes</p>
+</header>
+<main>
+<h2>Javascript Multiple Values</h2><p>A program may not always requires to store single values, if the data grows we need a mechanism to address the growing need of storing multiple values to a variable in the program.</p><p>To address this problem javascript programming language introduced Arrays and Objects.</p><h2>Arrays – ordered lists of values (like a numbered shelf).</h2><p>Objects – collections of named properties (like a dictionary of key–value pairs).</p><h2>Arrays</h2><p>An array is an ordered collection where each value has a numeric index starting at 0. Conceptually:</p><pre><code>Syntax:
+let arrayVarName = []; // Array created as empty
+let arrayVarName = [val1,val2,…,valn]; // Array created with list of values</code></pre><pre><code>Example:
+let languages = [&quot;JS&quot;,&quot;Java&quot;,&quot;Python&quot;];</code></pre><p>Index:   0      1        2</p><p>Value: &quot;JS&quot;  &quot;Python&quot; &quot;Java&quot;</p><p>You access values of an array by index, not by name.</p><pre><code>Example:</code></pre><p>Console.log(languages[0]); //Output: JS</p><p>Key points:</p><p>Square brackets [] define the array literal.</p><p>Elements are separated by commas.</p><h2>Arrays can contain mixed types (though in real projects you usually keep them consistent).</h2><p>Mixed-type array</p><pre><code>Example:
+let mixed = [&quot;Alice&quot;, 25, true];</code></pre><pre><code>console.log(mixed[0]); // line 3
+console.log(mixed[1]); // line 4
+console.log(mixed[2]); // line 5</code></pre><p>Array indices and length</p><p>Each element is stored at an index: first element at index 0, second at index 1, and so on. The array has a length property: the number of elements.</p><pre><code>let colors = [&quot;red&quot;, &quot;green&quot;, &quot;blue&quot;];</code></pre><p>Index:   0        1        2</p><p>Value: &quot;red&quot;   &quot;green&quot;  &quot;blue&quot;</p><pre><code>colors.length --&gt; 3</code></pre><pre><code>Example 3 – Using length and indices</code></pre><p>javascript</p><pre><code>let colors = [&quot;red&quot;, &quot;green&quot;, &quot;blue&quot;];</code></pre><pre><code>console.log(colors.length);  // line 3
+console.log(colors[colors.length - 1]); // line 4</code></pre><p>Explanation:</p><pre><code>let colors = [&quot;red&quot;, &quot;green&quot;, &quot;blue&quot;];
+Declares an array with three elements.
+console.log(colors.length);
+Prints the length, which is 3.
+console.log(colors[colors.length - 1]);
+Computes index 3 - 1 = 2 and prints the last element, &quot;blue&quot;.</code></pre><p>Modifying arrays: reading, writing, and methods</p><p>You can:</p><p>Read elements: array[index]</p><p>Write/replace elements: array[index] = newValue</p><p>JavaScript arrays have many built-in methods</p><p>1. Add &amp; Remove Elements</p><pre><code>let arr = [2, 3];
+arr.push(4);      // [2, 3, 4]
+arr.unshift(1);   // [1, 2, 3, 4]
+arr.pop();        // [1, 2, 3]
+arr.shift();      // [2, 3]</code></pre><p>An Arrow Function is a shorter way to write a function. It was introduced in ES6 (ECMAScript 2015).</p><pre><code>Syntax
+(parameters) =&gt; {</code></pre><p>    // function body</p><p>}</p><p>2. Iterate Through Arrays</p><p>forEach()</p><p>Executes a function for each element.</p><pre><code>const numbers = [1, 2, 3];</code></pre><pre><code>numbers.forEach(num =&gt; {</code></pre><p>  console.log(num);</p><p>});</p><pre><code>numbers.forEach((num,index) =&gt; {</code></pre><p>  console.log(index,&quot;  &quot;,num);</p><p>});</p><p>3. Transform Arrays</p><pre><code>map()</code></pre><p>Returns a new array.</p><pre><code>const nums = [1, 2, 3];</code></pre><pre><code>const doubled = nums.map(num =&gt; num * 2);</code></pre><pre><code>console.log(doubled);
+// [2, 4, 6]</code></pre><p>4. Filter Arrays</p><pre><code>filter()</code></pre><p>Returns elements that satisfy a condition.</p><pre><code>const nums = [1, 2, 3, 4, 5];</code></pre><pre><code>const even = nums.filter(num =&gt; num % 2 === 0);</code></pre><pre><code>console.log(even);
+// [2, 4]</code></pre><p>5. Find Elements</p><pre><code>find()</code></pre><p>Returns the first matching element.</p><pre><code>const nums = [10, 20, 30];</code></pre><pre><code>const result = nums.find(num =&gt; num &gt; 15);</code></pre><pre><code>console.log(result);
+// 20
+findIndex()
+const index = nums.findIndex(num =&gt; num &gt; 15);</code></pre><pre><code>console.log(index);
+// 1</code></pre><p>6. Test Conditions</p><pre><code>some()</code></pre><p>Returns true if at least one element matches.</p><pre><code>const nums = [1, 2, 3];</code></pre><pre><code>console.log(nums.some(num =&gt; num &gt; 2));
+// true
+every()</code></pre><p>Returns true if all elements match.</p><pre><code>console.log(nums.every(num =&gt; num &gt; 0));
+// true</code></pre><p>7. Reduce Arrays</p><pre><code>reduce()</code></pre><p>Reduces the array to a single value.</p><pre><code>const nums = [1, 2, 3, 4];</code></pre><pre><code>const sum = nums.reduce((total, num) =&gt; total + num, 0);</code></pre><pre><code>console.log(sum);
+// 10</code></pre><p>8. Search Arrays</p><p>includes()</p><pre><code>const fruits = [&quot;apple&quot;, &quot;banana&quot;];</code></pre><pre><code>console.log(fruits.includes(&quot;banana&quot;));
+// true</code></pre><p>indexOf()</p><pre><code>console.log(fruits.indexOf(&quot;banana&quot;));
+// 1</code></pre><p>9. Slice &amp; Splice</p><pre><code>slice()</code></pre><p>Returns a portion without modifying the original.</p><pre><code>const arr = [1, 2, 3, 4];</code></pre><pre><code>console.log(arr.slice(1, 3));
+// [2, 3]</code></pre><pre><code>console.log(arr);
+// [1, 2, 3, 4]
+splice()</code></pre><p>Modifies the original array.</p><pre><code>const arr = [1, 2, 3, 4];</code></pre><pre><code>arr.splice(1, 2);</code></pre><pre><code>console.log(arr);
+// [1, 4]</code></pre><p>10. Join &amp; Split</p><p>join()</p><pre><code>const words = [&quot;Hello&quot;, &quot;World&quot;];</code></pre><pre><code>console.log(words.join(&quot; &quot;));
+// &quot;Hello World&quot;</code></pre><pre><code>//split()
+let stmt = &quot;Today is saturday&quot;;
+console.log(stmt.split(&quot; &quot;));</code></pre><p>[ &#x27;Today&#x27;, &#x27;is&#x27;, &#x27;saturday&#x27; ]</p><p>11. Sort &amp; Reverse</p><pre><code>sort()
+const nums = [3, 1, 5, 2];</code></pre><p>nums.sort();</p><pre><code>console.log(nums);
+// [1, 2, 3, 5]
+reverse()
+const arr = [1, 2, 3];</code></pre><pre><code>arr.reverse();</code></pre><pre><code>console.log(arr);
+// [3, 2, 1]</code></pre><p>12. Combine Arrays</p><pre><code>concat()
+const a = [1, 2];
+const b = [3, 4];</code></pre><pre><code>const result = a.concat(b);</code></pre><pre><code>console.log(result);
+// [1, 2, 3, 4]</code></pre><p>13. Flatten Arrays</p><pre><code>flat()
+const arr = [1, [2, 3], [4, [5]]];</code></pre><pre><code>console.log(arr.flat());
+// [1, 2, 3, 4, [5]]
+flatMap()
+const arr = [&quot;hello world&quot;, &quot;javascript&quot;];</code></pre><pre><code>const words = arr.flatMap(str =&gt; str.split(&quot; &quot;));</code></pre><pre><code>console.log(words);
+// [&quot;hello&quot;, &quot;world&quot;, &quot;javascript&quot;]</code></pre><p>14. Create Arrays</p><pre><code>Array.from(&quot;hello&quot;);
+// [&quot;h&quot;, &quot;e&quot;, &quot;l&quot;, &quot;l&quot;, &quot;o&quot;]
+Array.of(1, 2, 3);
+// [1, 2, 3]
+new Array(3);
+// [empty × 3]</code></pre><p>Array(3).fill(0);</p><pre><code>// [0, 0, 0]</code></pre><p>15. Fill Arrays</p><pre><code>fill()
+const arr = [1, 2, 3];</code></pre><pre><code>arr.fill(0);</code></pre><pre><code>console.log(arr);
+// [0, 0, 0]</code></pre><p>16. Check Array Type</p><pre><code>Array.isArray([1, 2]);
+// true</code></pre><pre><code>Array.isArray(&quot;hello&quot;);
+// false</code></pre><p>Quick Interview Cheat Sheet</p><h2>Loops</h2><h2>Loops are control-flow structures that repeatedly execute a block of code as long as a specified condition is satisfied. They are essential for tasks such as:</h2><p>Repeating operations a fixed number of times</p><p>Iterating through arrays and objects</p><p>Generating sequences (for example, Fibonacci numbers)</p><p>The following loop constructs are:</p><pre><code>while loop
+do...while loop
+for loop</code></pre><p>Nested loops</p><h2>Loops with arrays</h2><p>for...of loop</p><h2>Loops with objects (for...in and object-to-array approaches)</h2><p>break and continue (including in nested loops and labeled blocks)</p><p>2. while Loop</p><p>2.1 Concept and Syntax</p><p>A while loop executes its body as long as its condition evaluates to true.</p><p>Basic syntax:</p><pre><code>while (condition) {</code></pre><p>  // code that executes while condition is true</p><p>}</p><p>The condition is evaluated before each iteration.</p><p>If the condition is initially false, the loop body is skipped entirely.</p><p>2.2 Simple counting example</p><p>This example prints numbers from 0 up to (but not including) 10.</p><pre><code>let i = 0;
+while (i &lt; 10) {</code></pre><p>  console.log(i);</p><p>  i = i + 1;</p><p>}</p><p>Line-by-line explanation:</p><pre><code>let i = 0;
+Declares a variable i and initializes it to 0; this is our loop counter.
+while (i &lt; 10) {
+Starts the loop; the body will execute while i is less than 10.
+console.log(i);
+Outputs the current value of i to the console.</code></pre><p>i = i + 1;
+Increments i by 1 so that the loop progresses toward the stopping condition.</p><p>When i reaches 10, the condition i &lt; 10 becomes false and the loop stops.</p><p>2.3 Searching in an array with while</p><pre><code>Example: find a specific value in an array and stop when found, or when the array is exhausted.</code></pre><pre><code>let someArray = [&quot;Mike&quot;, &quot;Antal&quot;, &quot;Marc&quot;, &quot;Emir&quot;, &quot;Louiza&quot;, &quot;Jacky&quot;];
+let notFound = true;</code></pre><pre><code>while (notFound &amp;&amp; someArray.length &gt; 0) {
+  if (someArray[0] === &quot;Louiza&quot;) {</code></pre><p>    console.log(&quot;Found her!&quot;);</p><p>    notFound = false;</p><p>  } else {</p><p>    someArray.shift();</p><p>  }</p><p>}</p><pre><code>console.log(notFound);</code></pre><p>Explanation:</p><p>someArray holds several names.</p><p>notFound is a Boolean that indicates whether we have already found &quot;Louiza&quot;. Initially it is true.</p><pre><code>while (notFound &amp;&amp; someArray.length &gt; 0) {
+The loop continues only while</code></pre><p>we have not found the name yet, and</p><p>the array still has elements (length &gt; 0).
+This prevents an infinite loop if the name is not present at all.</p><pre><code>if (someArray[0] === &quot;Louiza&quot;) { ... }
+Checks whether the first element of the array is &quot;Louiza&quot;.</code></pre><p>If found:</p><p>Logs &quot;Found her!&quot;.</p><p>Sets notFound to false, which will stop the loop in the next condition check.</p><p>Otherwise:</p><p>someArray.shift(); removes the first element, so the next name moves to index 0 for the next iteration.</p><p>After the loop completes, console.log(notFound); prints false if the name was found, or true if the array was exhausted without finding it.</p><p>2.4 Generating the Fibonacci sequence with while</p><pre><code>Example: create an array containing the first 25 values of the Fibonacci sequence.</code></pre><pre><code>let nr1 = 0;
+let nr2 = 1;
+let temp;
+let fibonacciArray = [];</code></pre><pre><code>while (fibonacciArray.length &lt; 25) {</code></pre><p>  fibonacciArray.push(nr1);</p><p>  temp = nr1 + nr2;</p><p>  nr1 = nr2;</p><p>  nr2 = temp;</p><p>}</p><pre><code>console.log(fibonacciArray);</code></pre><p>Explanation:</p><p>nr1 and nr2 hold consecutive Fibonacci numbers, starting at 0 and 1.</p><p>temp is a temporary variable to store the next value in the sequence.</p><p>fibonacciArray starts as an empty array; we will fill it with Fibonacci numbers.</p><pre><code>while (fibonacciArray.length &lt; 25) {
+Loops until the array contains 25 elements.</code></pre><p>fibonacciArray.push(nr1);
+Appends the current nr1 to the array.</p><p>temp = nr1 + nr2;
+Computes the next Fibonacci number as the sum of the two previous ones.</p><p>nr1 = nr2; and nr2 = temp;
+Shift the pair forward: what was nr2 becomes the new nr1, and temp becomes the new nr2.</p><p>The resulting array starts 0, 1, 1, 2, 3, 5, ... and quickly grows large.</p><p>3. do...while Loop</p><p>3.1 Concept and Syntax</p><p>A do...while loop guarantees that its body is executed at least once, because the condition is checked after the body runs.</p><pre><code>Syntax:
+do {</code></pre><p>  // code to execute at least once</p><p>} while (condition);</p><p>Use this when you must perform the action at least once—typical scenarios include user input prompts or connection attempts.</p><p>3.2 Validating user input between 0 and 100</p><pre><code>Example: repeatedly ask the user for a number in a valid range.</code></pre><pre><code>let number;
+do {</code></pre><p>  number = prompt(&quot;Please enter a number between 0 and 100&quot;);</p><p>} while (!number || number &lt; 0 || number &gt; 100);</p><pre><code>console.log(&quot;You entered:&quot;, number);</code></pre><p>Explanation:</p><pre><code>let number;
+Declares a variable to hold the user’s input.
+do { ... } while (...);
+Ensures the prompt is shown at least once.</code></pre><p>Inside the do block:</p><p>prompt(&quot;Please enter a number between 0 and 100&quot;) displays a dialog and returns a string typed by the user.</p><p>The result is assigned to number.</p><p>The while condition:</p><p>!number checks for an empty or cancel case.</p><p>number &lt; 0 checks for too small values.</p><p>number &gt; 100 checks for too large values.
+If any of these are true, the loop repeats and the user is prompted again.</p><p>Once the user enters a valid number, the loop exits and the final value is logged.</p><p>4. for Loop</p><p>4.1 Concept and general form</p><p>A for loop is a compact loop construct with three parts in its header:</p><pre><code>for (initialization; condition; update) {</code></pre><p>  // code to execute each iteration</p><p>}</p><p>Execution order:</p><p>Execute initialization (once).</p><p>Evaluate condition. If false, exit the loop.</p><p>Execute the body.</p><p>Execute update.</p><p>Return to step 2.</p><p>4.2 Counting with for</p><pre><code>Example: log numbers 0 through 9.</code></pre><pre><code>for (let i = 0; i &lt; 10; i = i + 1) {</code></pre><p>  console.log(i);</p><p>}</p><p>Explanation:</p><pre><code>let i = 0; (initialization)
+Declares and initializes loop counter i to 0.</code></pre><p>i &lt; 10; (condition)
+The body executes only while i is less than 10.</p><p>i = i + 1 (update)
+Increments i by 1 after each iteration.</p><pre><code>console.log(i);
+Outputs the current value of i for each iteration.</code></pre><p>4.3 Using for to build arrays</p><p>4.3.1 Array of integers 0 to 99</p><pre><code>let arr = [];
+for (let i = 0; i &lt; 100; i = i + 1) {
+  arr.push(i);</code></pre><p>}</p><pre><code>console.log(arr);</code></pre><p>Explanation:</p><pre><code>let arr = [];
+Creates an empty array to store values.</code></pre><p>The loop runs for i from 0 to 99.</p><pre><code>arr.push(i);
+Adds the current i to the end of arr in each iteration.</code></pre><p>After the loop, arr contains 100 elements, from 0 to 99.</p><p>4.3.2 Array of even numbers from 0 to 98</p><pre><code>let arr = [];
+for (let i = 0; i &lt; 100; i = i + 2) {
+  arr.push(i);</code></pre><p>}</p><pre><code>console.log(arr);</code></pre><p>Explanation:</p><p>Increments by 2 instead of 1, so i takes on values 0, 2, 4, ..., 98.</p><p>The result is an array of even numbers under 100.</p><p>5. Nested Loops</p><p>5.1 Concept</p><p>A nested loop is a loop inside another loop. For example:</p><p>Nested loops are commonly used for operating on two-dimensional data, such as tables, matrices, or arrays of arrays.</p><p>5.2 Creating an array of arrays with nested for loops</p><pre><code>Example: build a 3×7 structure (3 rows, 7 columns), where each inner array contains the numbers 0 through 6.
+let arrOfArrays = [];
+for (let i = 0; i &lt; 3; i = i + 1) {</code></pre><p>  arrOfArrays.push([]);</p><p>  for (let j = 0; j &lt; 7; j = j + 1) {</p><p>    arrOfArrays[i].push(j);</p><p>  }</p><p>}</p><pre><code>console.log(arrOfArrays);
+console.table(arrOfArrays);</code></pre><p>Explanation:</p><pre><code>let arrOfArrays = [];
+Creates an empty array that will hold other arrays (rows).</code></pre><p>Outer loop (for (let i = 0; i &lt; 3; i = i + 1))
+Runs 3 times, once for each row.</p><p>arrOfArrays.push([]);
+Adds a new empty inner array for each row.</p><p>Inner loop (for (let j = 0; j &lt; 7; j = j + 1))
+Runs 7 times per row to fill columns.</p><p>arrOfArrays[i].push(j);
+Appends the current j value (0–6) to the currently active row.</p><p>Resulting structure (conceptually):</p><p>[</p><p>  [0, 1, 2, 3, 4, 5, 6],</p><p>  [0, 1, 2, 3, 4, 5, 6],</p><p>  [0, 1, 2, 3, 4, 5, 6]</p><p>]</p><pre><code>console.table(arrOfArrays); displays this neatly in tabular form in supporting consoles.</code></pre><p>6. Loops and Arrays</p><p>6.1 Looping over arrays with for</p><p>General pattern:</p><pre><code>let arr = /* some array */;</code></pre><pre><code>for (let i = 0; i &lt; arr.length; i = i + 1) {</code></pre><p>  // use arr[i]</p><p>}</p><p>The condition i &lt; arr.length ensures that every valid index is visited exactly once and the loop stops after the last element.</p><p>6.2 Logging each array element</p><pre><code>let names = [&quot;Chantal&quot;, &quot;John&quot;, &quot;Maxime&quot;, &quot;Bobbi&quot;, &quot;Jair&quot;];</code></pre><pre><code>for (let i = 0; i &lt; names.length; i = i + 1) {</code></pre><p>  console.log(names[i]);</p><p>}</p><p>Explanation:</p><p>The loop counter i runs from 0 to names.length - 1.</p><p>names[i] accesses the element at position i.</p><p>Every name in the array is logged once.</p><p>6.3 Modifying every element in an array</p><pre><code>Example: prepend &quot;hello &quot; to each name.</code></pre><pre><code>let names = [&quot;Chantal&quot;, &quot;John&quot;, &quot;Maxime&quot;, &quot;Bobbi&quot;, &quot;Jair&quot;];</code></pre><pre><code>for (let i = 0; i &lt; names.length; i = i + 1) {</code></pre><p>  names[i] = &quot;hello &quot; + names[i];</p><p>}</p><pre><code>console.log(names);</code></pre><p>Explanation:</p><p>Inside the loop, names[i] is reassigned to a new string built by concatenating &quot;hello &quot; with the current value.</p><p>After the loop, the array contents are:
+&quot;hello Chantal&quot;, &quot;hello John&quot;, &quot;hello Maxime&quot;, &quot;hello Bobbi&quot;, &quot;hello Jair&quot;.</p><p>6.4 Filtering or transforming with conditions</p><pre><code>Example: remove names starting with &quot;M&quot; (using delete) and prepend &quot;hello &quot; to the others.
+let names = [&quot;Chantal&quot;, &quot;John&quot;, &quot;Maxime&quot;, &quot;Bobbi&quot;, &quot;Jair&quot;];</code></pre><pre><code>for (let i = 0; i &lt; names.length; i = i + 1) {
+  if (names[i].startsWith(&quot;M&quot;)) {</code></pre><p>    delete names[i];</p><p>    continue;</p><p>  }</p><p>  names[i] = &quot;hello &quot; + names[i];</p><p>}</p><pre><code>console.log(names);</code></pre><p>Explanation:</p><p>names[i].startsWith(&quot;M&quot;) checks if the current name begins with &quot;M&quot;.</p><p>If it does:</p><p>delete names[i]; removes the property at index i, leaving a hole (an empty slot) rather than shifting elements.</p><p>continue; skips the rest of the current iteration and proceeds with the next iteration.</p><p>For all other names, &quot;hello &quot; is prepended.</p><p>The resulting array includes an “empty item” where the deleted element was, because delete does not reindex the array.</p><p>6.5 Infinite loop hazard when modifying array length</p><p>Problematic example (do not use):</p><pre><code>let names = [&quot;Chantal&quot;, &quot;John&quot;, &quot;Maxime&quot;, &quot;Bobbi&quot;, &quot;Jair&quot;];
+for (let i = 0; i &lt; names.length; i = i + 1) {
+  names.push(&quot;...&quot;);</code></pre><p>}</p><p>Explanation:</p><p>Each iteration adds a new element to the array with names.push(&quot;...&quot;).</p><p>This increases names.length continuously.</p><p>Because i is always less than the ever-growing names.length, the loop never terminates, creating an infinite loop.</p><p>7. for...of Loop</p><p>7.1 Concept and syntax</p><p>The for...of loop iterates directly over the values of an iterable, such as an array.</p><pre><code>Syntax:
+for (let variableName of array) {</code></pre><p>  // code that uses variableName</p><p>}</p><p>Interpretation: “For each value in array, call it variableName and execute the body.”</p><p>Unlike the for loop with an index, for...of is designed for processing values and does not provide direct control to modify the array elements by index inside the loop body.</p><p>7.2 Example: logging array values</p><pre><code>let names = [&quot;Chantal&quot;, &quot;John&quot;, &quot;Maxime&quot;, &quot;Bobbi&quot;, &quot;Jair&quot;];</code></pre><pre><code>for (let name of names) {</code></pre><p>  console.log(name);</p><p>}</p><p>Explanation:</p><pre><code>let name of names
+On each iteration, name is assigned the next value from the names array.
+console.log(name);
+Logs the current name.</code></pre><p>The loop automatically stops after all values have been processed.</p><p>Key points:</p><p>No index variable is needed; the code is concise and readable.</p><p>Because you are iterating over values, this pattern is ideal for reading or sending data elsewhere, but not for in-place modification by index.</p><p>8. break and continue in Loops (Conceptual)</p><p>8.1 break</p><p>break immediately terminates the nearest enclosing loop and continues execution after the loop.</p><p>Useful when you find what you were searching for and do not want further iterations.</p><p>8.2 continue</p><p>continue skips the rest of the current iteration and moves directly to the next iteration’s condition check.</p><p>Useful for skipping certain elements (for example, filtering).</p><pre><code>Example:
+for (let i = 1; i &lt;= 10; i++) {
+    if (i === 6) {</code></pre><p>        break; // stops the loop</p><p>    }</p><p>    console.log(i);</p><p>}</p><pre><code>for (let i = 1; i &lt;= 10; i++) {
+    if (i === 6) {</code></pre><p>        continue; // skips the current iteration</p><p>    }</p><p>    console.log(i);</p><p>}</p>
+</main>
+<footer>Generated from uploaded learning material.</footer>
+</body>
+</html>

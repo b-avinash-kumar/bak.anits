@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JavaScript Logic Statements - Learning Material</title>
+<style>
+body{font-family:Segoe UI,Arial,sans-serif;background:#f4f7fb;color:#222;line-height:1.7;margin:0}
+header{background:#1e3a5f;color:#fff;padding:35px 20px;text-align:center}
+main{max-width:1100px;margin:auto;padding:20px}
+section{background:#fff;margin:18px 0;padding:22px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+h2{color:#1e3a5f;border-bottom:2px solid #d8e4f2;padding-bottom:6px}
+pre{background:#272822;color:#f8f8f2;padding:14px;border-radius:8px;overflow:auto}
+code{font-family:Consolas,monospace}
+table{border-collapse:collapse;width:100%}
+th,td{border:1px solid #ccc;padding:8px}
+th{background:#1e3a5f;color:#fff}
+.note{background:#eef7ff;border-left:5px solid #1e88e5;padding:12px}
+footer{text-align:center;padding:20px;color:#666}
+</style>
+</head>
+<body>
+<header>
+<h1>Logic Statements</h1>
+<p>JavaScript Learning Material</p>
+</header>
+<main>
+<section>
+<h2>1. Purpose of Logic Statements</h2>
+<p>Logic statements allow a program to choose between different execution paths based on conditions.</p>
+<div class="note">
+<b>Concept Overview</b>
+<ul>
+<li>A condition evaluates to <b>true</b> or <b>false</b>.</li>
+<li>A branch executes only when its condition is satisfied.</li>
+<li>Logic statements implement control flow.</li>
+</ul>
+</div>
+<pre><code>[Condition?]
+   |
+True   False
+ |       |
+if block else block</code></pre>
+</section>
+
+<section>
+<h2>2. if and if...else</h2>
+<h3>Basic if</h3>
+<pre><code>let temperature = 30;
+if (temperature > 25){
+    console.log("It is warm outside.");
+}</code></pre>
+
+<h3>if...else</h3>
+<pre><code>let isLoggedIn = false;
+if(isLoggedIn){
+   console.log("Welcome back!");
+}else{
+   console.log("Please log in first.");
+}</code></pre>
+</section>
+
+<section>
+<h2>3. else if Chain</h2>
+<pre><code>let score=78;
+if(score>=90){
+ console.log("Grade A");
+}else if(score>=80){
+ console.log("Grade B");
+}else if(score>=70){
+ console.log("Grade C");
+}else{
+ console.log("Grade D");
+}</code></pre>
+<p>Conditions are checked from top to bottom. The first true condition executes.</p>
+</section>
+
+<section>
+<h2>4. Truthy and Falsy</h2>
+<p>Falsy values:</p>
+<ul>
+<li>false</li><li>0</li><li>-0</li><li>""</li><li>null</li><li>undefined</li><li>NaN</li>
+</ul>
+<pre><code>let name="";
+if(name){
+ console.log("Name is provided");
+}else{
+ console.log("Name is missing");
+}</code></pre>
+</section>
+
+<section>
+<h2>5. Comparison and Logical Operators</h2>
+<table>
+<tr><th>Operator</th><th>Meaning</th></tr>
+<tr><td>==</td><td>Equal (coercion)</td></tr>
+<tr><td>===</td><td>Strict Equal</td></tr>
+<tr><td>!=</td><td>Not Equal</td></tr>
+<tr><td>!==</td><td>Strict Not Equal</td></tr>
+<tr><td>&gt;</td><td>Greater Than</td></tr>
+<tr><td>&lt;</td><td>Less Than</td></tr>
+<tr><td>&gt;=</td><td>Greater Than or Equal</td></tr>
+<tr><td>&lt;=</td><td>Less Than or Equal</td></tr>
+</table>
+
+<h3>Logical Operators</h3>
+<ul>
+<li>&amp;&amp; AND</li>
+<li>|| OR</li>
+<li>! NOT</li>
+</ul>
+<pre><code>let age=20;
+let hasID=true;
+if(age>=18 && hasID){
+ console.log("Access granted");
+}</code></pre>
+<pre><code>let isAdmin=false;
+let isModerator=true;
+if(isAdmin || isModerator){
+ console.log("You can manage comments.");
+}</code></pre>
+<pre><code>let isComplete=false;
+if(!isComplete){
+ console.log("Task is not complete yet.");
+}</code></pre>
+</section>
+
+<section>
+<h2>6. Conditional (Ternary) Operator</h2>
+<pre><code>let age=17;
+let message=(age>=18)?"Adult":"Minor";
+console.log(message);</code></pre>
+<p>Ternary is a concise alternative to simple if...else statements.</p>
+</section>
+
+<section>
+<h2>7. switch Statement</h2>
+<pre><code>let day="Wednesday";
+switch(day){
+ case "Monday":
+   console.log("Start of week");
+   break;
+ case "Wednesday":
+   console.log("Middle of week");
+   break;
+ default:
+   console.log("Another day");
+}</code></pre>
+<p>Without <b>break</b>, execution falls through to the next case.</p>
+</section>
+
+<section>
+<h2>8. Choosing Between if and switch</h2>
+<p>Use <b>if...else</b> for ranges and inequalities. Use <b>switch</b> for matching a single variable against multiple values.</p>
+</section>
+
+<section>
+<h2>9. Complete Example - Movie Ticket Price Calculator</h2>
+<pre><code>let age=16;
+let isStudent=true;
+let dayOfWeek="Wednesday";
+let basePrice;
+
+if(age&lt;12){
+ basePrice=5;
+}else if(age&lt;18){
+ basePrice=8;
+}else{
+ basePrice=10;
+}
+
+let discount=isStudent?2:0;
+let finalPrice;
+
+switch(dayOfWeek){
+ case "Wednesday":
+   finalPrice=basePrice-discount-1;
+   break;
+ default:
+   finalPrice=basePrice-discount;
+}
+
+console.log(finalPrice);</code></pre>
+</section>
+
+<section>
+<h2>Summary</h2>
+<ul>
+<li>if</li>
+<li>if...else</li>
+<li>else if</li>
+<li>Truthy &amp; Falsy</li>
+<li>Comparison Operators</li>
+<li>Logical Operators</li>
+<li>Ternary Operator</li>
+<li>Switch Statement</li>
+<li>Fall-through</li>
+<li>Choosing between if and switch</li>
+</ul>
+</section>
+
+</main>
+<footer>Prepared as JavaScript Learning Material</footer>
+</body>
+</html>
