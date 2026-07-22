@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JavaScript Functions - Learning Material</title>
+<style>
+body{margin:0;font-family:Segoe UI,Arial,sans-serif;line-height:1.7;background:#eef2f7;color:#222}
+header{background:#1f4e79;color:#fff;padding:28px 18px;text-align:center}
+main{max-width:1100px;margin:auto;padding:20px}
+section{background:#fff;margin:18px 0;padding:22px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+h2{color:#1f4e79;border-left:6px solid #1f4e79;padding-left:10px}
+.note{background:#eaf5ff;border-left:5px solid #2196f3;padding:12px;margin:10px 0}
+pre{background:#272822;color:#f8f8f2;padding:14px;border-radius:8px;overflow:auto}
+code{font-family:Consolas,monospace}
+table{width:100%;border-collapse:collapse;margin:12px 0}
+th,td{border:1px solid #ccc;padding:10px}
+th{background:#1f4e79;color:#fff}
+footer{text-align:center;padding:20px;color:#555}
+@media(max-width:700px){body{font-size:15px}header h1{font-size:1.7rem}}
+</style>
+</head>
+<body>
+<header>
+<h1>JavaScript Functions - Complete Learning Material</h1>
+<p>Unit 2 Learning Notes</p>
+</header>
+<main>
+
+<section>
+<h2>1. Why Functions Exist</h2>
+<p>Without functions, developers repeat the same logic multiple times. Functions allow code reuse by writing the logic once and calling it whenever required.</p>
+<div class="note"><strong>Key Idea:</strong> Write the logic once, call it many times.</div>
+<pre><code>// Without a function
+let width1 = 5, height1 = 10;
+let area1 = width1 * height1;
+console.log(area1);
+
+let width2 = 7, height2 = 3;
+let area2 = width2 * height2;
+console.log(area2);
+
+// Using a function
+function calculateArea(width, height) {
+    return width * height;
+}
+
+let areaOne = calculateArea(5,10);
+let areaTwo = calculateArea(7,3);</code></pre>
+</section>
+
+<section>
+<h2>2. Declaring and Calling a Function</h2>
+<p>A function declaration defines the function. Nothing happens until it is invoked (called).</p>
+<pre><code>function greet() {
+    console.log("Hello, JavaScript!");
+}
+
+greet();</code></pre>
+<ul>
+<li><strong>Declaration:</strong> <code>function greet(){ }</code></li>
+<li><strong>Invocation:</strong> <code>greet();</code></li>
+<li>Use meaningful camelCase names such as <code>calculateSum()</code>.</li>
+</ul>
+</section>
+
+<section>
+<h2>3. Parameters vs Arguments</h2>
+<table>
+<tr><th>Parameter</th><th>Argument</th></tr>
+<tr><td>Placeholder variable in function definition.</td><td>Actual value supplied during function call.</td></tr>
+</table>
+<pre><code>function greetPerson(name){
+    console.log("Hello, " + name + "!");
+}
+
+greetPerson("Avinash");
+greetPerson("Maaike");
+
+function multiply(a, b = 1){
+    console.log(a * b);
+}
+
+multiply(5);
+multiply(5,3);</code></pre>
+</section>
+
+<section>
+<h2>4. Arrow Functions</h2>
+<p>Arrow functions provide a shorter syntax for writing functions.</p>
+<pre><code>const square = (x) => {
+    return x * x;
+};
+
+console.log(square(4));
+
+const cube = x => x * x * x;
+console.log(cube(3));</code></pre>
+<p>If only one expression exists, braces and the <code>return</code> keyword may be omitted (implicit return).</p>
+</section>
+
+<section>
+<h2>5. Spread (...) vs Rest (...)</h2>
+<table>
+<tr><th>Spread Operator</th><th>Rest Operator</th></tr>
+<tr><td>Expands an array into individual arguments.</td><td>Collects multiple arguments into a single array.</td></tr>
+</table>
+<pre><code>function sumThree(a,b,c){
+    console.log(a+b+c);
+}
+
+const numbers=[1,2,3];
+sumThree(...numbers);
+
+function sumAll(...values){
+    let total=0;
+    for(let value of values)
+        total+=value;
+    console.log(total);
+}
+
+sumAll(1,2);
+sumAll(5,10,15);</code></pre>
+</section>
+
+<section>
+<h2>6. Returning Values</h2>
+<p>The <code>return</code> statement sends a value back to the caller and immediately stops execution.</p>
+<pre><code>function addNumbers(x,y){
+    return x+y;
+}
+
+let result = addNumbers(10,5);
+console.log(result);</code></pre>
+</section>
+
+<section>
+<h2>7. Scope - Where Variables Live</h2>
+<p>Variables declared inside a function are local and cannot be accessed outside the function.</p>
+<pre><code>function showLocal(){
+    let localVar="I am local";
+    console.log(localVar);
+}
+
+showLocal();
+// console.log(localVar);</code></pre>
+
+<pre><code>function testScope(){
+    if(true){
+        var usingVar="function-scoped";
+        let usingLet="block-scoped";
+    }
+
+    console.log(usingVar);
+    // console.log(usingLet);
+}</code></pre>
+
+<pre><code>let globalVar="I am global";
+
+function showGlobal(){
+    console.log(globalVar);
+}</code></pre>
+</section>
+
+<section>
+<h2>8. IIFE (Immediately Invoked Function Expression)</h2>
+<p>An IIFE executes immediately after it is defined and helps avoid polluting the global scope.</p>
+<pre><code>(function(){
+    console.log("This runs immediately");
+})();</code></pre>
+</section>
+
+<section>
+<h2>9. Recursion</h2>
+<p>A recursive function calls itself. Every recursive function must contain a base case.</p>
+<pre><code>function countdown(n){
+    if(n <= 0){
+        console.log("Done!");
+    }else{
+        console.log(n);
+        countdown(n-1);
+    }
+}
+
+countdown(3);</code></pre>
+</section>
+
+<section>
+<h2>10. Nested Functions</h2>
+<p>A function declared inside another function can access variables from its outer function.</p>
+<pre><code>function outer(){
+    let outerVar="from outer";
+
+    function inner(){
+        console.log("Inner sees: " + outerVar);
+    }
+
+    inner();
+}
+
+outer();</code></pre>
+</section>
+
+<section>
+<h2>11. Anonymous Functions</h2>
+<p>An anonymous function has no name and is usually stored in a variable.</p>
+<pre><code>const greetAnon = function(){
+    console.log("Hello from anonymous function");
+};
+
+greetAnon();</code></pre>
+</section>
+
+<section>
+<h2>12. Callback Functions</h2>
+<p>A callback is a function passed to another function to be executed later.</p>
+<pre><code>function doTwice(action){
+    action();
+    action();
+}
+
+function sayHello(){
+    console.log("Hello");
+}
+
+doTwice(sayHello);
+
+setTimeout(function(){
+    console.log("This runs after 1000 ms");
+},1000);</code></pre>
+</section>
+
+<section>
+<h2>Summary</h2>
+<ul>
+<li>Functions improve code reuse and readability.</li>
+<li>Understand declarations, invocations, parameters, and arguments.</li>
+<li>Use arrow functions for concise syntax.</li>
+<li>Know the difference between spread and rest operators.</li>
+<li>Understand return values and variable scope.</li>
+<li>Learn advanced concepts such as IIFE, recursion, nested functions, anonymous functions, and callbacks.</li>
+</ul>
+</section>
+
+</main>
+<footer>
+JavaScript Functions - Unit 2 Learning Page
+</footer>
+</body>
+</html>

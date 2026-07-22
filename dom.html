@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DOM Introduction - Learning Notes</title>
+<style>
+body{font-family:Arial,Helvetica,sans-serif;margin:0;background:#f4f7fb;color:#222;line-height:1.6}
+header{background:#0b5ed7;color:#fff;padding:30px;text-align:center}
+nav{background:#163d6b;padding:10px;position:sticky;top:0}
+nav a{color:#fff;text-decoration:none;margin:8px;font-size:.95rem}
+main{max-width:1100px;margin:auto;padding:20px}
+section{background:#fff;margin:20px 0;padding:25px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+h2{color:#0b5ed7;border-bottom:2px solid #e3ecfb;padding-bottom:8px}
+pre{background:#272822;color:#f8f8f2;padding:15px;overflow:auto;border-radius:8px}
+code{font-family:Consolas,monospace}
+.note{background:#fff3cd;border-left:5px solid #ffc107;padding:12px}
+.tip{background:#d1ecf1;border-left:5px solid #17a2b8;padding:12px}
+table{width:100%;border-collapse:collapse}
+th,td{border:1px solid #ccc;padding:8px}
+footer{text-align:center;padding:20px;background:#163d6b;color:white}
+@media(max-width:700px){nav{position:static}nav a{display:block;margin:5px 0}}
+</style>
+</head>
+<body>
+<header>
+<h1>Document Object Model (DOM) - Complete Learning Page</h1>
+<p>Unit 2 JavaScript Learning Material</p>
+</header>
+
+<nav>
+<a href="#why">Why DOM</a>
+<a href="#bom">BOM</a>
+<a href="#tree">DOM Tree</a>
+<a href="#select">Selecting Elements</a>
+<a href="#modify">Modifying DOM</a>
+<a href="#events">Events</a>
+<a href="#create">Create Elements</a>
+<a href="#accordion">Accordion</a>
+</nav>
+
+<main>
+
+<section id="why">
+<h2>1. Why the DOM Matters</h2>
+<p>The DOM allows JavaScript to view an HTML document as a tree of objects instead of plain text. This makes webpages interactive.</p>
+<table>
+<tr><th>Concept</th><th>Description</th></tr>
+<tr><td>HTML</td><td>Structure and content.</td></tr>
+<tr><td>BOM</td><td>Browser Object Model (window).</td></tr>
+<tr><td>DOM</td><td>Document Object Model (document).</td></tr>
+</table>
+<pre><code>window
+└── document
+    └── html elements</code></pre>
+</section>
+
+<section id="bom">
+<h2>2. HTML Refresher & Browser Object Model</h2>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+ &lt;head&gt;&lt;title&gt;Tab&lt;/title&gt;&lt;/head&gt;
+ &lt;body&gt;
+   &lt;p&gt;Hello Web!&lt;/p&gt;
+ &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+<p>Parent elements contain child elements. Attributes configure an element.</p>
+
+<pre><code>&lt;a href="https://google.com"&gt;Here's a link!&lt;/a&gt;</code></pre>
+
+<h3>window Object</h3>
+<pre><code>window.history.go(-1);
+
+console.dir(navigator);
+
+console.log(location.href);
+location.href="https://google.com";</code></pre>
+</section>
+
+<section id="tree">
+<h2>3. DOM Tree</h2>
+<pre><code>document
+└── html
+    ├── head
+    │   └── title
+    └── body
+        ├── h1
+        └── div
+            ├── p
+            └── a</code></pre>
+
+<pre><code>console.dir(document);
+
+document.documentElement;
+document.head;
+document.body;</code></pre>
+</section>
+
+<section id="select">
+<h2>4. Selecting Elements</h2>
+
+<h3>getElementById()</h3>
+<pre><code>const ele=document.getElementById("one");</code></pre>
+
+<h3>innerText vs innerHTML</h3>
+<pre><code>msg.innerText="Updated text";
+
+msg.innerHTML="&lt;strong&gt;Updated&lt;/strong&gt;";</code></pre>
+
+<div class="note">
+Use <b>innerText</b> for plain text. Use <b>innerHTML</b> only when HTML rendering is required. Never insert untrusted user input using innerHTML.
+</div>
+
+<h3>Other Selection Methods</h3>
+<pre><code>document.getElementsByTagName("div");
+
+document.getElementsByClassName("ele");
+
+document.querySelector(".ele");
+
+document.querySelectorAll(".myEle");</code></pre>
+</section>
+
+<section id="modify">
+<h2>5. Manipulating Elements</h2>
+
+<h3>Changing Style</h3>
+<pre><code>title.style.color="red";
+title.style.backgroundColor="yellow";</code></pre>
+
+<h3>classList</h3>
+<pre><code>item.classList.add("highlight");
+item.classList.remove("highlight");
+item.classList.toggle("highlight");</code></pre>
+
+<h3>Attributes</h3>
+<pre><code>el.getAttribute("data-row");
+el.setAttribute("data-row","5");</code></pre>
+
+<h3>Friends Table Example</h3>
+<pre><code>function getData(el){
+ let row=el.getAttribute("data-row");
+ let name=el.getAttribute("data-name");
+ message.innerHTML=`${name} is in row ${row}`;
+}</code></pre>
+</section>
+
+<section id="events">
+<h2>6. Event Handling</h2>
+
+<h3>Using this</h3>
+<pre><code>&lt;button onclick="message(this)"&gt;Button&lt;/button&gt;</code></pre>
+
+<h3>addEventListener()</h3>
+<pre><code>const btns=document.querySelectorAll("button");
+
+function output(){
+ console.log(this.textContent);
+}
+
+btns.forEach(btn=>{
+ btn.addEventListener("click",output);
+});</code></pre>
+
+<div class="tip">
+addEventListener is preferred because it separates HTML and JavaScript and allows multiple handlers.
+</div>
+
+</section>
+
+<section id="create">
+<h2>7. Creating Elements Dynamically</h2>
+
+<pre><code>var li=document.createElement("li");
+li.appendChild(document.createTextNode(text));
+document.getElementById("sList").appendChild(li);</code></pre>
+
+<p><b>Pattern:</b> Read input → Create element → Append element.</p>
+
+</section>
+
+<section id="accordion">
+<h2>8. Putting Everything Together - Accordion</h2>
+
+<pre><code>.myText{display:none;}
+.myText.active{display:block;}
+
+menus.forEach(el=>{
+ el.addEventListener("click",()=>{
+   openText.forEach(e=>e.classList.remove("active"));
+   el.nextElementSibling.classList.toggle("active");
+ });
+});</code></pre>
+
+<h3>Concepts Used</h3>
+<ul>
+<li>querySelectorAll()</li>
+<li>addEventListener()</li>
+<li>classList.toggle()</li>
+<li>DOM Traversal</li>
+<li>nextElementSibling</li>
+</ul>
+</section>
+
+<section>
+<h2>Chapter Summary</h2>
+<ul>
+<li>DOM represents HTML as objects.</li>
+<li>document is the root of the DOM.</li>
+<li>Select elements using ID, class, tag or CSS selectors.</li>
+<li>Modify text using innerText or innerHTML.</li>
+<li>Use classList for styling.</li>
+<li>Use addEventListener() for events.</li>
+<li>Create elements dynamically using createElement(), createTextNode() and appendChild().</li>
+</ul>
+</section>
+
+</main>
+
+<footer>
+DOM Introduction Learning Notes • Responsive HTML Study Page
+</footer>
+
+</body>
+</html>

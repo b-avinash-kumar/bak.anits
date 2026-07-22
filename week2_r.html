@@ -1,0 +1,204 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>R Programming - Week 2 Learning Notes</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f4f7fb;color:#222;margin:0;line-height:1.7}
+header{background:#1e3a5f;color:#fff;padding:30px 20px;text-align:center}
+main{max-width:1100px;margin:auto;padding:20px}
+section{background:#fff;margin:18px 0;padding:22px;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+h2{color:#1e3a5f;border-left:6px solid #2f80ed;padding-left:10px}
+table{width:100%;border-collapse:collapse}
+th,td{border:1px solid #ccc;padding:8px}
+th{background:#eaf2ff}
+pre{background:#272822;color:#f8f8f2;padding:14px;border-radius:8px;overflow:auto}
+code{font-family:Consolas,monospace}
+.note{background:#fff8d5;border-left:5px solid #e0a800;padding:10px}
+footer{text-align:center;color:#555;padding:20px}
+@media(max-width:700px){body{font-size:15px}header h1{font-size:1.6rem}}
+</style>
+</head>
+<body>
+<header>
+<h1>R Programming – Week 2 Learning Material</h1>
+<p>Comprehensive Study Notes</p>
+</header>
+<main>
+
+<section>
+<h2>1. Data Types</h2>
+<table>
+<tr><th>Type</th><th>Description</th><th>Examples</th></tr>
+<tr><td>Numeric</td><td>Numbers with/without decimals and numeric NA.</td><td>23, 0.03, NA</td></tr>
+<tr><td>Character</td><td>Text enclosed in quotes.</td><td>'hello', "R"</td></tr>
+<tr><td>Logical</td><td>TRUE or FALSE.</td><td>TRUE, FALSE</td></tr>
+<tr><td>Vector</td><td>Collection of same data type.</td><td>c(1,2,3)</td></tr>
+<tr><td>NA</td><td>Missing value.</td><td>NA</td></tr>
+</table>
+<pre><code>class(2)
+class('hello')
+class('23')
+class(FALSE)
+class(NA)
+
+print('Boina Avinash Kumar')</code></pre>
+</section>
+
+<section>
+<h2>2. Variables</h2>
+<p>Variables store information using the assignment operator <code>&lt;-</code> (preferred) or <code>=</code>.</p>
+<pre><code>full_name &lt;- "Natalia Rodríguez Nuñez"
+message_string &lt;- "Hello there"
+print(message_string)
+
+message_string &lt;- "Hasta la vista"
+print(message_string)</code></pre>
+</section>
+
+<section>
+<h2>3. Vectors</h2>
+<p>Vectors are list-like structures containing values of the same type.</p>
+<pre><code>spring_months &lt;- c("March","April","May","June")
+
+typeof(spring_months)
+length(spring_months)
+spring_months[2]</code></pre>
+<div class="note">
+Task: Create a numeric vector named <b>phone</b> containing area code, next three digits and last four digits.
+</div>
+</section>
+
+<section>
+<h2>4. Conditional Statements</h2>
+<pre><code>if(TRUE){
+ print("This message will print!")
+}
+
+if(TRUE){
+ print("Go to sleep!")
+}else{
+ print("Wake up!")
+}
+
+message &lt;- "I change based on a condition."
+if(TRUE){
+ message="I execute this when true!"
+}else{
+ message="I execute this when false!"
+}
+print(message)</code></pre>
+</section>
+
+<section>
+<h2>5. Comparison Operators</h2>
+<ul>
+<li>&lt; Less Than</li>
+<li>&gt; Greater Than</li>
+<li>&lt;= Less Than or Equal</li>
+<li>&gt;= Greater Than or Equal</li>
+<li>== Equal</li>
+<li>!= Not Equal</li>
+</ul>
+<pre><code>10 &lt; 12
+56 &gt;= 129
+56 != 129</code></pre>
+</section>
+
+<section>
+<h2>6. Logical Operators</h2>
+<ul>
+<li>&amp; AND</li>
+<li>| OR</li>
+<li>! NOT</li>
+</ul>
+<pre><code>if(stopLight=='green' &amp; pedestrians==0){
+ print('Go!')
+}else{
+ print('Stop')
+}
+
+if(day=='Saturday' | day=='Sunday'){
+ print('Enjoy the weekend!')
+}
+
+excited &lt;- TRUE
+print(!excited)</code></pre>
+</section>
+
+<section>
+<h2>7. Functions</h2>
+<p>Functions perform reusable tasks.</p>
+<pre><code>sort(c(2,4,10,5,1))
+length(c(2,4,10,5,1))
+sum(5,15,10)
+
+data &lt;- c(120,22,22,31,15,120)
+unique_vals &lt;- unique(data)
+print(unique_vals)
+
+solution &lt;- sqrt(49)
+
+round_down &lt;- floor(3.14)
+round_up &lt;- ceiling(3.14)</code></pre>
+<p><b>Important Functions:</b> sort(), length(), sum(), unique(), sqrt(), floor(), ceiling()</p>
+</section>
+
+<section>
+<h2>8. Importing Packages</h2>
+<pre><code>install.packages('dplyr')
+library(dplyr)
+library(readr)
+
+artists &lt;- read_csv('artists.csv')
+
+artists %&gt;%
+ select(-country,-year_founded,-albums) %&gt;%
+ filter(spotify_monthly_listeners &gt; 20000000,
+        genre != "Hip Hop") %&gt;%
+ arrange(desc(youtube_subscribers))</code></pre>
+
+<h3>Pipeline (%&gt;%)</h3>
+<p>The pipe operator passes the output of one function directly as input to the next.</p>
+
+<h3>dplyr Steps</h3>
+<ol>
+<li><b>select()</b> – removes unwanted columns.</li>
+<li><b>filter()</b> – filters rows based on conditions.</li>
+<li><b>arrange(desc())</b> – sorts rows in descending order.</li>
+</ol>
+</section>
+
+<section>
+<h2>9. RStudio Tips</h2>
+<ul>
+<li>Customize RStudio layout from Preferences.</li>
+<li><b>Ctrl + Enter</b> executes current line.</li>
+<li>Create plots using <code>plot(x,y,type='b')</code>.</li>
+<li>Export plots as Image or PDF.</li>
+<li>Help commands: <code>?install.packages</code> and <code>??install</code>.</li>
+</ul>
+</section>
+
+<section>
+<h2>10. Summary</h2>
+<ul>
+<li>Understand R data types and variables.</li>
+<li>Create and manipulate vectors.</li>
+<li>Use conditional statements and logical operators.</li>
+<li>Apply comparison operators.</li>
+<li>Call built-in functions effectively.</li>
+<li>Install and import packages.</li>
+<li>Use dplyr for data manipulation.</li>
+<li>Use RStudio shortcuts and documentation.</li>
+</ul>
+</section>
+
+</main>
+<footer>
+Prepared from Week 2 R Programming learning material.
+</footer>
+</body>
+</html>
