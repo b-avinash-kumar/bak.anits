@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JavaScript Unit 2 - Interactive Content and Event Listeners</title>
+<style>
+body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f4f7fb;color:#222;line-height:1.7}
+header{background:#1e3a5f;color:#fff;padding:30px;text-align:center}
+nav{position:sticky;top:0;background:#294d74;padding:10px;overflow:auto}
+nav a{color:#fff;text-decoration:none;margin:0 10px;font-size:.9rem}
+main{max-width:1100px;margin:auto;padding:25px}
+section{background:#fff;margin:25px 0;padding:25px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+h2{color:#1e3a5f;border-bottom:3px solid #d6e5f5;padding-bottom:6px}
+h3{color:#0d5b94}
+.note{background:#fff7d6;border-left:5px solid #f5b400;padding:12px;margin:15px 0}
+.tip{background:#eaf8ea;border-left:5px solid #2e8b57;padding:12px;margin:15px 0}
+pre{background:#272822;color:#f8f8f2;padding:15px;overflow:auto;border-radius:8px}
+code{font-family:Consolas,monospace}
+table{width:100%;border-collapse:collapse}
+td,th{border:1px solid #ccc;padding:8px}
+footer{text-align:center;padding:25px;color:#555}
+@media(max-width:768px){body{font-size:15px}nav a{display:inline-block;margin:5px}}
+</style>
+</head>
+<body>
+<header>
+<h1>JavaScript Unit 2</h1>
+<h2>Interactive Content and Event Listeners</h2>
+<p>Complete Learning Notes</p>
+</header>
+
+<nav>
+<a href="#intro">Introduction</a>
+<a href="#events">Events</a>
+<a href="#handlers">Event Handlers</a>
+<a href="#load">Load Events</a>
+<a href="#target">Event Object</a>
+<a href="#bubble">Bubbling</a>
+<a href="#forms">Forms</a>
+<a href="#focus">Focus</a>
+<a href="#project">Project</a>
+</nav>
+
+<main>
+
+<section id="intro">
+<h2>1. Interactive Content</h2>
+<p>Interactive content means web pages respond to user actions such as clicking, typing, mouse movement, scrolling and submitting forms.</p>
+<p>JavaScript creates interactivity by detecting events and executing functions.</p>
+</section>
+
+<section id="events">
+<h2>2. What is an Event?</h2>
+<p>An event is a signal that something happened in the browser.</p>
+<ul>
+<li>click</li>
+<li>input</li>
+<li>change</li>
+<li>submit</li>
+<li>DOMContentLoaded</li>
+<li>load</li>
+</ul>
+</section>
+
+<section id="handlers">
+<h2>3. Three Ways to Attach Event Handlers</h2>
+
+<h3>Method 1 - Inline HTML</h3>
+<pre><code>&lt;button onclick="showMessage()"&gt;Click me&lt;/button&gt;
+
+function showMessage(){
+   alert("Button was clicked");
+}</code></pre>
+
+<div class="note">
+Inline handlers are easy for beginners but mix HTML and JavaScript.
+</div>
+
+<h3>Method 2 - JavaScript Property</h3>
+<pre><code>const btn=document.getElementById("myButton");
+
+btn.onclick=function(){
+   alert("Button clicked via property");
+};</code></pre>
+
+<div class="note">
+Only one function can be assigned using <b>onclick</b>.
+</div>
+
+<h3>Method 3 - addEventListener (Recommended)</h3>
+<pre><code>const button=document.getElementById("btn");
+
+function handleClick(){
+   alert("Button clicked");
+}
+
+button.addEventListener("click",handleClick);</code></pre>
+
+<div class="tip">
+Multiple listeners can be attached using addEventListener().
+</div>
+
+<pre><code>button.addEventListener("click",()=>{
+ console.log("First");
+});
+
+button.addEventListener("click",()=>{
+ console.log("Second");
+});</code></pre>
+
+</section>
+
+<section id="load">
+<h2>4. Page Load Events</h2>
+
+<table>
+<tr><th>DOMContentLoaded</th><th>load</th></tr>
+<tr><td>DOM parsed</td><td>Entire page including images loaded</td></tr>
+<tr><td>Runs earlier</td><td>Runs later</td></tr>
+</table>
+
+<pre><code>document.addEventListener("DOMContentLoaded",()=>{
+ console.log("DOM Ready");
+});
+
+window.addEventListener("load",()=>{
+ console.log("Window Loaded");
+});</code></pre>
+
+</section>
+
+<section id="target">
+<h2>5. Event Object and event.target</h2>
+
+<pre><code>button.addEventListener("click",function(event){
+ output.textContent="You entered: "+input.value;
+ console.log(event.target.id);
+});</code></pre>
+
+<ul>
+<li>event contains event information.</li>
+<li>event.target returns the element that fired the event.</li>
+</ul>
+
+</section>
+
+<section id="bubble">
+<h2>6. Event Bubbling</h2>
+
+<p>Events move from the clicked element to its parent elements.</p>
+
+<pre><code>button → div → body → html → document</code></pre>
+
+<pre><code>wrapper.addEventListener("click",()=>{
+ console.log("Wrapper");
+});
+
+inner.addEventListener("click",()=>{
+ console.log("Inner");
+});</code></pre>
+
+<h3>Stopping Bubbling</h3>
+
+<pre><code>inner.addEventListener("click",(event)=>{
+ event.stopPropagation();
+});</code></pre>
+
+</section>
+
+<section id="forms">
+<h2>7. Form Events and Validation</h2>
+
+<h3>change Event</h3>
+
+<pre><code>first.addEventListener("change",updateOutput);
+second.addEventListener("change",updateOutput);</code></pre>
+
+<h3>paste Event</h3>
+
+<pre><code>pasteField.addEventListener("paste",()=>{
+ message.textContent="You pasted text.";
+});</code></pre>
+
+<h3>submit Event</h3>
+
+<pre><code>form.addEventListener("submit",function(event){
+
+ event.preventDefault();
+
+ if(!firstName.value || !lastName.value || !age.value){
+    result.textContent="All fields are required.";
+    return;
+ }
+
+ if(Number(age.value)&lt;=0){
+    result.textContent="Age must be positive.";
+    return;
+ }
+
+ result.textContent="Submitted Successfully";
+
+});</code></pre>
+
+</section>
+
+<section id="focus">
+<h2>8. Focus and Blur Events</h2>
+
+<pre><code>focusField.addEventListener("focus",()=>{
+ status.textContent="Focused";
+});
+
+focusField.addEventListener("blur",()=>{
+ status.textContent="Lost Focus";
+});</code></pre>
+
+</section>
+
+<section id="project">
+<h2>9. Progressive Project - Voting Counter</h2>
+
+<pre><code>let votes=0;
+
+voteButton.addEventListener("click",()=>{
+ votes++;
+ votesDisplay.textContent="Votes: "+votes;
+});</code></pre>
+
+<div class="tip">
+This project demonstrates state change using JavaScript events.
+</div>
+
+<h2>Important Concepts Summary</h2>
+
+<ul>
+<li>Interactive Content</li>
+<li>Events</li>
+<li>Inline Event Handlers</li>
+<li>Property Event Handlers</li>
+<li>addEventListener()</li>
+<li>DOMContentLoaded</li>
+<li>load</li>
+<li>event.target</li>
+<li>Event Bubbling</li>
+<li>stopPropagation()</li>
+<li>input</li>
+<li>change</li>
+<li>paste</li>
+<li>submit</li>
+<li>preventDefault()</li>
+<li>focus</li>
+<li>blur</li>
+</ul>
+
+</section>
+
+</main>
+
+<footer>
+JavaScript Unit 2 - Interactive Content and Event Listeners.
+</footer>
+
+</body>
+</html>
