@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Node.js Basics & Setup - Unit 3</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:Arial,sans-serif;background:#eef3f8;color:#333}
+header{height:100vh;background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);display:flex;align-items:center;justify-content:center;flex-direction:column;color:#fff;text-align:center;padding:30px}
+header h1{font-size:58px}
+header p{max-width:900px;line-height:1.8;margin:20px auto}
+.btn{display:inline-block;padding:15px 35px;background:#2ecc71;color:#fff;text-decoration:none;border-radius:40px;margin-top:20px}
+aside{position:fixed;left:0;top:0;width:260px;height:100vh;background:#1f2937;color:#fff;padding:20px;overflow:auto}
+aside h2{margin-bottom:15px}
+aside a{display:block;color:#ddd;text-decoration:none;padding:10px;border-radius:6px}
+aside a:hover{background:#374151}
+main{margin-left:280px;padding:35px}
+section{background:#fff;margin-bottom:25px;padding:30px;border-radius:12px;box-shadow:0 5px 18px rgba(0,0,0,.08)}
+h2{color:#1565c0;margin-bottom:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px}
+.card{background:#f7fbff;padding:18px;border-left:5px solid #1565c0;border-radius:8px}
+pre{background:#1e1e1e;color:#d4d4d4;padding:15px;border-radius:8px;overflow:auto}
+table{width:100%;border-collapse:collapse}
+td,th{border:1px solid #ccc;padding:10px}
+th{background:#1565c0;color:#fff}
+footer{padding:40px;text-align:center;background:#203a43;color:#fff}
+@media(max-width:900px){aside{display:none}main{margin-left:0}}
+</style>
+</head>
+<body>
+
+<header>
+<h1>🚀 Node.js Basics & Setup</h1>
+<p>Interactive Learning Module - Complete Unit 3</p>
+<a class="btn" href="#unit">Start Learning</a>
+</header>
+
+<aside>
+<h2>📘 Unit 3</h2>
+<a href="#unit">Learning Objectives</a>
+<a href="#node">What is Node.js?</a>
+<a href="#runtime">Runtime</a>
+<a href="#event">Event Loop</a>
+<a href="#install">Installation</a>
+<a href="#repl">REPL</a>
+<a href="#scripts">Scripts</a>
+<a href="#summary">Summary</a>
+</aside>
+
+<main>
+<section id="unit">
+<h2>Learning Objectives</h2>
+<div class="grid">
+<div class="card"><h3>Understand Node.js</h3><p>Runtime, V8 engine, backend development.</p></div>
+<div class="card"><h3>Installation</h3><p>Install Node.js, npm, configure PowerShell.</p></div>
+<div class="card"><h3>Programming</h3><p>REPL, JavaScript files, app.js, index.js.</p></div>
+</div>
+</section>
+
+<section id="node">
+<h2>What is Node.js?</h2>
+<p>Node.js is a JavaScript runtime environment built on Google's V8 JavaScript Engine. It allows JavaScript to run outside the browser and is widely used for backend applications, APIs, command-line tools and real-time applications.</p>
+</section>
+
+<section id="runtime">
+<h2>Runtime & V8 Engine</h2>
+<div class="grid">
+<div class="card"><h3>JavaScript</h3><p>Developer writes code.</p></div>
+<div class="card"><h3>Node Runtime</h3><p>Executes JavaScript outside browsers.</p></div>
+<div class="card"><h3>V8 Engine</h3><p>Compiles JavaScript into machine code.</p></div>
+<div class="card"><h3>Output</h3><p>Console, API or Server.</p></div>
+</div>
+</section>
+
+<section id="event">
+<h2>Event Loop</h2>
+<p>Node.js uses an event-driven, non-blocking architecture. Long-running I/O tasks are delegated while the event loop continues processing other work.</p>
+<table>
+<tr><th>Blocking</th><th>Non-Blocking</th></tr>
+<tr><td>Waits for file/database</td><td>Continues executing other tasks</td></tr>
+<tr><td>Lower concurrency</td><td>High concurrency</td></tr>
+</table>
+</section>
+
+<section id="install">
+<h2>Installation</h2>
+<ol>
+<li>Download the official MSI installer.</li>
+<li>Install Node.js.</li>
+<li>Keep "Add to PATH" enabled.</li>
+<li>Verify using <code>node -v</code> and <code>npm -v</code>.</li>
+<li>Configure PowerShell if required.</li>
+</ol>
+<pre>node -v
+npm -v
+Get-ExecutionPolicy
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned</pre>
+</section>
+
+<section id="repl">
+<h2>Node.js REPL</h2>
+<pre>> 10+20
+30
+
+> function add(a,b){
+... return a+b;
+... }
+> add(5,10)
+15
+
+.exit</pre>
+</section>
+
+<section id="scripts">
+<h2>Executing Scripts</h2>
+<pre>// app.js
+console.log("Hello Node.js");
+
+node app.js</pre>
+</section>
+
+<section id="summary">
+<h2>Unit Summary</h2>
+<ul>
+<li>Node.js is a runtime environment.</li>
+<li>Uses Google's V8 Engine.</li>
+<li>Supports asynchronous non-blocking I/O.</li>
+<li>Includes npm.</li>
+<li>REPL is useful for testing.</li>
+<li>Run programs using <b>node filename.js</b>.</li>
+</ul>
+</section>
+
+<footer>
+<h2>Congratulations!</h2>
+<p>You completed Unit 3 - Node.js Basics & Setup.</p>
+</footer>
+
+</body>
+</html>
