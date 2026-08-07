@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Node.js Unit 3 - NPM & Global Objects</title>
+<style>
+body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f4f7fb;color:#222;line-height:1.7}
+header{background:linear-gradient(135deg,#0d47a1,#1976d2);color:#fff;padding:50px 20px;text-align:center}
+nav{position:sticky;top:0;background:#fff;padding:10px;border-bottom:1px solid #ddd}
+nav a{margin:0 10px;color:#1565c0;text-decoration:none;font-weight:bold}
+main{max-width:1100px;margin:auto;padding:25px}
+section{background:#fff;margin:20px 0;padding:25px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+h2{color:#0d47a1;border-left:5px solid #1976d2;padding-left:10px}
+pre{background:#272822;color:#f8f8f2;padding:15px;border-radius:8px;overflow:auto}
+code{font-family:Consolas,monospace}
+table{width:100%;border-collapse:collapse}
+th,td{border:1px solid #ccc;padding:8px}
+th{background:#1976d2;color:#fff}
+.card{background:#eef6ff;padding:15px;border-left:4px solid #1976d2;margin:10px 0}
+footer{background:#0d47a1;color:#fff;text-align:center;padding:20px}
+@media(max-width:700px){nav{text-align:center}nav a{display:inline-block;margin:6px}}
+</style>
+</head>
+<body>
+<header>
+<h1>Node Package Manager (NPM) & Global Objects</h1>
+<p>Interactive Learning Notes - Unit 3</p>
+</header>
+<nav>
+<a href="#npm">NPM</a>
+<a href="#package">package.json</a>
+<a href="#install">Install</a>
+<a href="#semver">SemVer</a>
+<a href="#scripts">Scripts</a>
+<a href="#global">Global Objects</a>
+</nav>
+<main>
+
+<section id="npm">
+<h2>What is NPM?</h2>
+<p>NPM (Node Package Manager) is the default package manager for Node.js. It downloads, installs and manages reusable packages (libraries/modules). It also maintains project dependencies using package.json and package-lock.json.</p>
+<div class="card">
+<b>Popular Packages</b>
+<ul>
+<li>Express</li>
+<li>Mongoose</li>
+<li>Axios</li>
+<li>React</li>
+<li>dotenv</li>
+<li>Nodemon</li>
+<li>Socket.io</li>
+</ul>
+</div>
+<pre><code>npm install
+npm install express
+npm update
+npm uninstall express</code></pre>
+</section>
+
+<section id="package">
+<h2>package.json & package-lock.json</h2>
+<p><b>package.json</b> stores project metadata, scripts and dependencies.</p>
+<pre><code>{
+ "name":"my-node-app",
+ "version":"1.0.0",
+ "main":"index.js",
+ "scripts":{
+   "start":"node index.js",
+   "test":"echo \"No tests\""
+ },
+ "dependencies":{
+   "express":"^4.18.2"
+ }
+}</code></pre>
+<p><b>package-lock.json</b> records the exact versions installed to ensure reproducible installations.</p>
+</section>
+
+<section id="install">
+<h2>Dependency Types & Installation</h2>
+<table>
+<tr><th>Type</th><th>Purpose</th></tr>
+<tr><td>dependencies</td><td>Required in production</td></tr>
+<tr><td>devDependencies</td><td>Development tools</td></tr>
+<tr><td>optionalDependencies</td><td>Optional packages</td></tr>
+</table>
+<pre><code>npm install express
+npm install -g nodemon
+npm install --save-dev nodemon
+npm install express@4.18.2</code></pre>
+</section>
+
+<section id="semver">
+<h2>Semantic Versioning</h2>
+<p><b>MAJOR.MINOR.PATCH</b></p>
+<ul>
+<li>Major - Breaking changes</li>
+<li>Minor - New features</li>
+<li>Patch - Bug fixes</li>
+</ul>
+<table>
+<tr><th>Range</th><th>Meaning</th></tr>
+<tr><td>^1.2.3</td><td>Minor + Patch updates</td></tr>
+<tr><td>~1.2.3</td><td>Patch updates only</td></tr>
+<tr><td>1.2.3</td><td>Exact version</td></tr>
+</table>
+</section>
+
+<section id="scripts">
+<h2>NPM Scripts</h2>
+<pre><code>// index.js
+console.log("Hello from my first npm script!");
+
+// package.json
+"scripts":{
+ "start":"node index.js",
+ "dev":"node index.js",
+ "test":"echo \"Running tests...\""
+}
+
+npm start
+npm run dev
+npm test</code></pre>
+</section>
+
+<footer>
+<h3>Quick Revision</h3>
+<p>NPM manages packages, package.json stores project configuration, package-lock.json ensures reproducible installs, SemVer controls version compatibility, and Node.js Global Objects provide runtime functionality such as process, Buffer, console, timers and URL utilities.</p>
+</footer>
+</main>
+</body>
+</html>
