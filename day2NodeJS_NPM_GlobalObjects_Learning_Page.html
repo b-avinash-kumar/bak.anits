@@ -123,6 +123,62 @@ npm start
 npm run dev
 npm test</code></pre>
 </section>
+<section id="global">
+<h2>Node.js Global Objects</h2>
+
+<h3>global</h3>
+<pre><code>global.a="Hello";
+console.log(a);</code></pre>
+
+<h3>console</h3>
+<pre><code>console.log("Message");
+console.error("Error");
+console.warn("Warning");</code></pre>
+
+<h3>process</h3>
+<pre><code>console.log(process.pid);
+console.log(process.version);
+console.log(process.platform);</code></pre>
+
+<h3>Calculator using process.argv</h3>
+<pre><code>let n1=Number(process.argv[2]);
+let op=process.argv[3];
+let n2=Number(process.argv[4]);</code></pre>
+
+<h3>Buffer</h3>
+<pre><code>const buffer=Buffer.from("Hello Node.js");
+console.log(buffer);</code></pre>
+
+<h3>__dirname & __filename</h3>
+<pre><code>console.log(__dirname);
+console.log(__filename);</code></pre>
+
+<h3>Timers</h3>
+<pre><code>setTimeout(()=>console.log("After 2 sec"),2000);
+setInterval(()=>console.log("Every 3 sec"),3000);</code></pre>
+
+<h3>URL & URLSearchParams</h3>
+<pre><code>const u=new URL("https://example.com/?name=Lily");
+console.log(u.searchParams.get("name"));</code></pre>
+
+<h3>TextEncoder & TextDecoder</h3>
+<pre><code>const enc=new TextEncoder();
+const data=enc.encode("Hello");
+const dec=new TextDecoder();
+console.log(dec.decode(data));</code></pre>
+
+<table>
+<tr><th>Object</th><th>Purpose</th></tr>
+<tr><td>global</td><td>Application-wide scope</td></tr>
+<tr><td>console</td><td>Logging</td></tr>
+<tr><td>process</td><td>Runtime information</td></tr>
+<tr><td>Buffer</td><td>Binary data</td></tr>
+<tr><td>__dirname</td><td>Current directory</td></tr>
+<tr><td>__filename</td><td>Current file path</td></tr>
+<tr><td>URL</td><td>URL parsing</td></tr>
+<tr><td>TextEncoder/TextDecoder</td><td>Encode/Decode UTF-8</td></tr>
+</table>
+</section>
 
 <footer>
 <h3>Quick Revision</h3>
