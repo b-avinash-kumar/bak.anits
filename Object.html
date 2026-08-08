@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JavaScript Objects — Learning Material</title>
+<style>
+:root{
+  --bg:#f5f7fb; --card:#ffffff; --ink:#172033; --muted:#5d687d;
+  --primary:#315efb; --primary-soft:#edf2ff; --accent:#10b981;
+  --border:#e4e8f0; --code:#111827; --shadow:0 10px 30px rgba(24,39,75,.08);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.65}
+header{background:linear-gradient(135deg,#172554,#315efb);color:#fff;padding:54px 20px 46px}
+.hero{max-width:1100px;margin:auto}
+.badge{display:inline-block;background:rgba(255,255,255,.15);padding:6px 12px;border-radius:999px;font-size:.85rem}
+h1{font-size:clamp(2rem,5vw,3.4rem);margin:15px 0 8px;line-height:1.1}
+.hero p{max-width:760px;color:#e7edff;font-size:1.05rem}
+.layout{max-width:1100px;margin:28px auto;padding:0 18px;display:grid;grid-template-columns:245px 1fr;gap:24px}
+nav{position:sticky;top:18px;height:max-content;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:var(--shadow)}
+nav strong{display:block;margin-bottom:10px}
+nav a{display:block;text-decoration:none;color:var(--muted);padding:8px 10px;border-radius:8px;font-size:.94rem}
+nav a:hover{background:var(--primary-soft);color:var(--primary)}
+main{min-width:0}
+section{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:28px;margin-bottom:22px;box-shadow:var(--shadow)}
+h2{font-size:1.65rem;margin:0 0 12px;color:#172554}
+h3{font-size:1.2rem;margin-top:24px;color:#23304d}
+p{margin:8px 0 14px}
+ul,ol{padding-left:22px}
+.callout{background:var(--primary-soft);border-left:5px solid var(--primary);padding:15px 18px;border-radius:10px;margin:18px 0}
+.tip{background:#ecfdf5;border-left-color:var(--accent)}
+.code-title{font-size:.9rem;font-weight:700;margin-top:18px;color:var(--muted)}
+pre{background:var(--code);color:#e5e7eb;padding:18px;border-radius:12px;overflow:auto;font-size:.92rem;line-height:1.55}
+code{font-family:Consolas,Monaco,"Courier New",monospace}
+.inline{background:#eef2f7;padding:2px 6px;border-radius:5px}
+.compare{width:100%;border-collapse:collapse;margin:16px 0}
+.compare th,.compare td{border:1px solid var(--border);padding:11px;text-align:left}
+.compare th{background:#f1f5ff}
+.steps{counter-reset:item;list-style:none;padding:0}
+.steps li{counter-increment:item;display:flex;gap:12px;margin:12px 0}
+.steps li::before{content:counter(item);flex:0 0 28px;height:28px;border-radius:50%;background:var(--primary);color:#fff;text-align:center;line-height:28px;font-weight:700}
+footer{text-align:center;color:var(--muted);padding:25px}
+@media(max-width:820px){
+ .layout{grid-template-columns:1fr}
+ nav{position:relative;top:auto}
+ nav a{display:inline-block;margin:2px}
+ section{padding:21px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="hero">
+    <span class="badge">JavaScript • Data Structures</span>
+    <h1>Objects, Arrays of Objects &amp; Objects of Arrays</h1>
+    <p>A student-friendly guide to storing related information using named properties and combining objects with arrays.</p>
+  </div>
+</header>
+
+<div class="layout">
+<nav aria-label="Page navigation">
+<strong>On this page</strong>
+<a href="#what">3.1 What is an object?</a>
+<a href="#literal">3.2 Object literal syntax</a>
+<a href="#access">3.3 Accessing &amp; modifying</a>
+<a href="#types">3.4 Multiple value types</a>
+<a href="#combined">4. Arrays &amp; objects</a>
+<a href="#arrayobjects">4.1 Array of objects</a>
+<a href="#objectarrays">4.2 Object of arrays</a>
+</nav>
+
+<main>
+<section id="what">
+<h2>3.1 What is an Object?</h2>
+<p>An <strong>object</strong> is a collection of named properties. Each property has a <strong>key</strong> (property name) and a <strong>value</strong>.</p>
+<div class="callout">
+<strong>Key idea:</strong> Arrays normally use numeric indexes such as <span class="inline">0</span>, <span class="inline">1</span>, and <span class="inline">2</span>. Objects use meaningful names such as <span class="inline">name</span>, <span class="inline">age</span>, and <span class="inline">isStudent</span>.
+</div>
+<pre><code>let person = {
+  name: "Alice",
+  age: 25,
+  isStudent: true
+};</code></pre>
+<table class="compare">
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>name</td><td>"Alice"</td></tr>
+<tr><td>age</td><td>25</td></tr>
+<tr><td>isStudent</td><td>true</td></tr>
+</table>
+</section>
+
+<section id="literal">
+<h2>3.2 Object Literal Syntax</h2>
+<p>You create an object using curly braces <span class="inline">{ }</span>. Inside them, properties are written as <strong>key : value</strong> pairs separated by commas.</p>
+<div class="code-title">Example 7 — Basic object</div>
+<pre><code>let person = {
+  name: "Alice",      // line 2
+  age: 25,            // line 3
+  isStudent: true     // line 4
+};
+
+console.log(person.name); // line 7
+console.log(person.age);  // line 8</code></pre>
+<h3>How the example works</h3>
+<ol class="steps">
+<li><span><strong>let person = {</strong> starts an object literal assigned to <span class="inline">person</span>.</span></li>
+<li><span><strong>name: "Alice"</strong> creates a property named <span class="inline">name</span> with the value <span class="inline">"Alice"</span>.</span></li>
+<li><span><strong>age: 25</strong> creates an <span class="inline">age</span> property with a numeric value.</span></li>
+<li><span><strong>isStudent: true</strong> creates an <span class="inline">isStudent</span> property with a Boolean value.</span></li>
+<li><span><strong>}</strong> ends the object literal.</span></li>
+<li><span><strong>person.name</strong> uses dot notation to access the <span class="inline">name</span> property.</span></li>
+<li><span><strong>person.age</strong> uses dot notation to access the <span class="inline">age</span> property.</span></li>
+</ol>
+</section>
+
+<section id="access">
+<h2>3.3 Accessing and Modifying Properties</h2>
+<p>JavaScript provides two common ways to access object properties:</p>
+<table class="compare">
+<tr><th>Method</th><th>Syntax</th><th>Example</th></tr>
+<tr><td>Dot notation</td><td><code>object.propertyName</code></td><td><code>car.brand</code></td></tr>
+<tr><td>Bracket notation</td><td><code>object["propertyName"]</code></td><td><code>car["model"]</code></td></tr>
+</table>
+<p>You can also add new properties or change existing properties after the object has been created.</p>
+<div class="code-title">Example 8 — Dot vs bracket notation</div>
+<pre><code>let car = {
+  brand: "Toyota",
+  model: "Corolla"
+};
+
+console.log(car.brand);        // line 5
+console.log(car["model"]);     // line 6
+
+car.year = 2020;               // line 8
+car["color"] = "blue";         // line 9
+
+console.log(car.year);         // line 11
+console.log(car.color);        // line 12</code></pre>
+<div class="callout tip">
+<strong>Remember:</strong> Dot notation is convenient when the property name is a normal identifier. Bracket notation explicitly places the property name inside quotes and is useful when working with a property name dynamically.
+</div>
+<h3>What happens here?</h3>
+<ul>
+<li><code>car.brand</code> accesses <strong>brand</strong> using dot notation.</li>
+<li><code>car["model"]</code> accesses <strong>model</strong> using bracket notation.</li>
+<li><code>car.year = 2020</code> adds a new <strong>year</strong> property.</li>
+<li><code>car["color"] = "blue"</code> adds a new <strong>color</strong> property.</li>
+</ul>
+</section>
+
+<section id="types">
+<h2>3.4 Objects Containing Multiple Types</h2>
+<p>Object property values can be different JavaScript data types. The source material highlights strings, numbers, booleans, arrays, other objects, and functions (methods).</p>
+<div class="code-title">Example 9 — Object with various value types</div>
+<pre><code>let book = {
+  title: "JavaScript Guide",
+  pages: 300,
+  available: true
+};
+
+console.log(book.title);     // line 6
+console.log(book.pages);     // line 7
+console.log(book.available); // line 8</code></pre>
+<p>Here, <code>title</code> stores a string, <code>pages</code> stores a number, and <code>available</code> stores a Boolean value.</p>
+</section>
+
+<section id="combined">
+<h2>4. Arrays of Objects and Objects of Arrays</h2>
+<p>Real-world data often requires combining arrays and objects. This lets us represent collections of similar records or group related lists under named keys.</p>
+<div class="callout">
+<strong>Think of it this way:</strong> an <strong>array of objects</strong> is useful for a list of similar entities, while an <strong>object of arrays</strong> groups several related lists under meaningful property names.
+</div>
+</section>
+
+<section id="arrayobjects">
+<h2>4.1 Array of Objects</h2>
+<p>An array of objects is useful when you have a list of similar entities, each with named fields.</p>
+<div class="code-title">Example 10 — Array of objects</div>
+<pre><code>let students = [
+  { name: "Alice", age: 20 },  // line 2
+  { name: "Bob", age: 22 },    // line 3
+  { name: "Cara", age: 21 }     // line 4
+];
+
+console.log(students[0].name); // line 7
+console.log(students[1].age);  // line 8</code></pre>
+<h3>Understanding the access pattern</h3>
+<ol class="steps">
+<li><span><code>students</code> is an array.</span></li>
+<li><span>Each <code>{ ... }</code> is an object representing one student.</span></li>
+<li><span><code>students[0].name</code> gets the first object and then reads its <code>name</code>.</span></li>
+<li><span><code>students[1].age</code> gets the second object and then reads its <code>age</code>.</span></li>
+</ol>
+
+<div class="code-title">Example 11 — Iterating over an array of objects</div>
+<pre><code>let students = [
+  { name: "Alice", age: 20 },
+  { name: "Bob", age: 22 },
+  { name: "Cara", age: 21 }
+];
+
+for (let i = 0; i &lt; students.length-1; i++) {
+  console.log(students[i].name + " is " + students[i].age);
+}</code></pre>
+<p>The loop accesses each student object through <code>students[i]</code>, then reads its <code>name</code> and <code>age</code> properties.</p>
+
+<div class="code-title">Another example — <code>for...of</code> with <code>for...in</code></div>
+<pre><code>let students = [
+  {name:'bob', branch:"CSE-AIML", fee:350000},
+  {name:'ben', branch:"CSE", fee:300000},
+  {name:'bint', branch:"CSE-DS", fee:300000}
+];
+
+for(let value of students){
+  for(let key in value){
+    console.log(key+" is "+value[key]);
+  }
+  console.log("----------------");
+}</code></pre>
+<div class="callout">
+<strong>Reading the nested loops:</strong> <code>for...of</code> gets each student object from the array. Inside it, <code>for...in</code> visits the keys of that object, and <code>value[key]</code> reads the corresponding value.
+</div>
+</section>
+
+<section id="objectarrays">
+<h2>4.2 Object of Arrays</h2>
+<p>An object of arrays is useful when you group several related lists under named keys.</p>
+<pre><code>let course = {
+  titles: ["Math", "Physics", "Chemistry"],   // line 2
+  credits: [3, 4, 3]                          // line 3
+};
+
+console.log(course.titles[1]);   // line 6
+console.log(course.credits[1]);  // line 7</code></pre>
+<h3>How it works</h3>
+<ul>
+<li><code>course</code> is an object with two properties.</li>
+<li><code>titles</code> is an array containing course names.</li>
+<li><code>credits</code> is an array containing credit values.</li>
+<li><code>course.titles[1]</code> accesses <strong>"Physics"</strong>.</li>
+<li><code>course.credits[1]</code> accesses <strong>4</strong>, the credits for Physics.</li>
+</ul>
+</section>
+
+<section>
+<h2>Quick Review</h2>
+<table class="compare">
+<tr><th>Concept</th><th>What it represents</th><th>Example access</th></tr>
+<tr><td>Object</td><td>Named properties</td><td><code>person.name</code></td></tr>
+<tr><td>Array of objects</td><td>A list of similar records</td><td><code>students[0].name</code></td></tr>
+<tr><td>Object of arrays</td><td>Named groups of related lists</td><td><code>course.titles[1]</code></td></tr>
+</table>
+<div class="callout tip">
+<strong>Study tip:</strong> When you see an expression such as <code>students[0].name</code>, read it from left to right: first select the array element, then select the object's property.
+</div>
+</section>
+</main>
+</div>
+
+<footer>
+JavaScript Learning Material • Objects and Collections
+</footer>
+</body>
+</html>
