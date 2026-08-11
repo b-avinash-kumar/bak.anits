@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Student-friendly learning material on Node.js Core Modules: OS, Path, DNS, Net and Domain.">
+<title>Node.js Core Modules | Learning Material</title>
+<style>
+  :root{
+    --bg:#f5f7fb; --surface:#ffffff; --surface2:#f8fafc; --text:#172033;
+    --muted:#5f6b7a; --primary:#2563eb; --primary2:#1d4ed8; --border:#dbe2ea;
+    --code:#111827; --codeText:#e5e7eb; --accent:#e8f0ff; --warn:#fff7ed;
+    --warnBorder:#fb923c; --shadow:0 8px 28px rgba(15,23,42,.07);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+  a{color:inherit}
+  .topbar{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+  .topbar-inner{max-width:1400px;margin:auto;padding:12px 22px;display:flex;gap:16px;align-items:center}
+  .brand{font-weight:800;color:var(--primary);white-space:nowrap}
+  .search{flex:1;max-width:560px;margin-left:auto}
+  .search input{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:10px;font-size:14px;outline:none}
+  .search input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+  .layout{max-width:1400px;margin:auto;display:grid;grid-template-columns:270px 1fr;gap:26px;padding:26px 22px}
+  aside{position:sticky;top:76px;height:calc(100vh - 100px);overflow:auto;padding:18px;background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow)}
+  aside h2{font-size:14px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 12px}
+  .toc a{display:block;text-decoration:none;padding:8px 10px;border-radius:8px;font-size:14px;color:var(--muted)}
+  .toc a:hover{background:var(--accent);color:var(--primary)}
+  main{min-width:0}
+  .hero{background:linear-gradient(135deg,#eff6ff,#fff);border:1px solid #cfe0ff;border-radius:20px;padding:34px;box-shadow:var(--shadow);margin-bottom:24px}
+  .eyebrow{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--primary)}
+  h1{font-size:clamp(30px,5vw,48px);line-height:1.1;margin:8px 0 14px}
+  h2{font-size:28px;margin:0 0 12px;line-height:1.2}
+  h3{font-size:20px;margin:26px 0 8px}
+  h4{font-size:17px;margin:20px 0 6px}
+  p{margin:8px 0 14px}
+  .lead{font-size:18px;color:#334155;max-width:900px}
+  .badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .badge{background:#fff;border:1px solid var(--border);padding:5px 10px;border-radius:999px;font-size:13px;color:var(--muted)}
+  section.card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:28px;margin-bottom:22px;box-shadow:var(--shadow);scroll-margin-top:90px}
+  .section-number{display:inline-flex;width:34px;height:34px;align-items:center;justify-content:center;border-radius:9px;background:var(--primary);color:#fff;font-weight:800;margin-right:8px}
+  .section-title{display:flex;align-items:center;gap:8px}
+  .intro-box,.tip,.warning{padding:14px 16px;border-radius:12px;margin:16px 0}
+  .intro-box{background:var(--accent);border-left:4px solid var(--primary)}
+  .tip{background:#f0fdf4;border-left:4px solid #22c55e}
+  .warning{background:var(--warn);border-left:4px solid var(--warnBorder)}
+  .code-wrap{position:relative;margin:14px 0 18px}
+  pre{margin:0;background:var(--code);color:var(--codeText);padding:18px 18px 18px;border-radius:12px;overflow:auto;font:13.5px/1.6 Consolas,Monaco,"Courier New",monospace}
+  code{font-family:Consolas,Monaco,"Courier New",monospace}
+  .copy{position:absolute;right:8px;top:8px;border:1px solid #4b5563;background:#1f2937;color:#e5e7eb;border-radius:7px;padding:5px 9px;cursor:pointer;font-size:12px}
+  .copy:hover{background:#374151}
+  .label{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:10px 0 5px}
+  table{width:100%;border-collapse:collapse;margin:14px 0 18px;font-size:14px}
+  th,td{padding:10px 12px;border:1px solid var(--border);text-align:left;vertical-align:top}
+  th{background:#eef2f7;font-weight:800}
+  tr:nth-child(even) td{background:#fbfcfe}
+  .method{font-family:Consolas,monospace;color:#1d4ed8;font-weight:700}
+  .output{background:#0b1220;color:#d1fae5;border-radius:10px;padding:14px 16px;font:13px/1.55 Consolas,monospace;overflow:auto;white-space:pre-wrap}
+  .tree{background:var(--surface2);border:1px dashed var(--border);border-radius:10px;padding:15px;font:14px/1.6 Consolas,monospace;white-space:pre;overflow:auto}
+  ul{padding-left:22px}
+  li{margin:5px 0}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+  .mini-card{border:1px solid var(--border);border-radius:12px;padding:15px;background:var(--surface2)}
+  .mini-card strong{display:block;margin-bottom:4px}
+  .backtop{display:inline-block;margin-top:10px;color:var(--primary);font-size:13px;text-decoration:none}
+  footer{text-align:center;color:var(--muted);padding:30px 10px}
+  .hidden{display:none!important}
+  @media(max-width:900px){
+    .layout{grid-template-columns:1fr}
+    aside{position:relative;top:auto;height:auto}
+    .toc{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3px}
+    .search{max-width:none}
+  }
+  @media(max-width:600px){
+    .topbar-inner{padding:10px 14px;flex-wrap:wrap}
+    .brand{width:100%}
+    .layout{padding:15px 12px}
+    section.card{padding:20px}
+    .hero{padding:24px 20px}
+    .toc{grid-template-columns:1fr}
+    table{font-size:13px}
+    th,td{padding:8px}
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">Node.js Core Modules</div>
+    <div class="search">
+      <input id="searchBox" type="search" placeholder="Search this material…">
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+<aside>
+  <h2>Contents</h2>
+  <nav class="toc" id="toc">
+    <a href="#overview">Overview</a>
+    <a href="#os">1. OS Module</a>
+    <a href="#path">2. Path Module</a>
+    <a href="#dns">3. DNS Module</a>
+    <a href="#net">4. Net Module</a>
+    <a href="#domain">5. Domain Module</a>
+    <a href="#interview">Interview Questions</a>
+    <a href="#summary">Quick Summary</a>
+  </nav>
+</aside>
+
+<main>
+<section class="hero" id="overview">
+  <div class="eyebrow">Node.js Learning Material</div>
+  <h1>Node.js Core Modules</h1>
+  <p class="lead">Node.js Core Modules provide built-in functionalities for handling system operations, file paths, networking, and error management in Node.js applications.</p>
+  <div class="badges">
+    <span class="badge">OS</span><span class="badge">Path</span><span class="badge">DNS</span>
+    <span class="badge">Net</span><span class="badge">Domain</span>
+  </div>
+</section>
+
+<section class="card searchable" id="os">
+  <h2 class="section-title"><span class="section-number">1</span>OS Module</h2>
+  <p>Operating System-based utility modules for Node.js are provided by the OS module.</p>
+
+  <div class="label">Basic syntax and example</div>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const os = require('os');
+
+// Display operating System type
+console.log('Operating System type : ' + os.type());
+
+// Display operating System platform
+console.log('platform : ' + os.platform());
+
+// Display total memory
+console.log('total memory : ' + os.totalmem() + " bytes.");
+
+// Display available memory
+console.log('Available memory : ' + os.availmem() + " bytes.");</code></pre></div>
+
+  <div class="label">Common methods</div>
+  <table>
+    <thead><tr><th>Method</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td class="method">os.platform()</td><td>Returns the operating system platform.</td></tr>
+      <tr><td class="method">os.arch()</td><td>Returns the CPU architecture.</td></tr>
+      <tr><td class="method">os.hostname()</td><td>Returns the computer name (host name).</td></tr>
+      <tr><td class="method">os.type()</td><td>Returns the operating system name.</td></tr>
+      <tr><td class="method">os.release()</td><td>Returns the OS release version.</td></tr>
+      <tr><td class="method">os.version()</td><td>Returns the operating system version.</td></tr>
+      <tr><td class="method">os.uptime()</td><td>Returns the system uptime (seconds).</td></tr>
+      <tr><td class="method">os.totalmem()</td><td>Returns total system memory (bytes).</td></tr>
+      <tr><td class="method">os.freemem()</td><td>Returns free memory (bytes).</td></tr>
+      <tr><td class="method">os.cpus()</td><td>Returns information about all CPU cores.</td></tr>
+      <tr><td class="method">os.networkInterfaces()</td><td>Returns network interface information.</td></tr>
+      <tr><td class="method">os.userInfo()</td><td>Returns details about the current user.</td></tr>
+      <tr><td class="method">os.homedir()</td><td>Returns the user's home directory.</td></tr>
+      <tr><td class="method">os.tmpdir()</td><td>Returns the temporary directory path.</td></tr>
+      <tr><td class="method">os.endianness()</td><td>Returns the CPU byte order (BE or LE).</td></tr>
+    </tbody>
+  </table>
+  <a class="backtop" href="#overview">↑ Back to top</a>
+</section>
+
+<section class="card searchable" id="path">
+  <h2 class="section-title"><span class="section-number">2</span>Path Module</h2>
+  <p>The path module in Node.js is used for transforming and handling various file paths.</p>
+
+  <div class="label">Syntax and introductory example</div>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const path = require('path');
+
+console.log('resolve:' + path.resolve('paths.js'));
+console.log('extension:' + path.extname('paths.js'));</code></pre></div>
+
+  <h3>Commonly Used Methods</h3>
+
+  <h4>1. path.basename()</h4>
+  <p>Returns the last portion (file name) of a path.</p>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const path = require("path");
+const file = "C:\\Users\\Admin\\notes.txt";
+
+console.log(path.basename(file));</code></pre></div>
+  <div class="output">notes.txt</div>
+  <p><strong>Remove extension:</strong></p>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>console.log(path.basename(file, ".txt"));</code></pre></div>
+  <div class="output">notes</div>
+
+  <h4>2. path.dirname()</h4>
+  <p>Returns the directory name.</p>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const path = require("path");
+const file = "C:\\Users\\Admin\\notes.txt";
+console.log(path.dirname(file));</code></pre></div>
+  <div class="output">C:\Users\Admin</div>
+
+  <h4>3. path.extname()</h4>
+  <p>Returns the file extension.</p>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const path = require("path");
+
+console.log(path.extname("student.pdf"));
+console.log(path.extname("image.png"));
+console.log(path.extname("program.js"));</code></pre></div>
+  <div class="output">.pdf
+.png
+.js</div>
+
+  <h4>4. path.join()</h4>
+  <p>Joins path segments correctly.</p>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const path = require("path");
+const fullPath = path.join("Students", "Avinash", "marks.txt");
+console.log(fullPath);</code></pre></div>
+  <div class="grid">
+    <div class="mini-card"><strong>Windows Output</strong><code>Students\Avinash\marks.txt</code></div>
+    <div class="mini-card"><strong>Linux Output</strong><code>Students/Avinash/marks.txt</code></div>
+  </div>
+
+  <h4>5. path.resolve()</h4>
+  <p>Returns an absolute path.</p>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const path = require("path");
+console.log(path.resolve("data.txt"));</code></pre></div>
+  <div class="output">C:\NodeProject\data.txt</div>
+  <p>If the current folder is <code>C:\NodeProject</code>, this is an example of the resulting absolute path.</p>
+
+  <h4>6. path.parse()</h4>
+  <p>Breaks a path into an object.</p>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const path = require("path");
+const details = path.parse("C:\\Users\\Admin\\report.pdf");
+console.log(details);</code></pre></div>
+  <div class="output">{
+  root: 'C:\\',
+  dir: 'C:\\Users\\Admin',
+  base: 'report.pdf',
+  ext: '.pdf',
+  name: 'report'
+}</div>
+
+  <h4>7. path.format()</h4>
+  <p>Converts an object back into a path.</p>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const path = require("path");
+
+const obj = {
+  dir: "C:\\Users\\Admin",
+  name: "report",
+  ext: ".pdf"
+};
+
+console.log(path.format(obj));</code></pre></div>
+  <div class="output">C:\Users\Admin\report.pdf</div>
+
+  <h4>8. path.isAbsolute()</h4>
+  <p>Checks whether a path is absolute.</p>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const path = require("path");
+
+console.log(path.isAbsolute("C:\\Users\\Admin"));
+console.log(path.isAbsolute("notes.txt"));</code></pre></div>
+  <div class="output">true
+false</div>
+
+  <h4>9. path.normalize()</h4>
+  <p>Removes unnecessary separators.</p>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const path = require("path");
+console.log(path.normalize("folder//subfolder///file.txt"));</code></pre></div>
+  <div class="output">folder\subfolder\file.txt
+(on Windows)</div>
+
+  <h4>10. path.relative()</h4>
+  <p>Finds the relative path between two locations.</p>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const path = require("path");
+
+const from = "C:\\Users\\Admin";
+const to = "C:\\Users\\Admin\\Projects\\Node";
+
+console.log(path.relative(from, to));</code></pre></div>
+  <div class="output">Projects\Node</div>
+
+  <h3>Real-Time Example: Reading a File</h3>
+  <p>Suppose your project structure is:</p>
+  <div class="tree">Project
+│
+├── app.js
+├── data
+│   └── students.txt</div>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const fs = require("fs");
+const path = require("path");
+
+const filePath = path.join(__dirname, "data", "students.txt");
+
+fs.readFile(filePath, "utf8", (err, data) => {
+  if (err)
+    console.log(err);
+  else
+    console.log(data);
+});</code></pre></div>
+  <div class="tip">
+    <strong>Here:</strong>
+    <ul>
+      <li><code>__dirname</code> gives the current directory.</li>
+      <li><code>path.join()</code> creates the correct file path.</li>
+      <li><code>fs.readFile()</code> reads the file.</li>
+    </ul>
+  </div>
+
+  <h3>Real-Time Example: Upload Folder</h3>
+  <div class="tree">Project
+│
+├── uploads
+│   └── photo.jpg
+├── server.js</div>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const path = require("path");
+
+const uploadPath = path.join(__dirname, "uploads", "photo.jpg");
+console.log(uploadPath);</code></pre></div>
+  <div class="output">C:\Project\uploads\photo.jpg</div>
+
+  <h3>Real-Time Example: Logging File</h3>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const path = require("path");
+
+const logFile = path.join(__dirname, "logs", "app.log");
+console.log(logFile);</code></pre></div>
+  <p>Useful for creating log files in a consistent location across operating systems.</p>
+
+  <h3 id="interview">Interview Questions</h3>
+  <div class="intro-box"><strong>Q1. Is the path module built into Node.js?</strong><br>Answer: Yes. It is a core module, so no installation is needed.</div>
+  <div class="intro-box">
+    <strong>Q2. Difference between path.join() and path.resolve()?</strong>
+    <table>
+      <thead><tr><th>path.join()</th><th>path.resolve()</th></tr></thead>
+      <tbody>
+        <tr><td>Joins path segments</td><td>Returns an absolute path</td></tr>
+        <tr><td>May return a relative path</td><td>Always resolves to an absolute path</td></tr>
+      </tbody>
+    </table>
+    <div class="code-wrap"><button class="copy">Copy</button><pre><code>console.log(path.join("folder", "file.txt"));
+// folder/file.txt
+
+console.log(path.resolve("folder", "file.txt"));
+// C:\CurrentFolder\folder\file.txt</code></pre></div>
+  </div>
+
+  <h3>Path Module Summary</h3>
+  <table>
+    <thead><tr><th>Method</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td class="method">basename()</td><td>Gets file name</td></tr>
+      <tr><td class="method">dirname()</td><td>Gets directory</td></tr>
+      <tr><td class="method">extname()</td><td>Gets file extension</td></tr>
+      <tr><td class="method">join()</td><td>Joins path segments</td></tr>
+      <tr><td class="method">resolve()</td><td>Creates an absolute path</td></tr>
+      <tr><td class="method">parse()</td><td>Converts a path to an object</td></tr>
+      <tr><td class="method">format()</td><td>Converts an object to a path</td></tr>
+      <tr><td class="method">isAbsolute()</td><td>Checks if a path is absolute</td></tr>
+      <tr><td class="method">normalize()</td><td>Cleans up path separators</td></tr>
+      <tr><td class="method">relative()</td><td>Finds relative path between locations</td></tr>
+    </tbody>
+  </table>
+  <a class="backtop" href="#overview">↑ Back to top</a>
+</section>
+
+<section class="card searchable" id="dns">
+  <h2 class="section-title"><span class="section-number">3</span>DNS Module</h2>
+  <p>The DNS module provides APIs for DNS resolution and hostname lookups using the operating system’s name resolution services.</p>
+
+  <div class="label">Syntax</div>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const dns = require('dns');</code></pre></div>
+
+  <table>
+    <thead><tr><th>Method</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td class="method">lookup()</td><td>Get IP address from a hostname</td></tr>
+      <tr><td class="method">resolve4()</td><td>Get IPv4 addresses</td></tr>
+      <tr><td class="method">resolve6()</td><td>Get IPv6 addresses</td></tr>
+      <tr><td class="method">reverse()</td><td>Get hostname from an IP address</td></tr>
+      <tr><td class="method">resolveMx()</td><td>Get email (MX) records</td></tr>
+      <tr><td class="method">resolveTxt()</td><td>Get TXT records</td></tr>
+      <tr><td class="method">resolveNs()</td><td>Get name server records</td></tr>
+      <tr><td class="method">resolveCname()</td><td>Get canonical (alias) name records</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Basic lookup example</h3>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const dns = require('dns');
+
+// Store the web address
+const website = 'bakumar.online';
+
+// Call lookup function of DNS
+dns.lookup(website, (err, address, family) => {
+  console.log('Address of %s is %j family: IPv%s',
+    website, address, family);
+});</code></pre></div>
+  <div class="output">Address of www.bakumar.online is "203.92.39.72"
+family: IPv4</div>
+
+  <h3>1. dns.lookup()</h3>
+  <p>Looks up the IP address of a hostname.</p>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const dns = require("dns");
+
+dns.lookup("google.com", (err, address, family) => {
+  if (err)
+    console.log(err);
+  else
+    console.log(address, family);
+});</code></pre></div>
+  <div class="output">142.250.183.110 4</div>
+  <p><strong>Here:</strong> <code>address</code> is the IP address and <code>family</code> is the IP version (4 or 6).</p>
+
+  <h3>2. dns.resolve4()</h3>
+  <p>Returns all IPv4 addresses.</p>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const dns = require("dns");
+
+dns.resolve4("google.com", (err, addresses) => {
+  if (err)
+    console.log(err);
+  else
+    console.log(addresses);
+});</code></pre></div>
+  <div class="output">[
+  '142.250.183.110',
+  '142.250.183.111'
+]</div>
+
+  <h3>3. dns.resolve6()</h3>
+  <p>Returns IPv6 addresses.</p>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const dns = require("dns");
+
+dns.resolve6("google.com", (err, addresses) => {
+  if (err)
+    console.log(err);
+  else
+    console.log(addresses);
+});</code></pre></div>
+  <div class="output">[
+  '2404:6800:4007:80f::200e'
+]</div>
+
+  <h3>4. dns.reverse()</h3>
+  <p>Converts an IP address into a hostname.</p>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const dns = require("dns");
+
+dns.reverse("8.8.8.8", (err, hostnames) => {
+  if (err)
+    console.log(err);
+  else
+    console.log(hostnames);
+});</code></pre></div>
+  <div class="output">[ 'dns.google' ]</div>
+
+  <h3>5. dns.resolveMx()</h3>
+  <p>Returns Mail Exchange (MX) records used by email servers.</p>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const dns = require("dns");
+
+dns.resolveMx("gmail.com", (err, addresses) => {
+  if (err)
+    console.log(err);
+  else
+    console.log(addresses);
+});</code></pre></div>
+  <div class="output">[
+  { exchange: 'gmail-smtp-in.l.google.com', priority: 5 },
+  { exchange: 'alt1.gmail-smtp-in.l.google.com', priority: 10 }
+]</div>
+
+  <h3>6. dns.resolveTxt()</h3>
+  <p>Returns TXT records.</p>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const dns = require("dns");
+
+dns.resolveTxt("google.com", (err, records) => {
+  if (err)
+    console.log(err);
+  else
+    console.log(records);
+});</code></pre></div>
+  <div class="output">[
+  ['v=spf1 include:_spf.google.com ~all']
+]</div>
+  <p>TXT records are commonly used for:</p>
+  <ul><li>SPF</li><li>DKIM</li><li>Domain verification</li></ul>
+
+  <h3>7. dns.resolveNs()</h3>
+  <p>Returns Name Server (NS) records.</p>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const dns = require("dns");
+
+dns.resolveNs("google.com", (err, servers) => {
+  if (err)
+    console.log(err);
+  else
+    console.log(servers);
+});</code></pre></div>
+  <div class="output">[
+  'ns1.google.com',
+  'ns2.google.com'
+]</div>
+
+  <h3>8. dns.resolveCname()</h3>
+  <p>Returns Canonical Name (CNAME) records.</p>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const dns = require("dns");
+
+dns.resolveCname("www.github.com", (err, addresses) => {
+  if (err)
+    console.log(err);
+  else
+    console.log(addresses);
+});</code></pre></div>
+  <div class="output">[
+  'github.com'
+]</div>
+
+  <h3>Real-Time Example 1: Website Availability Checker</h3>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const dns = require("dns");
+const website = "openai.com";
+
+dns.lookup(website, (err, address) => {
+  if (err)
+    console.log("Website not found");
+  else
+    console.log(`${website} IP Address: ${address}`);
+});</code></pre></div>
+  <div class="output">openai.com IP Address: 104.xx.xx.xx</div>
+
+  <h3>Real-Time Example 2: Network Diagnostic Tool</h3>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const dns = require("dns");
+
+const websites = [
+  "google.com",
+  "github.com",
+  "microsoft.com"
+];
+
+websites.forEach(site => {
+  dns.lookup(site, (err, address) => {
+    if (err)
+      console.log(site + " not found");
+    else
+      console.log(site + " -> " + address);
+  });
+});</code></pre></div>
+  <div class="output">google.com -> 142.xxx.xxx.xxx
+github.com -> 140.xxx.xxx.xxx
+microsoft.com -> 20.xxx.xxx.xxx</div>
+
+  <h3>Real-Time Example 3: Email Domain Validation</h3>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const dns = require("dns");
+
+dns.resolveMx("gmail.com", (err, records) => {
+  if (records)
+    console.log("Email server exists");
+  else
+    console.log("No mail server");
+});</code></pre></div>
+
+  <h3>Real-Time Example 4: Reverse DNS Lookup</h3>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const dns = require("dns");
+
+dns.reverse("8.8.8.8", (err, hostnames) => {
+  if (err)
+    console.log(err);
+  else
+    console.log(hostnames);
+});</code></pre></div>
+  <div class="output">dns.google</div>
+  <a class="backtop" href="#overview">↑ Back to top</a>
+</section>
+
+<section class="card searchable" id="net">
+  <h2 class="section-title"><span class="section-number">4</span>Net Module</h2>
+  <p>Net Module in Node.js is used for the creation of both client and server. Similar to DNS Module, this module also provides an asynchronous network wrapper.</p>
+
+  <div class="label">Syntax</div>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const net = require('net');</code></pre></div>
+
+  <table>
+    <thead><tr><th>Method</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td class="method">createServer()</td><td>Creates a TCP server</td></tr>
+      <tr><td class="method">createConnection()</td><td>Creates a TCP client</td></tr>
+      <tr><td class="method">listen()</td><td>Starts the server</td></tr>
+      <tr><td class="method">write()</td><td>Sends data</td></tr>
+      <tr><td class="method">end()</td><td>Closes the connection gracefully</td></tr>
+      <tr><td class="method">destroy()</td><td>Immediately terminates the connection</td></tr>
+      <tr><td class="method">address()</td><td>Returns socket details</td></tr>
+      <tr><td class="method">setTimeout()</td><td>Sets a timeout for the socket</td></tr>
+      <tr><td class="method">close()</td><td>Stops the server</td></tr>
+    </tbody>
+  </table>
+
+  <h3>1. net.createServer()</h3>
+  <p>Creates a TCP server.</p>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const net = require("net");
+
+const server = net.createServer((socket) => {
+  console.log("Client Connected");
+  socket.write("Welcome to Node.js Server");
+  socket.end();
+});
+
+server.listen(3000, () => {
+  console.log("Server Running");
+});</code></pre></div>
+
+  <h3>2. server.listen()</h3>
+  <p>Starts listening for client connections.</p>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>server.listen(5000, () => {
+  console.log("Listening on port 5000");
+});</code></pre></div>
+
+  <h3>3. net.createConnection()</h3>
+  <p>Creates a TCP client.</p>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const net = require("net");
+
+const client = net.createConnection({
+  host: "localhost",
+  port: 3000
+});
+
+client.on("data", (data) => {
+  console.log(data.toString());
+});</code></pre></div>
+
+  <h3>4. socket.write()</h3>
+  <p>Sends data to the client/server.</p>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>socket.write("Hello Client");</code></pre></div>
+
+  <h3>5. socket.end()</h3>
+  <p>Closes the connection.</p>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>socket.end();</code></pre></div>
+
+  <h3>6. socket.destroy()</h3>
+  <p>Immediately terminates the connection.</p>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>socket.destroy();</code></pre></div>
+
+  <h3>7. socket.setTimeout()</h3>
+  <p>Sets socket timeout.</p>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>socket.setTimeout(5000);</code></pre></div>
+
+  <h3>8. socket.address()</h3>
+  <p>Returns socket information.</p>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>console.log(socket.address());</code></pre></div>
+  <div class="output">{
+  address: '127.0.0.1',
+  family: 'IPv4',
+  port: 3000
+}</div>
+
+  <h3>9. server.close()</h3>
+  <p>Stops the server.</p>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>server.close();</code></pre></div>
+
+  <h3>Events</h3>
+  <table>
+    <thead><tr><th>Type</th><th>Event</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td>Server</td><td class="method">connection</td><td>Triggered when a client connects.</td></tr>
+      <tr><td>Server</td><td class="method">close</td><td>Triggered when the server stops.</td></tr>
+      <tr><td>Server</td><td class="method">error</td><td>Triggered when an error occurs.</td></tr>
+      <tr><td>Socket</td><td class="method">data</td><td>Triggered when data is received.</td></tr>
+      <tr><td>Socket</td><td class="method">end</td><td>Triggered when the connection ends.</td></tr>
+      <tr><td>Socket</td><td class="method">close</td><td>Triggered when the socket closes.</td></tr>
+      <tr><td>Socket</td><td class="method">error</td><td>Triggered on socket errors.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Server-Side Example</h3>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>// Require net module
+const net = require("net");
+
+const server = net.createServer((socket) => {
+  console.log("Client connected");
+
+  socket.on("data", (data) => {
+    console.log("Message from Client:", data.toString());
+    socket.write("Hello Client! Message received.");
+  });
+
+  socket.on("end", () => {
+    console.log("Client disconnected");
+  });
+});
+
+server.listen(5000, () => {
+  console.log("Server is running on port 5000");
+});</code></pre></div>
+
+  <h3>Client-Side Example</h3>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const net = require("net");
+
+const client = new net.Socket();
+
+client.connect(5000, "localhost", () => {
+  console.log("Connected to Server");
+  client.write("Hello Server!");
+});
+
+client.on("data", (data) => {
+  console.log("Message from Server:", data.toString());
+  client.end();
+});
+
+client.on("close", () => {
+  console.log("Connection closed");
+});</code></pre></div>
+  <a class="backtop" href="#overview">↑ Back to top</a>
+</section>
+
+<section class="card searchable" id="domain">
+  <h2 class="section-title"><span class="section-number">5</span>Domain Module</h2>
+  <p>The Domain module in Node.js is used to handle and intercept unhandled errors in asynchronous operations. It groups multiple I/O operations into a single context so that errors can be handled together.</p>
+
+  <div class="warning"><strong>Important:</strong> The source document notes that the Domain module is deprecated and should not be used in modern Node.js applications.</div>
+
+  <h3>Error Interception</h3>
+  <p>Error interception can be performed in two ways:</p>
+  <ul>
+    <li><strong>Internal Binding:</strong> The error emitter runs the code internally within the <code>run()</code> method of a domain.</li>
+    <li><strong>External Binding:</strong> The error emitter is explicitly added to the domain using the <code>add()</code> method.</li>
+  </ul>
+
+  <div class="label">Syntax</div>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const domain = require('domain');</code></pre></div>
+
+  <p>The domain class provides a mechanism for routing unhandled exceptions and errors to the active domain object. It is considered a child class of EventEmitter.</p>
+
+  <h3>Domain Example</h3>
+  <div class="code-wrap"><button class="copy">Copy</button><pre><code>const EventEmitter = require("events").EventEmitter;
+const domain = require("domain");
+
+const emit_a = new EventEmitter();
+const dom_a = domain.create();
+
+dom_a.on('error', function (err) {
+  console.log("Error handled by dom_a (" + err.message + ")");
+});
+
+dom_a.add(emit_a);
+
+emit_a.on('error', function (err) {
+  console.log("listener handled this error (" + err.message + ")");
+});
+
+emit_a.emit('error', new Error('Listener handles this'));
+
+emit_a.removeAllListeners('error');
+
+emit_a.emit('error', new Error('Dom_a handles this'));
+
+const dom_b = domain.create();
+
+dom_b.on('error', function (err) {
+  console.log("Error handled by dom_b (" + err.message + ")");
+});
+
+dom_b.run(function () {
+  const emit_b = new EventEmitter();
+  emit_b.emit('error', new Error('Dom_b handles this'));
+});
+
+dom_a.remove(emit_a);
+
+emit_a.emit('error', new Error('Exception message...!'));</code></pre></div>
+
+  <div class="label">Output shown in the source material</div>
+  <div class="output">Listener handled this error (Listener handles this)
+Error handled by dom_a (Dom_a handles this)
+Error handled by dom_b (Dom_b handles this)
+
+events.js:187
+      throw er; // Unhandled 'error' event
+
+Error: Exception message...
+    ...stack trace...</div>
+
+  <h3>Advantages listed in the source</h3>
+  <ul>
+    <li><strong>Enhanced Debugging:</strong> Provides powerful tools for inspecting and debugging objects.</li>
+    <li><strong>Simplified Async Handling:</strong> Makes it easier to work with asynchronous code by converting callback-based APIs to promise-based ones.</li>
+    <li><strong>Flexible String Formatting:</strong> Allows dynamic and customizable string formatting.</li>
+  </ul>
+
+  <a class="backtop" href="#overview">↑ Back to top</a>
+</section>
+
+<section class="card searchable" id="summary">
+  <h2>Quick Revision Summary</h2>
+  <div class="grid">
+    <div class="mini-card"><strong>OS</strong>System information such as platform, architecture, memory, CPU and user details.</div>
+    <div class="mini-card"><strong>Path</strong>Build, inspect, normalize and transform file-system paths.</div>
+    <div class="mini-card"><strong>DNS</strong>Look up hostnames, IP addresses and DNS record types.</div>
+    <div class="mini-card"><strong>Net</strong>Create TCP servers and clients and exchange data through sockets.</div>
+    <div class="mini-card"><strong>Domain</strong>Group asynchronous operations for error handling; deprecated according to the source document.</div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>Node.js Core Modules</strong> · Student Learning Material</p>
+  <p>Self-contained HTML page · No external libraries or setup required</p>
+</footer>
+</main>
+</div>
+
+<script>
+(function(){
+  const copyButtons = document.querySelectorAll('.copy');
+  copyButtons.forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const code = btn.parentElement.querySelector('code').innerText;
+      try {
+        await navigator.clipboard.writeText(code);
+        const old = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = old, 1200);
+      } catch(e) {
+        btn.textContent = 'Select & copy';
+        setTimeout(() => btn.textContent = 'Copy', 1200);
+      }
+    });
+  });
+
+  const search = document.getElementById('searchBox');
+  const sections = document.querySelectorAll('.searchable');
+  search.addEventListener('input', function(){
+    const q = this.value.trim().toLowerCase();
+    sections.forEach(section => {
+      section.classList.toggle('hidden', q && !section.innerText.toLowerCase().includes(q));
+    });
+  });
+})();
+</script>
+</body>
+</html>
