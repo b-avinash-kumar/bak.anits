@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Express JS — Environment & Routing</title>
+<style>
+  :root{
+    --bg:#f6f8fc; --surface:#ffffff; --ink:#172033; --muted:#5e6b82;
+    --primary:#5b5bd6; --primary2:#7b61ff; --accent:#16a085;
+    --border:#e4e8f0; --code:#111827; --soft:#eef0ff; --warn:#fff7df;
+    --shadow:0 12px 35px rgba(24,32,51,.08); --radius:18px;
+  }
+  *{box-sizing:border-box;scroll-behavior:smooth}
+  body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.65}
+  header{background:linear-gradient(135deg,#171b3a,#4c4cc5 60%,#7867ff);color:#fff;padding:58px 20px 50px}
+  .hero{max-width:1120px;margin:auto}
+  .eyebrow{font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;opacity:.8;font-weight:800}
+  h1{font-size:clamp(2.1rem,5vw,4rem);line-height:1.08;margin:12px 0 16px}
+  .hero p{max-width:780px;font-size:1.08rem;opacity:.92;margin:0}
+  .chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:24px}
+  .chip{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.2);
+        padding:7px 12px;border-radius:999px;font-size:.85rem}
+  nav{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);
+      border-bottom:1px solid var(--border);overflow:auto}
+  nav .navin{max-width:1120px;margin:auto;display:flex;gap:4px;padding:9px 12px}
+  nav a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.88rem;padding:9px 11px;border-radius:10px}
+  nav a:hover{background:var(--soft);color:var(--primary)}
+  main{max-width:1120px;margin:34px auto;padding:0 18px}
+  section{margin:0 0 34px}
+  .section-head{display:flex;gap:14px;align-items:flex-start;margin-bottom:16px}
+  .num{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;background:var(--soft);
+       color:var(--primary);font-weight:900;flex:none}
+  h2{font-size:1.7rem;line-height:1.2;margin:4px 0}
+  h3{margin:0 0 8px;font-size:1.12rem}
+  .subtitle{color:var(--muted);margin:0}
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  .grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:21px;box-shadow:var(--shadow)}
+  .card p:last-child{margin-bottom:0}
+  .eli{background:linear-gradient(135deg,#f0f0ff,#faf9ff);border-left:5px solid var(--primary)}
+  .visual{position:relative;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;padding:25px 12px}
+  .node{padding:13px 16px;border-radius:14px;border:2px solid #dfe2ff;background:#fff;font-weight:800;text-align:center;min-width:130px}
+  .arrow{font-size:1.5rem;color:var(--primary);font-weight:900}
+  .mindmap{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:12px;align-items:center}
+  .mind-center{grid-column:2;grid-row:1 / span 3;background:var(--soft);border:2px solid #cfd1ff;border-radius:50%;
+               width:170px;height:170px;display:grid;place-items:center;text-align:center;font-weight:900;margin:auto}
+  .mind-side{padding:14px;border-radius:14px;background:#fff;border:1px solid var(--border);box-shadow:0 5px 18px rgba(24,32,51,.05)}
+  .left{grid-column:1}.right{grid-column:3}
+  pre{position:relative;background:var(--code);color:#e8eefc;border-radius:14px;padding:20px;overflow:auto;
+      margin:13px 0 0;font-size:.9rem;line-height:1.55}
+  code{font-family:"Cascadia Code","SFMono-Regular",Consolas,monospace}
+  .copy{position:absolute;right:10px;top:10px;border:0;background:#2a3347;color:#dce5ff;border-radius:8px;
+        padding:6px 9px;cursor:pointer;font-size:.75rem}
+  .copy:hover{background:#39465f}
+  .keyword{color:#b9a7ff}.string{color:#9fe6b8}.comment{color:#8996ae}
+  .steps{counter-reset:step;display:grid;gap:12px}
+  .step{display:grid;grid-template-columns:42px 1fr;gap:12px;align-items:start}
+  .step:before{counter-increment:step;content:counter(step);width:34px;height:34px;border-radius:50%;
+               background:var(--primary);color:white;display:grid;place-items:center;font-weight:900}
+  .callout{padding:15px 17px;border-radius:14px;background:var(--warn);border:1px solid #f0df9b}
+  .tip{background:#eafaf5;border-color:#bfe9db}
+  .table-wrap{overflow:auto;border:1px solid var(--border);border-radius:14px}
+  table{width:100%;border-collapse:collapse;background:#fff;min-width:620px}
+  th,td{padding:13px 15px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
+  th{background:#f1f3fa;font-size:.86rem}
+  tr:last-child td{border-bottom:0}
+  .badge{display:inline-block;padding:3px 8px;border-radius:999px;background:var(--soft);color:var(--primary);
+         font-size:.76rem;font-weight:800}
+  .flow{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;margin:12px 0}
+  .flow span{padding:10px 13px;border-radius:12px;background:#fff;border:1px solid var(--border);font-weight:750}
+  .flow b{color:var(--primary)}
+  .terminal{background:#0b1020;color:#cdd7ee;border-radius:14px;padding:18px;overflow:auto}
+  .terminal .prompt{color:#9fe6b8}
+  .tester{background:linear-gradient(135deg,#151a34,#24285c);color:white}
+  .tester input,.tester select{width:100%;padding:11px;border-radius:9px;border:1px solid #4d5680;background:#11162d;color:white;margin-top:6px}
+  .tester button{margin-top:12px;padding:10px 14px;border:0;border-radius:9px;background:#8b7cff;color:white;font-weight:800;cursor:pointer}
+  #result{margin-top:13px;padding:13px;border-radius:10px;background:#10162a;min-height:48px;color:#dfe6ff}
+  .checklist{list-style:none;padding:0;margin:0;display:grid;gap:9px}
+  .checklist li{padding-left:29px;position:relative}
+  .checklist li:before{content:"✓";position:absolute;left:0;color:var(--accent);font-weight:900}
+  footer{margin-top:45px;padding:30px 18px;background:#171b3a;color:#cbd3e8;text-align:center}
+  .small{font-size:.84rem;color:var(--muted)}
+  @media(max-width:780px){
+    .grid,.grid3{grid-template-columns:1fr}
+    .mindmap{grid-template-columns:1fr}
+    .mind-center,.left,.right{grid-column:auto;grid-row:auto}
+    .mind-center{width:135px;height:135px}
+    main{padding:0 13px}
+    header{padding:42px 17px}
+    .card{padding:17px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="hero">
+    <div class="eyebrow">Express JS • Unit Learning Page</div>
+    <h1>Environment & Routing</h1>
+    <p>Learn how to set up an Express project, understand npm, create your first server, define routes, work with HTTP methods, and organize routes using routers.</p>
+    <div class="chips">
+      <span class="chip">Node.js</span><span class="chip">npm</span><span class="chip">Express</span>
+      <span class="chip">Routing</span><span class="chip">Express Router</span>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="navin">
+    <a href="#setup">Setup</a><a href="#npm">npm</a><a href="#project">Project</a>
+    <a href="#server">First Server</a><a href="#code">Code</a><a href="#routing">Routing</a>
+    <a href="#methods">HTTP Methods</a><a href="#routers">Routers</a><a href="#practice">Practice</a>
+  </div>
+</nav>
+
+<main>
+<section id="setup">
+  <div class="section-head"><div class="num">1</div><div><h2>Express JS Environment</h2>
+  <p class="subtitle">Before Express, make sure Node.js and npm are available.</p></div></div>
+  <div class="grid">
+    <div class="card eli">
+      <h3>🧠 ELI10 idea</h3>
+      <p>Think of <strong>Node.js</strong> as the engine that runs JavaScript outside the browser. <strong>npm</strong> is the package manager that helps you bring useful JavaScript packages into your project. <strong>Express</strong> is a framework built on Node.js that makes creating web servers and routes easier.</p>
+    </div>
+    <div class="card">
+      <h3>🔎 Check your installation</h3>
+      <p>Run these commands in your terminal:</p>
+      <pre><button class="copy">Copy</button><code>node -v
+npm -v</code></pre>
+      <p class="small">The source document shows Node v22.13.0 and npm 10.9.2 as example output.</p>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <div class="visual">
+      <div class="node">Node.js<br><span class="small">JavaScript runtime</span></div>
+      <div class="arrow">→</div>
+      <div class="node">npm<br><span class="small">Package manager</span></div>
+      <div class="arrow">→</div>
+      <div class="node">Express<br><span class="small">Web framework</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="npm">
+  <div class="section-head"><div class="num">2</div><div><h2>Node Package Manager (npm)</h2>
+  <p class="subtitle">npm helps you discover and install packages for Node.js projects.</p></div></div>
+  <div class="card">
+    <p>npm is the package manager for Node. The npm Registry is a public collection of packages containing open-source code for Node.js, front-end web apps, mobile apps, robots, routers, and many other JavaScript needs.</p>
+    <div class="grid3">
+      <div class="card"><span class="badge">Global</span><h3>Development tools</h3><p>Generally used for development tools and CLI-based packages.</p><pre><button class="copy">Copy</button><code>npm install -g &lt;package-name&gt;</code></pre></div>
+      <div class="card"><span class="badge">Local</span><h3>Frameworks & libraries</h3><p>Installed inside a project directory and used by that project.</p><pre><button class="copy">Copy</button><code>npm install &lt;package-name&gt;</code></pre></div>
+      <div class="card tip"><span class="badge">Remember</span><h3>Why local?</h3><p>A locally installed package belongs to the project directory where it is installed.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="project">
+  <div class="section-head"><div class="num">3</div><div><h2>Create the Express Project</h2>
+  <p class="subtitle">Build a small project named <strong>hello-world</strong>.</p></div></div>
+  <div class="card">
+    <div class="steps">
+      <div class="step"><div><h3>Create a folder and enter it</h3>
+        <pre><button class="copy">Copy</button><code>mkdir hello-world
+cd hello-world</code></pre></div></div>
+      <div class="step"><div><h3>Create package.json</h3>
+        <p>Run <code>npm init</code>. npm asks for project information and creates a <strong>package.json</strong> file.</p>
+        <pre><button class="copy">Copy</button><code>npm init</code></pre></div></div>
+      <div class="step"><div><h3>Install Express</h3>
+        <p>The document uses <code>--save</code> so Express is added as a project dependency.</p>
+        <pre><button class="copy">Copy</button><code>npm install --save express</code></pre></div></div>
+      <div class="step"><div><h3>Install nodemon</h3>
+        <p>nodemon restarts the server when files change, so you do not have to restart it manually after every modification.</p>
+        <pre><button class="copy">Copy</button><code>npm install -g nodemon</code></pre></div></div>
+    </div>
+  </div>
+  <div class="callout tip" style="margin-top:16px">
+    <strong>💡 Dependency idea:</strong> Once dependencies are recorded in <code>package.json</code>, running <code>npm install</code> can install the dependencies listed there.
+  </div>
+</section>
+
+<section id="server">
+  <div class="section-head"><div class="num">4</div><div><h2>Your First Express Web Server</h2>
+  <p class="subtitle">Create <code>index.js</code> and send a message from the server to the browser.</p></div></div>
+  <div class="card">
+    <h3>index.js</h3>
+    <pre><button class="copy">Copy</button><code><span class="keyword">var</span> express = <span class="keyword">require</span>(<span class="string">'express'</span>);
+<span class="keyword">var</span> app = express();
+
+app.get(<span class="string">'/'</span>, <span class="keyword">function</span>(req, res){
+  res.send(<span class="string">"Hello world!"</span>);
+});
+
+app.listen(<span class="string">3000</span>);</code></pre>
+    <div class="flow">
+      <span>Browser</span><b>→</b><span>GET /</span><b>→</b><span>Express route</span><b>→</b><span>Hello world!</span>
+    </div>
+    <h3 style="margin-top:20px">Start the application</h3>
+    <div class="terminal"><span class="prompt">E:\Dev\hello-world&gt;</span> nodemon index.js</div>
+    <p>Then open <strong>http://localhost:3000</strong> in a browser. The source document shows a browser screenshot displaying <strong>Hello world!</strong> on page 5.</p>
+  </div>
+</section>
+
+<section id="code">
+  <div class="section-head"><div class="num">5</div><div><h2>Understand the index.js Code</h2>
+  <p class="subtitle">Read the program one line at a time.</p></div></div>
+  <div class="grid">
+    <div class="card"><h3>1. Import Express</h3><pre><button class="copy">Copy</button><code>var express = require('express');</code></pre><p>This imports the Express framework and makes it available through the <code>express</code> variable.</p></div>
+    <div class="card"><h3>2. Create the app</h3><pre><button class="copy">Copy</button><code>var app = express();</code></pre><p>This creates a new Express application instance. The <code>app</code> object can be used to configure routes, middleware, and the server.</p></div>
+    <div class="card"><h3>3. Define a GET route</h3><pre><button class="copy">Copy</button><code>app.get('/', function(req, res){
+  res.send("Hello world!");
+});</code></pre><p><code>req</code> represents the incoming request and <code>res</code> represents the response sent back to the client.</p></div>
+    <div class="card"><h3>4. Start listening</h3><pre><button class="copy">Copy</button><code>app.listen(3000);</code></pre><p>The application listens for incoming HTTP requests on port <strong>3000</strong>.</p></div>
+  </div>
+</section>
+
+<section id="listen">
+  <div class="section-head"><div class="num">6</div><div><h2>app.listen()</h2><p class="subtitle">The method that starts the Express server listening for requests.</p></div></div>
+  <div class="card">
+    <pre><button class="copy">Copy</button><code>app.listen(port, [host], [backlog], [callback])</code></pre>
+    <div class="table-wrap" style="margin-top:15px">
+      <table>
+        <thead><tr><th>Argument</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><strong>port</strong></td><td>The port number on which the server accepts incoming requests. It is the only required parameter.</td></tr>
+          <tr><td><strong>host</strong></td><td>The domain/host name. The source notes it may be set when deploying applications to the cloud.</td></tr>
+          <tr><td><strong>backlog</strong></td><td>Maximum number of queued pending connections. The document gives a default of 511 and notes it is rarely changed unless high concurrent connection volume is expected.</td></tr>
+          <tr><td><strong>callback</strong></td><td>An asynchronous function called after the server successfully starts listening; commonly used for a startup confirmation message.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="routing">
+  <div class="section-head"><div class="num">7</div><div><h2>Routing</h2>
+  <p class="subtitle">Routing decides how your server responds to a particular HTTP request and URL path.</p></div></div>
+  <div class="card eli">
+    <h3>🧠 ELI10 analogy</h3>
+    <p>Imagine a building with different doors. The URL path tells you <strong>which door</strong> you are asking for, the HTTP method tells you <strong>what kind of action</strong> you want, and the route handler decides <strong>what happens next</strong>.</p>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h3>The usual Express pattern</h3>
+    <pre><button class="copy">Copy</button><code>app.method(path, handler)</code></pre>
+    <div class="mindmap" style="margin-top:18px">
+      <div class="mind-side left"><strong>method</strong><br><span class="small">GET, POST, PUT, DELETE...</span></div>
+      <div class="mind-center">EXPRESS<br>ROUTE</div>
+      <div class="mind-side right"><strong>path</strong><br><span class="small">URL such as /hello</span></div>
+      <div class="mind-side left"><strong>handler</strong><br><span class="small">Function that receives req & res</span></div>
+      <div class="mind-side right"><strong>response</strong><br><span class="small">What the client receives</span></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h3>Example: /hello</h3>
+    <pre><button class="copy">Copy</button><code><span class="keyword">var</span> express = <span class="keyword">require</span>(<span class="string">'express'</span>);
+<span class="keyword">var</span> app = express();
+
+app.get(<span class="string">'/hello'</span>, <span class="keyword">function</span>(req, res){
+  res.send(<span class="string">"Hello World!"</span>);
+});
+
+app.listen(<span class="string">3000</span>);</code></pre>
+    <p>When you visit <code>localhost:3000/hello</code>, the server receives a GET request for <code>/hello</code>, executes its handler, and sends <strong>Hello World!</strong> back to the browser.</p>
+  </div>
+</section>
+
+<section id="methods">
+  <div class="section-head"><div class="num">8</div><div><h2>Different HTTP Methods at the Same Route</h2>
+  <p class="subtitle">The same path can have different handlers for different HTTP methods.</p></div></div>
+  <div class="card">
+    <pre><button class="copy">Copy</button><code>app.get(<span class="string">'/hello'</span>, <span class="keyword">function</span>(req, res){
+  res.send(<span class="string">"Hello World!"</span>);
+});
+
+app.post(<span class="string">'/hello'</span>, <span class="keyword">function</span>(req, res){
+  res.send(<span class="string">"You just called the post method at '/hello'!\n"</span>);
+});
+
+app.listen(<span class="string">3000</span>);</code></pre>
+    <div class="flow">
+      <span>GET /hello</span><b>→</b><span>Hello World!</span>
+      <span>POST /hello</span><b>→</b><span>POST response</span>
+    </div>
+    <p>The source demonstrates testing the POST request with Postman at <code>http://localhost:3000/hello</code>; page 9 includes a Postman screenshot showing the POST request and response.</p>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h3>app.all()</h3>
+    <pre><button class="copy">Copy</button><code>app.all(<span class="string">'/test'</span>, <span class="keyword">function</span>(req, res){
+  res.send(<span class="string">"HTTP method doesn't have any effect on this route!"</span>);
+});</code></pre>
+    <p><code>app.all()</code> handles all HTTP methods at a particular route using the same function. The source notes that it is generally used for defining middleware.</p>
+  </div>
+</section>
+
+<section id="routers">
+  <div class="section-head"><div class="num">9</div><div><h2>Routers: Keep Routes Organized</h2>
+  <p class="subtitle">Move related routes into their own file as the application grows.</p></div></div>
+  <div class="card eli">
+    <h3>🧠 Why use a router?</h3>
+    <p>Putting every route in <code>index.js</code> can become difficult to maintain. A router lets you group related API routes in a separate file. For example, all routes related to a particular entity can live together.</p>
+  </div>
+  <div class="grid" style="margin-top:16px">
+    <div class="card">
+      <h3>things.js</h3>
+      <pre><button class="copy">Copy</button><code><span class="keyword">var</span> express = <span class="keyword">require</span>(<span class="string">'express'</span>);
+<span class="keyword">var</span> router = express.Router();
+
+router.get(<span class="string">'/'</span>, <span class="keyword">function</span>(req, res){
+  res.send(<span class="string">'GET route on things.'</span>);
+});
+
+router.post(<span class="string">'/'</span>, <span class="keyword">function</span>(req, res){
+  res.send(<span class="string">'POST route on things.'</span>);
+});
+
+<span class="comment">// export this router to use in index.js</span>
+module.exports = router;</code></pre>
+    </div>
+    <div class="card">
+      <h3>index.js</h3>
+      <pre><button class="copy">Copy</button><code><span class="keyword">var</span> express = <span class="keyword">require</span>(<span class="string">'express'</span>);
+<span class="keyword">var</span> app = express();
+<span class="keyword">var</span> things = <span class="keyword">require</span>(<span class="string">'./things.js'</span>);
+
+app.get(<span class="string">'/hello'</span>, <span class="keyword">function</span>(req, res){
+  res.send(<span class="string">"Hello World!"</span>);
+});
+
+app.use(<span class="string">'/things'</span>, things);
+app.listen(<span class="string">3000</span>);</code></pre>
+      <p class="small">Both <code>index.js</code> and <code>things.js</code> should be in the same directory in the source example.</p>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h3>🔗 How the route is combined</h3>
+    <div class="flow">
+      <span>app.use('/things', things)</span><b>+</b><span>router.get('/')</span><b>→</b><span>GET /things/</span>
+    </div>
+    <p>The <code>/</code> route inside <code>things.js</code> becomes a subroute of <code>/things</code>. Visiting <code>localhost:3000/things/</code> therefore reaches the router's GET handler. The source's page 11 screenshot shows the resulting <strong>GET route on things.</strong> response.</p>
+  </div>
+  <div class="callout tip" style="margin-top:16px">
+    <strong>📌 Key takeaway:</strong> Routers separate concerns, keep related code together, and help build maintainable applications. Define routes relating to an entity in a single file and include that router from <code>index.js</code>.
+  </div>
+</section>
+
+<section id="practice">
+  <div class="section-head"><div class="num">10</div><div><h2>Interactive Routing Check</h2>
+  <p class="subtitle">Use this mini activity to connect method + path + handler.</p></div></div>
+  <div class="card tester">
+    <h3>🎯 Predict the response</h3>
+    <p>Choose the request used in the routing examples.</p>
+    <div class="grid">
+      <div><label>HTTP method<select id="method"><option>GET</option><option>POST</option><option>PUT</option></select></label></div>
+      <div><label>Path<select id="path"><option>/hello</option><option>/things/</option><option>/unknown</option></select></label></div>
+    </div>
+    <button onclick="checkRoute()">Check route</button>
+    <div id="result">Choose a method and path, then click <strong>Check route</strong>.</div>
+  </div>
+</section>
+
+<section>
+  <div class="section-head"><div class="num">✓</div><div><h2>Quick Revision Checklist</h2><p class="subtitle">Before moving to the next Express topic, you should be able to explain these.</p></div></div>
+  <div class="card">
+    <ul class="checklist">
+      <li>Why Node.js and npm are needed before starting Express.</li>
+      <li>The difference between global and local npm installation.</li>
+      <li>The purpose of <code>package.json</code>.</li>
+      <li>How to install Express and nodemon.</li>
+      <li>What <code>express()</code> does when creating the app.</li>
+      <li>What <code>req</code> and <code>res</code> represent.</li>
+      <li>How <code>app.get()</code> defines a GET route.</li>
+      <li>What <code>app.listen(3000)</code> does.</li>
+      <li>How different HTTP methods can use the same path.</li>
+      <li>Why <code>express.Router()</code> is useful for larger applications.</li>
+      <li>How <code>app.use('/things', things)</code> mounts a router.</li>
+    </ul>
+  </div>
+</section>
+</main>
+
+<footer>
+  <strong>Express JS — Environment & Routing</strong>
+  <p class="small" style="color:#aeb8d0">Student-friendly learning page created from the supplied course document. Core examples and terminology are preserved and reorganized for web learning.</p>
+</footer>
+
+<script>
+  // Copy buttons
+  document.querySelectorAll('.copy').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const code = btn.parentElement.querySelector('code').innerText;
+      navigator.clipboard.writeText(code).then(()=>{
+        const old=btn.textContent; btn.textContent='Copied!';
+        setTimeout(()=>btn.textContent=old,1200);
+      });
+    });
+  });
+
+  function checkRoute(){
+    const method=document.getElementById('method').value;
+    const path=document.getElementById('path').value;
+    const out=document.getElementById('result');
+    let msg='';
+    if(method==='GET' && path==='/hello'){
+      msg='✅ Match: app.get("/hello") handles this request and sends "Hello World!".';
+    }else if(method==='POST' && path==='/hello'){
+      msg='✅ Match: app.post("/hello") handles this request and sends the POST response shown in the lesson.';
+    }else if(method==='GET' && path==='/things/'){
+      msg='✅ Match: the mounted things router handles GET /things/ using router.get("/").';
+    }else if(path==='/unknown'){
+      msg='❌ No route from the lesson matches this path.';
+    }else{
+      msg='ℹ️ No matching route is defined in the examples for this method + path combination.';
+    }
+    out.innerHTML=msg;
+  }
+</script>
+</body>
+</html>

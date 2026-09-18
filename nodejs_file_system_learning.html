@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Node.js File System (fs) — Student Learning Module</title>
+<style>
+:root{
+  --bg:#f5f7fb; --card:#fff; --ink:#172033; --muted:#5f6b7a;
+  --primary:#2563eb; --primary2:#1d4ed8; --accent:#7c3aed;
+  --line:#dfe5ef; --code:#111827; --soft:#eef4ff; --good:#ecfdf5;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.65}
+header{background:linear-gradient(135deg,#172554,#2563eb);color:white;padding:48px 20px 56px}
+.hero{max-width:1100px;margin:auto}
+.badge{display:inline-block;background:rgba(255,255,255,.16);padding:7px 13px;border-radius:999px;font-size:.9rem}
+h1{font-size:clamp(2rem,5vw,3.5rem);line-height:1.1;margin:18px 0 12px}
+.hero p{max-width:780px;font-size:1.08rem;opacity:.92}
+nav{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 2px 12px rgba(0,0,0,.05)}
+.navin{max-width:1100px;margin:auto;display:flex;gap:8px;overflow:auto;padding:10px 16px}
+nav a{white-space:nowrap;text-decoration:none;color:#334155;padding:8px 11px;border-radius:8px;font-size:.92rem}
+nav a:hover{background:var(--soft);color:var(--primary)}
+main{max-width:1100px;margin:30px auto;padding:0 16px}
+section{margin:0 0 34px}
+h2{font-size:1.8rem;margin:0 0 14px}
+h3{font-size:1.25rem;margin:25px 0 10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;margin:16px 0;box-shadow:0 5px 18px rgba(15,23,42,.04)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.mini{padding:18px;border:1px solid var(--line);border-radius:13px;background:#fff}
+.mini strong{display:block;margin-bottom:5px}
+.callout{border-left:5px solid var(--primary);background:var(--soft);padding:17px 19px;border-radius:10px;margin:18px 0}
+.hand{font-family:"Comic Sans MS","Segoe Print",cursive;background:#fffdf5;border:1px dashed #c7b98a}
+.hand h3{margin-top:0}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:10px;justify-content:center;margin:18px 0}
+.flow span{background:#fff;border:2px solid #bfdbfe;border-radius:12px;padding:12px 16px;font-weight:600}
+.arrow{font-size:1.4rem;color:var(--primary)}
+code{font-family:Consolas,Monaco,monospace}
+pre{background:var(--code);color:#e5e7eb;border-radius:12px;padding:18px;overflow:auto;font-size:.9rem;line-height:1.55}
+.kw{color:#93c5fd}.str{color:#86efac}.com{color:#9ca3af}.fn{color:#fcd34d}
+table{width:100%;border-collapse:collapse;margin:15px 0;background:#fff}
+th,td{text-align:left;padding:12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:#f1f5f9}
+ul{padding-left:22px}
+details{background:#fff;border:1px solid var(--line);border-radius:12px;margin:10px 0;padding:13px 16px}
+summary{cursor:pointer;font-weight:700}
+button{border:0;border-radius:9px;padding:10px 14px;background:var(--primary);color:white;cursor:pointer}
+button:hover{background:var(--primary2)}
+footer{text-align:center;padding:35px 16px;color:var(--muted)}
+@media(max-width:650px){header{padding:34px 16px 42px}.card{padding:18px}h2{font-size:1.5rem}pre{font-size:.82rem}}
+</style>
+</head>
+<body>
+<header>
+  <div class="hero">
+    <span class="badge">Node.js • File System Module</span>
+    <h1>Node.js File System (fs)</h1>
+    <p>A student-friendly guide to reading, writing, appending, opening, closing and deleting files using Node.js.</p>
+  </div>
+</header>
+
+<nav><div class="navin">
+<a href="#overview">Overview</a><a href="#sync">Synchronous</a><a href="#async">Asynchronous</a>
+<a href="#open">Open</a><a href="#read">Read</a><a href="#write">Write</a><a href="#append">Append</a>
+<a href="#close">Close</a><a href="#delete">Delete</a><a href="#recap">Recap</a>
+</div></nav>
+
+<main>
+<section id="overview">
+<h2>1. What is the File System module?</h2>
+<div class="card">
+<p>The <strong>fs (File System)</strong> module is a built-in Node.js API used to perform file and directory operations on the server.</p>
+<div class="grid">
+<div class="mini"><strong>📁 Files & directories</strong>Create, read, update and remove file-system content.</div>
+<div class="mini"><strong>⚙️ Two approaches</strong>Supports both synchronous and asynchronous methods.</div>
+<div class="mini"><strong>🛡️ Error handling</strong>Helps handle problems such as missing files and permission errors.</div>
+<div class="mini"><strong>🔌 Built in</strong>No separate package is required.</div>
+</div>
+<h3>Import fs</h3>
+<pre><span class="kw">const</span> fs = <span class="fn">require</span>(<span class="str">"fs"</span>);</pre>
+<div class="callout"><strong>ELI10:</strong> Think of <code>fs</code> as Node.js's toolbox for working with files and folders.</div>
+</div>
+</section>
+
+<section id="sync">
+<h2>2. Synchronous approach</h2>
+<div class="card">
+<p>A synchronous, or <strong>blocking</strong>, operation waits for one task to finish before moving to the next task.</p>
+<div class="flow"><span>Start</span><b class="arrow">→</b><span>Read file</span><b class="arrow">→</b><span>Wait</span><b class="arrow">→</b><span>Continue</span></div>
+<ul><li>Follows a step-by-step execution flow.</li><li>Pauses program flow while the operation runs.</li><li>Prevents other work from progressing through that flow.</li><li>Subsequent tasks start only after completion.</li><li>Long-running operations may affect responsiveness.</li></ul>
+<div class="hand"><h3>✍️ Easy way to remember</h3><p><strong>Synchronous = “Wait for me.”</strong><br>The program waits until the file operation finishes.</p></div>
+<h3>Example: readFileSync()</h3>
+<pre><span class="kw">const</span> fs = <span class="fn">require</span>(<span class="str">"fs"</span>);
+
+<span class="com">// Synchronous read</span>
+<span class="kw">const</span> data = fs.<span class="fn">readFileSync</span>(<span class="str">'input.txt'</span>);
+console.<span class="fn">log</span>(<span class="str">"Synchronous read: "</span> + data.<span class="fn">toString</span>());</pre>
+<p><strong>Output:</strong> Synchronous read: Geeks: A computer science portal</p>
+<p><strong>Use cases:</strong> lightweight tasks that finish quickly and situations where simplicity is more important than avoiding blocking.</p>
+</div>
+</section>
+
+<section id="async">
+<h2>3. Asynchronous approach</h2>
+<div class="card">
+<p>An asynchronous, or <strong>non-blocking</strong>, operation starts a task without waiting for it to finish. The program can continue and handle the result later.</p>
+<div class="flow"><span>Start</span><b class="arrow">→</b><span>Start file operation</span><b class="arrow">→</b><span>Continue other work</span><b class="arrow">→</b><span>Handle result</span></div>
+<ul><li>Execution continues without waiting for completion.</li><li>The operation works in the background from the application's point of view.</li><li>The result is handled when it is ready.</li><li>Useful for performance and responsiveness.</li></ul>
+<div class="hand"><h3>✍️ Easy way to remember</h3><p><strong>Asynchronous = “You do that; I'll continue.”</strong></p></div>
+<h3>Example: readFile()</h3>
+<pre><span class="kw">const</span> fs = <span class="fn">require</span>(<span class="str">"fs"</span>);
+
+<span class="com">// Asynchronous read</span>
+fs.<span class="fn">readFile</span>(<span class="str">"input.txt"</span>, <span class="kw">function</span> (err, data) {
+  <span class="kw">if</span> (err) {
+    <span class="kw">return</span> console.<span class="fn">error</span>(err);
+  }
+
+  console.<span class="fn">log</span>(<span class="str">"Asynchronous read: "</span> + data.<span class="fn">toString</span>());
+});</pre>
+<p><strong>Output:</strong> Asynchronous read: Geeks: A computer science portal</p>
+<p><strong>Use cases:</strong> heavy or time-consuming tasks and applications where responsiveness matters.</p>
+</div>
+</section>
+
+<section id="open">
+<h2>4. Opening a file</h2>
+<div class="card">
+<p><code>fs.open()</code> opens a file and returns a <strong>file descriptor</strong>, which can be used for further file operations.</p>
+<pre>fs.open(path, flags, mode, callback)</pre>
+<table><tr><th>Parameter</th><th>Simple meaning</th></tr>
+<tr><td>path</td><td>File name or complete file path.</td></tr>
+<tr><td>flags</td><td>Defines how the file is opened, such as <code>r</code>, <code>w</code>, <code>a</code>, <code>r+</code>.</td></tr>
+<tr><td>mode</td><td>File access permissions.</td></tr>
+<tr><td>callback</td><td>Runs after the operation and receives the error and file descriptor.</td></tr></table>
+<pre><span class="kw">const</span> fs = <span class="fn">require</span>(<span class="str">"fs"</span>);
+
+console.<span class="fn">log</span>(<span class="str">"opening file!"</span>);
+fs.<span class="fn">open</span>(<span class="str">"input.txt"</span>, <span class="str">"r+"</span>, <span class="kw">function</span> (err, fd) {
+  <span class="kw">if</span> (err) <span class="kw">return</span> console.<span class="fn">error</span>(err);
+  console.<span class="fn">log</span>(<span class="str">"File open successfully"</span>);
+});</pre>
+<p><strong>Output:</strong> opening file! → File open successfully</p>
+</div>
+</section>
+
+<section id="read">
+<h2>5. Reading a file</h2>
+<div class="card">
+<p><code>fs.read()</code> reads data from an already-open file into memory using its file descriptor.</p>
+<pre>fs.read(fd, buffer, offset, length, position, callback)</pre>
+<table><tr><th>Parameter</th><th>Meaning</th></tr>
+<tr><td>fd</td><td>File descriptor returned by <code>fs.open()</code>.</td></tr>
+<tr><td>buffer</td><td>Memory area where the data is stored.</td></tr>
+<tr><td>offset</td><td>Where writing into the buffer should begin.</td></tr>
+<tr><td>length</td><td>Number of bytes to read.</td></tr>
+<tr><td>position</td><td>Starting position in the file; <code>null</code> uses the current file position.</td></tr>
+<tr><td>callback</td><td>Runs after reading and receives the error and read result.</td></tr></table>
+<h3>Example</h3>
+<pre><span class="kw">const</span> fs = <span class="fn">require</span>(<span class="str">"fs"</span>);
+<span class="kw">const</span> buf = Buffer.<span class="fn">alloc</span>(1024);
+
+console.<span class="fn">log</span>(<span class="str">"opening an existing file"</span>);
+fs.<span class="fn">open</span>(<span class="str">"input.txt"</span>, <span class="str">"r+"</span>, <span class="kw">function</span> (err, fd) {
+  <span class="kw">if</span> (err) <span class="kw">return</span> console.<span class="fn">error</span>(err);
+
+  console.<span class="fn">log</span>(<span class="str">"File opened successfully!"</span>);
+  console.<span class="fn">log</span>(<span class="str">"reading the file"</span>);
+
+  fs.<span class="fn">read</span>(fd, buf, 0, buf.length, 0, <span class="kw">function</span> (err, bytes) {
+    <span class="kw">if</span> (err) console.<span class="fn">log</span>(err);
+
+    console.<span class="fn">log</span>(bytes + <span class="str">" bytes read"</span>);
+    <span class="kw">if</span> (bytes &gt; 0) {
+      console.<span class="fn">log</span>(buf.<span class="fn">slice</span>(0, bytes).<span class="fn">toString</span>());
+    }
+  });
+});</pre>
+<p><strong>Output:</strong> opening an existing file → File opened successfully! → reading the file → 40 bytes read → Geeks: A computer science portal</p>
+</div>
+</section>
+
+<section id="write">
+<h2>6. Writing to a file</h2>
+<div class="card">
+<p><code>fs.writeFile()</code> asynchronously writes data to a file. If the file already exists, the operation overwrites its existing content.</p>
+<pre>fs.writeFile(path, data, options, callback)</pre>
+<ul><li><strong>path:</strong> file location or file descriptor.</li><li><strong>data:</strong> content to write, such as a string or buffer.</li><li><strong>options:</strong> controls encoding, mode and flag.</li><li><strong>callback:</strong> runs when writing completes.</li></ul>
+<pre><span class="kw">const</span> fs = <span class="fn">require</span>(<span class="str">"fs"</span>);
+
+console.<span class="fn">log</span>(<span class="str">"writing into existing file"</span>);
+fs.<span class="fn">writeFile</span>(<span class="str">"input.txt"</span>, <span class="str">"Geeks"</span>, <span class="kw">function</span> (err) {
+  <span class="kw">if</span> (err) <span class="kw">return</span> console.<span class="fn">error</span>(err);
+
+  console.<span class="fn">log</span>(<span class="str">"Data written successfully!"</span>);
+  console.<span class="fn">log</span>(<span class="str">"Let's read newly written data"</span>);
+
+  fs.<span class="fn">readFile</span>(<span class="str">"input.txt"</span>, <span class="kw">function</span> (err, data) {
+    <span class="kw">if</span> (err) <span class="kw">return</span> console.<span class="fn">error</span>(err);
+    console.<span class="fn">log</span>(<span class="str">"Asynchronous read: "</span> + data.<span class="fn">toString</span>());
+  });
+});</pre>
+<p><strong>Output:</strong> writing into existing file → Data written successfully! → Let's read newly written data → Asynchronous read: Geeks</p>
+<div class="callout"><strong>Remember:</strong> <code>writeFile()</code> replaces the existing content. If you want to keep existing content and add more, use <code>appendFile()</code>.</div>
+</div>
+</section>
+
+<section id="append">
+<h2>7. Appending to a file</h2>
+<div class="card">
+<p>Appending means adding new data to the <strong>end</strong> of an existing file without overwriting its current content.</p>
+<table><tr><th>Method</th><th>Style</th><th>Purpose</th></tr>
+<tr><td><code>fs.appendFile()</code></td><td>Asynchronous</td><td>Add data and continue without blocking.</td></tr>
+<tr><td><code>fs.appendFileSync()</code></td><td>Synchronous</td><td>Add data and wait for completion.</td></tr></table>
+<h3>Asynchronous example</h3>
+<pre><span class="kw">const</span> fs = <span class="fn">require</span>(<span class="str">"fs"</span>);
+<span class="kw">let</span> data = <span class="str">"\nLearn Node.js"</span>;
+
+fs.<span class="fn">appendFile</span>(<span class="str">"input.txt"</span>, data, <span class="str">"utf8"</span>, <span class="kw">function</span> (err) {
+  <span class="kw">if</span> (err) <span class="kw">throw</span> err;
+  console.<span class="fn">log</span>(<span class="str">"Data is appended to file successfully."</span>);
+});</pre>
+<h3>Synchronous example</h3>
+<pre><span class="kw">const</span> fs = <span class="fn">require</span>(<span class="str">"fs"</span>);
+<span class="kw">const</span> data = <span class="str">"\nLearn Node.js"</span>;
+
+fs.<span class="fn">appendFileSync</span>(<span class="str">"input.txt"</span>, data, <span class="str">"utf8"</span>);
+console.<span class="fn">log</span>(<span class="str">"Data is appended to file successfully."</span>);</pre>
+<div class="hand"><h3>✍️ Before → After</h3>
+<p><strong>Before:</strong> Geeks: A computer science portal</p>
+<p><strong>After:</strong> Geeks: A computer science portal<br>Learn Node.js</p></div>
+</div>
+</section>
+
+<section id="close">
+<h2>8. Closing a file</h2>
+<div class="card">
+<p><code>fs.close()</code> asynchronously closes an open file descriptor and releases the associated system resources.</p>
+<pre>fs.close(fd, callback)</pre>
+<ul><li><strong>fd:</strong> integer representing the file descriptor.</li><li><strong>callback:</strong> runs after closing completes.</li><li><strong>err:</strong> indicates a failure, if one occurs.</li><li>Do not close a descriptor while an active file operation is using it.</li></ul>
+<pre><span class="com">// Close the opened file.</span>
+fs.<span class="fn">close</span>(fd, <span class="kw">function</span> (err) {
+  <span class="kw">if</span> (err) {
+    console.<span class="fn">log</span>(err);
+  }
+  console.<span class="fn">log</span>(<span class="str">"File closed successfully."</span>);
+});</pre>
+<p><strong>Output:</strong> File closed successfully.</p>
+</div>
+</section>
+
+<section id="delete">
+<h2>9. Deleting a file</h2>
+<div class="card">
+<p><code>fs.unlink()</code> deletes a file or symbolic link from the file system.</p>
+<div class="callout"><strong>Important:</strong> <code>fs.unlink()</code> is for files or symbolic links, not directories. The source material notes that <code>fs.rm()</code> is used to delete directories.</div>
+<pre>fs.unlink(path, callback)</pre>
+<pre><span class="kw">const</span> fs = <span class="fn">require</span>(<span class="str">"fs"</span>);
+
+console.<span class="fn">log</span>(<span class="str">"deleting an existing file"</span>);
+fs.<span class="fn">unlink</span>(<span class="str">"input.txt"</span>, <span class="kw">function</span> (err) {
+  <span class="kw">if</span> (err) <span class="kw">return</span> console.<span class="fn">error</span>(err);
+  console.<span class="fn">log</span>(<span class="str">"File deleted successfully!"</span>);
+});</pre>
+<p><strong>Output:</strong> deleting an existing file → File deleted successfully!</p>
+</div>
+</section>
+
+<section id="recap">
+<h2>10. Quick revision</h2>
+<div class="card">
+<table>
+<tr><th>Operation</th><th>Node.js method</th><th>Easy meaning</th></tr>
+<tr><td>Import</td><td><code>require("fs")</code></td><td>Get the file-system toolbox.</td></tr>
+<tr><td>Read synchronously</td><td><code>fs.readFileSync()</code></td><td>Read and wait.</td></tr>
+<tr><td>Read asynchronously</td><td><code>fs.readFile()</code></td><td>Read and continue.</td></tr>
+<tr><td>Open</td><td><code>fs.open()</code></td><td>Open a file and get its descriptor.</td></tr>
+<tr><td>Read opened file</td><td><code>fs.read()</code></td><td>Read using the descriptor and buffer.</td></tr>
+<tr><td>Write</td><td><code>fs.writeFile()</code></td><td>Write/replace file content.</td></tr>
+<tr><td>Append</td><td><code>fs.appendFile()</code></td><td>Add data at the end.</td></tr>
+<tr><td>Append synchronously</td><td><code>fs.appendFileSync()</code></td><td>Add data and wait.</td></tr>
+<tr><td>Close</td><td><code>fs.close()</code></td><td>Close the file descriptor.</td></tr>
+<tr><td>Delete file</td><td><code>fs.unlink()</code></td><td>Remove a file.</td></tr>
+</table>
+
+<div class="hand"><h3>🧠 One-line memory map</h3>
+<p><strong>OPEN → READ / WRITE → APPEND → CLOSE → DELETE</strong></p>
+<p>And remember: <strong>Sync = wait</strong> • <strong>Async = continue</strong></p></div>
+
+<h3>Self-check</h3>
+<details><summary>1. What does the fs module do?</summary><p>It provides Node.js file and directory operations such as reading, writing, appending, opening, closing and deleting.</p></details>
+<details><summary>2. What is the main idea of synchronous file operations?</summary><p>The program waits for the current operation to finish before moving on.</p></details>
+<details><summary>3. What is the main idea of asynchronous file operations?</summary><p>The program can continue while the file operation completes and its result is handled later.</p></details>
+<details><summary>4. Which method appends without overwriting?</summary><p><code>fs.appendFile()</code> or <code>fs.appendFileSync()</code>.</p></details>
+<details><summary>5. Which method deletes a file?</summary><p><code>fs.unlink()</code>.</p></details>
+</div>
+</section>
+</main>
+<footer>
+Node.js File System Learning Module • Built as a self-contained educational webpage
+</footer>
+<script>
+document.querySelectorAll('pre').forEach(p=>{
+  p.setAttribute('tabindex','0');
+  p.title='Code block — scroll horizontally on small screens if needed';
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Custom Modules in Node.js — Student Notes</title>
+<style>
+:root{
+  --bg:#f6f8fb;--card:#fff;--text:#172033;--muted:#5d687a;
+  --primary:#2563eb;--primary2:#1d4ed8;--accent:#e8f0ff;--code:#111827;
+  --border:#dfe5ee;--success:#0f766e;--warn:#fff7ed;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+background:var(--bg);color:var(--text);line-height:1.65}
+header{background:linear-gradient(135deg,#172554,#2563eb);color:#fff;padding:48px 20px}
+.hero{max-width:1100px;margin:auto}
+.badge{display:inline-block;background:#ffffff22;border:1px solid #ffffff44;padding:6px 12px;border-radius:999px;font-size:.85rem}
+h1{font-size:clamp(2rem,5vw,3.5rem);margin:14px 0 8px;line-height:1.1}
+.hero p{max-width:780px;color:#dbeafe;font-size:1.05rem}
+nav{position:sticky;top:0;z-index:10;background:#ffffffee;backdrop-filter:blur(10px);
+border-bottom:1px solid var(--border)}
+.navin{max-width:1100px;margin:auto;display:flex;gap:8px;overflow:auto;padding:10px 16px}
+nav a{white-space:nowrap;text-decoration:none;color:var(--text);padding:8px 12px;border-radius:8px}
+nav a:hover{background:var(--accent);color:var(--primary)}
+main{max-width:1100px;margin:28px auto;padding:0 16px}
+section{margin:0 0 30px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;
+box-shadow:0 4px 18px #1720330a}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+h2{font-size:1.7rem;margin:0 0 14px}
+h3{margin-top:0}
+.lead{font-size:1.08rem;color:var(--muted)}
+.callout{border-left:5px solid var(--primary);background:var(--accent);padding:16px 18px;border-radius:10px;margin:18px 0}
+.eli{border-left-color:#7c3aed;background:#f5f3ff}
+.hand{font-family:"Comic Sans MS","Segoe Print",cursive;background:#fffdf3;border:1px dashed #d6b656}
+.mind{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;padding:20px}
+.node{padding:11px 15px;border-radius:12px;background:#eef2ff;border:1px solid #c7d2fe;font-weight:600}
+.node.core{background:#2563eb;color:#fff;border-color:#2563eb}
+.arrow{font-size:1.4rem;color:var(--muted)}
+.filetree{background:#f8fafc;border:1px solid var(--border);border-radius:12px;padding:18px;font-family:ui-monospace,monospace;white-space:pre;overflow:auto}
+pre{background:var(--code);color:#e5e7eb;padding:18px;border-radius:12px;overflow:auto;font-size:.92rem}
+code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.inline{background:#eef2f7;padding:2px 6px;border-radius:5px}
+.kw{color:#93c5fd}.str{color:#86efac}.fn{color:#fcd34d}.cm{color:#9ca3af}
+table{width:100%;border-collapse:collapse;margin:14px 0}
+th,td{border:1px solid var(--border);padding:11px;text-align:left;vertical-align:top}
+th{background:#f1f5f9}
+.step{display:flex;gap:14px;align-items:flex-start;margin:12px 0}
+.num{min-width:34px;height:34px;border-radius:50%;background:var(--primary);color:#fff;
+display:grid;place-items:center;font-weight:700}
+.quiz button{border:1px solid var(--border);background:#fff;padding:9px 12px;border-radius:8px;margin:5px;cursor:pointer}
+.quiz button:hover{border-color:var(--primary)}
+.answer{display:none;margin-top:10px;color:var(--success);font-weight:600}
+footer{text-align:center;color:var(--muted);padding:30px 16px}
+@media(max-width:720px){.grid{grid-template-columns:1fr}.card{padding:18px}main{margin-top:18px}h2{font-size:1.4rem}}
+</style>
+</head>
+<body>
+<header>
+  <div class="hero">
+    <span class="badge">Node.js • Unit 3 • Custom Modules</span>
+    <h1>Custom Modules</h1>
+    <p>Learn how to create your own reusable Node.js modules, export functions, and use them from other files.</p>
+  </div>
+</header>
+
+<nav><div class="navin">
+<a href="#idea">Concept</a><a href="#create">Create</a><a href="#export">Export</a>
+<a href="#use">Use</a><a href="#organize">Organize</a><a href="#quiz">Quick Check</a>
+</div></nav>
+
+<main>
+<section id="idea" class="card">
+<h2>1. What is a Custom Module?</h2>
+<p class="lead">A custom module is a <strong>user-defined module</strong> containing reusable code such as functions, objects, or classes. Other parts of a Node.js application can use that code.</p>
+<div class="callout eli"><strong>🧒 ELI10:</strong> Think of a module as a small toolbox. You put useful tools inside it, label the toolbox, and another program can take the tools it needs.</div>
+<div class="grid">
+<div>
+<h3>Why use custom modules?</h3>
+<ul>
+<li>Organize code across multiple files.</li>
+<li>Reuse functions, objects, or classes.</li>
+<li>Improve maintainability and readability.</li>
+<li>Make an application more modular.</li>
+</ul>
+</div>
+<div>
+<h3>Core idea</h3>
+<div class="mind">
+<span class="node core">Custom Module</span><span class="arrow">→</span>
+<span class="node">Define code</span><span class="arrow">→</span>
+<span class="node">Export</span><span class="arrow">→</span>
+<span class="node">require()</span><span class="arrow">→</span>
+<span class="node">Reuse</span>
+</div>
+</div>
+</div>
+</section>
+
+<section id="create" class="card">
+<h2>2. Creating a Custom Module</h2>
+<p>Start by creating a JavaScript file. This file becomes your custom module. Define the functions, classes, or objects that you want the module to contain.</p>
+<div class="step"><div class="num">1</div><div><strong>Create a file.</strong><br>Example: <span class="inline">math-utils.js</span></div></div>
+<div class="step"><div class="num">2</div><div><strong>Define reusable functions.</strong><br>The source document demonstrates <span class="inline">add()</span> and <span class="inline">multiply()</span>.</div></div>
+<pre><code>// math-utils.js
+<span class=<span class="str">"kw"</span>>function</span> add(a, b) {
+  <span class=<span class="str">"kw"</span>>return</span> a + b;
+}
+
+<span class=<span class="str">"kw"</span>>function</span> multiply(a, b) {
+  <span class=<span class="str">"kw"</span>>return</span> a * b;
+}</code></pre>
+</section>
+
+<section id="export" class="card">
+<h2>3. Exporting Code</h2>
+<p>Defining a function is not enough. To make it available to another file, export it.</p>
+<div class="grid">
+<div class="card" style="box-shadow:none">
+<h3>Using <span class="inline">module.exports</span></h3>
+<pre><code>// math-utils.js
+<span class=<span class="str">"kw"</span>>function</span> add(a, b) {
+  <span class=<span class="str">"kw"</span>>return</span> a + b;
+}
+
+<span class=<span class="str">"kw"</span>>function</span> multiply(a, b) {
+  <span class=<span class="str">"kw"</span>>return</span> a * b;
+}
+
+module.exports = {
+  add,
+  multiply
+};</code></pre>
+</div>
+<div class="card" style="box-shadow:none">
+<h3>Using <span class="inline">exports</span></h3>
+<pre><code><span class=<span class="str">"kw"</span>>function</span> add(a, b) {
+  <span class=<span class="str">"kw"</span>>return</span> a + b;
+}
+
+<span class=<span class="str">"kw"</span>>function</span> multiply(a, b) {
+  <span class=<span class="str">"kw"</span>>return</span> a * b;
+}
+
+exports.add = add;
+exports.multiply = multiply;</code></pre>
+</div>
+</div>
+<div class="callout hand"><strong>✍️ Remember:</strong> Both approaches export <code>add</code> and <code>multiply</code>, so another file can access them with <code>require()</code>.</div>
+</section>
+
+<section id="use" class="card">
+<h2>4. Importing and Using a Custom Module</h2>
+<p>The source material uses <code>require()</code> to load the custom module into another JavaScript file.</p>
+<pre><code>// arthmetic.js
+<span class=<span class="str">"kw"</span>>const</span> mathUtils = <span class=<span class="str">"kw"</span>>require</span>(&#x27;./math-utils&#x27;);
+
+<span class=<span class="str">"kw"</span>>const</span> sum = mathUtils.add(5, 3);
+<span class=<span class="str">"kw"</span>>const</span> product = mathUtils.multiply(5, 3);
+
+console.log(`Sum: ${{sum}}, Product: ${{product}}`);</code></pre>
+<div class="callout"><strong>🧠 Visualize it:</strong> <code>math-utils.js</code> is the toolbox. <code>arthmetic.js</code> opens that toolbox using <code>require('./math-utils')</code> and uses its tools.</div>
+</section>
+
+<section id="organize" class="card">
+<h2>5. Organizing Code into Multiple Modules</h2>
+<p>As an application becomes larger, separating functionality into different modules can improve clarity and maintainability. Each module should handle a specific functionality.</p>
+<div class="filetree">math application
+├── addition.js       → add()
+├── multiplication.js → multiply()
+├── division.js       → divide()
+├── subtraction.js    → subtract()
+└── arithmetic.js     → loads and uses the modules</div>
+
+<h3>Module files</h3>
+<div class="grid">
+<div><strong>addition.js</strong><pre><code><span class=<span class="str">"kw"</span>>function</span> add(a, b) {
+  <span class=<span class="str">"kw"</span>>return</span> a + b;
+}
+
+module.exports = add;</code></pre></div>
+<div><strong>multiplication.js</strong><pre><code><span class=<span class="str">"kw"</span>>function</span> multiply(a, b) {
+  <span class=<span class="str">"kw"</span>>return</span> a * b;
+}
+
+module.exports = multiply;</code></pre></div>
+<div><strong>subtraction.js</strong><pre><code><span class=<span class="str">"kw"</span>>function</span> subtract(a, b) {
+  <span class=<span class="str">"kw"</span>>return</span> a - b;
+}
+
+module.exports = subtract;</code></pre></div>
+<div><strong>division.js</strong><pre><code><span class=<span class="str">"kw"</span>>function</span> divide(a, b) {
+  <span class=<span class="str">"kw"</span>>return</span> a / b;
+}
+
+module.exports = divide;</code></pre></div>
+</div>
+
+<h3>Using all modules</h3>
+<pre><code>// arthmetic.js
+<span class=<span class="str">"kw"</span>>const</span> add = <span class=<span class="str">"kw"</span>>require</span>(&#x27;./addition&#x27;);
+<span class=<span class="str">"kw"</span>>const</span> multiply = <span class=<span class="str">"kw"</span>>require</span>(&#x27;./multiplication&#x27;);
+<span class=<span class="str">"kw"</span>>const</span> divide = <span class=<span class="str">"kw"</span>>require</span>(&#x27;./division&#x27;);
+<span class=<span class="str">"kw"</span>>const</span> subtract = <span class=<span class="str">"kw"</span>>require</span>(&#x27;./subtraction&#x27;);
+
+console.log(`Addition: ${add(5, 3)}`);
+console.log(`Multiplication: ${multiply(5, 3)}`);
+console.log(`Division: ${divide(6, 3)}`);
+console.log(`Subtraction: ${subtract(5, 3)}`);</code></pre>
+</section>
+
+<section class="card">
+<h2>6. Quick Comparison</h2>
+<table>
+<tr><th>Part</th><th>What it does</th><th>Example from the material</th></tr>
+<tr><td>Custom module</td><td>Stores reusable user-defined code.</td><td><code>math-utils.js</code></td></tr>
+<tr><td>Export</td><td>Makes module code available to another file.</td><td><code>module.exports</code> / <code>exports</code></td></tr>
+<tr><td>Import</td><td>Loads a custom module into another file.</td><td><code>require('./math-utils')</code></td></tr>
+<tr><td>Multiple modules</td><td>Separates different functionality into focused files.</td><td>addition, multiplication, division, subtraction</td></tr>
+</table>
+</section>
+
+<section id="quiz" class="card quiz">
+<h2>7. Quick Check 🎯</h2>
+<p><strong>Q1. Why do we create custom modules?</strong></p>
+<button>To organize and reuse code</button><button>To remove JavaScript</button><button>To replace Node.js</button>
+<div class="answer">✔ Correct: Custom modules help organize and reuse code.</div>
+<p><strong>Q2. Which function is used in the source material to load a custom module?</strong></p>
+<button>load()</button><button>require()</button><button>importModule()</button>
+<div class="answer">✔ Correct: require()</div>
+<p><strong>Q3. Which can be exported from a custom module?</strong></p>
+<button>Only numbers</button><button>Functions, objects, or classes</button><button>Only HTML</button>
+<div class="answer">✔ Correct: Functions, objects, or classes can be exported.</div>
+</section>
+
+<section class="card">
+<h2>8. One-Minute Revision 🧠</h2>
+<div class="callout eli">
+<strong>Define → Export → Require → Use</strong><br><br>
+1. <strong>Define</strong> reusable code in a JavaScript file.<br>
+2. <strong>Export</strong> it with <code>module.exports</code> or <code>exports</code>.<br>
+3. <strong>Require</strong> the module from another file.<br>
+4. <strong>Use</strong> the exported functions, objects, or classes.
+</div>
+<button id="copyAll">Copy all code</button>
+</section>
+</main>
+
+<footer>
+Educational notes based on the uploaded document “Custom Modules”.<br>
+Source: uploaded course material. 
+</footer>
+<script>
+document.querySelectorAll('.quiz button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const box=btn.closest('.quiz').querySelector('.answer');
+    box.style.display='block';
+  });
+});
+document.getElementById('copyAll')?.addEventListener('click',()=>{
+  const codes=[...document.querySelectorAll('pre')].map(x=>x.innerText).join('\n\n');
+  navigator.clipboard?.writeText(codes).then(()=>{
+    const b=document.getElementById('copyAll'); b.textContent='Copied!';
+    setTimeout(()=>b.textContent='Copy all code',1500);
+  });
+});
+</script>
+</body>
+</html>

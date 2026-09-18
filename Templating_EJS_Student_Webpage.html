@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Express.js Templating with EJS</title>
+<style>
+  *{box-sizing:border-box}
+  :root{
+    --ink:#263238; --muted:#60717a; --paper:#fffdf7; --card:#ffffff;
+    --blue:#2563eb; --blue-soft:#eaf2ff; --green:#16834b; --green-soft:#eaf8f0;
+    --orange:#d97706; --orange-soft:#fff4df; --pink:#be185d; --pink-soft:#fff0f6;
+    --border:#dce4e8; --shadow:0 10px 30px rgba(38,50,56,.08);
+  }
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;color:var(--ink);background:
+      radial-gradient(circle at 15% 10%,rgba(37,99,235,.06),transparent 25%),
+      radial-gradient(circle at 85% 30%,rgba(22,131,75,.06),transparent 25%),
+      var(--paper);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+    line-height:1.65;
+  }
+  .wrap{max-width:1180px;margin:auto;padding:0 20px}
+  header{
+    padding:56px 0 38px;
+    background:linear-gradient(135deg,#eff6ff 0%,#fffdf7 52%,#ecfdf5 100%);
+    border-bottom:1px solid var(--border);
+  }
+  .eyebrow{font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);font-size:.78rem}
+  h1{font-size:clamp(2.1rem,5vw,4rem);line-height:1.05;margin:8px 0 14px}
+  .lead{font-size:1.12rem;color:var(--muted);max-width:780px}
+  .badge-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+  .badge{padding:7px 12px;border-radius:999px;background:#fff;border:1px solid var(--border);font-weight:700;font-size:.9rem}
+  nav{
+    position:sticky;top:0;z-index:10;background:rgba(255,253,247,.92);
+    backdrop-filter:blur(10px);border-bottom:1px solid var(--border)
+  }
+  nav .wrap{display:flex;gap:8px;overflow:auto;padding-top:9px;padding-bottom:9px}
+  nav a{white-space:nowrap;text-decoration:none;color:var(--ink);font-weight:700;padding:7px 11px;border-radius:9px}
+  nav a:hover{background:var(--blue-soft);color:var(--blue)}
+  main{padding:38px 0 70px}
+  section{margin:0 0 48px;scroll-margin-top:70px}
+  h2{font-size:1.9rem;margin:0 0 16px}
+  h3{margin:0 0 8px}
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+  .grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+  .card{
+    background:var(--card);border:1px solid var(--border);border-radius:18px;
+    padding:22px;box-shadow:var(--shadow)
+  }
+  .card p:last-child{margin-bottom:0}
+  .callout{border-left:5px solid var(--blue);background:var(--blue-soft);padding:17px 19px;border-radius:12px;margin:18px 0}
+  .callout.green{border-left-color:var(--green);background:var(--green-soft)}
+  .callout.orange{border-left-color:var(--orange);background:var(--orange-soft)}
+  .callout.pink{border-left-color:var(--pink);background:var(--pink-soft)}
+  .eli10{
+    font-family:"Comic Sans MS","Segoe Print",cursive;
+    background:#fffef0;border:2px dashed #e5c94b;border-radius:18px;
+    padding:20px;transform:rotate(-.2deg);box-shadow:3px 5px 0 rgba(229,201,75,.18)
+  }
+  .eli10 strong{color:#8a6b00}
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+  .compare .bad{border-top:5px solid #ef4444}
+  .compare .good{border-top:5px solid var(--green)}
+  pre{
+    margin:14px 0 0;padding:18px;border-radius:14px;overflow:auto;
+    background:#182027;color:#e9f1f4;border:1px solid #2c3941;
+    font:14px/1.6 Consolas,"Courier New",monospace;
+  }
+  code{font-family:Consolas,"Courier New",monospace}
+  .inline{background:#eef2f4;padding:2px 6px;border-radius:5px;font-family:Consolas,monospace}
+  .steps{counter-reset:step;display:grid;gap:13px}
+  .step{display:grid;grid-template-columns:46px 1fr;gap:13px;align-items:start}
+  .step:before{
+    counter-increment:step;content:counter(step);display:grid;place-items:center;
+    width:42px;height:42px;border-radius:50%;background:var(--blue);color:white;font-weight:800
+  }
+  .flow{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:20px 0}
+  .flowbox{padding:15px 18px;border:2px solid var(--border);background:#fff;border-radius:14px;font-weight:800;text-align:center}
+  .flowbox.template{border-color:#82c784;background:#f0faef}
+  .flowbox.engine{border-color:#7db6ff;background:#edf5ff}
+  .flowbox.html{border-color:#a8a8a8;background:#f5f5f5}
+  .arrow{font-size:1.5rem;font-weight:900;color:var(--muted)}
+  table{width:100%;border-collapse:collapse;background:white;border:1px solid var(--border);border-radius:14px;overflow:hidden}
+  th,td{padding:12px 14px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+  th{background:#f1f5f9}
+  tr:last-child td{border-bottom:0}
+  .tag{font-family:Consolas,monospace;font-weight:800;color:var(--pink)}
+  ul{padding-left:21px}
+  .folder{
+    background:#101820;color:#dfeaf0;padding:18px;border-radius:14px;font:14px/1.7 Consolas,monospace
+  }
+  .folder .dir{color:#8bd5a9}.folder .file{color:#9bc8ff}
+  .mini{font-size:.92rem;color:var(--muted)}
+  footer{border-top:1px solid var(--border);padding:25px 0 45px;color:var(--muted)}
+  .top{position:fixed;right:18px;bottom:18px;border:0;background:var(--ink);color:white;width:44px;height:44px;border-radius:50%;cursor:pointer;font-size:18px}
+  @media(max-width:800px){
+    .grid,.grid3,.compare{grid-template-columns:1fr}
+    header{padding-top:38px}
+    .flow{flex-direction:column}
+    .arrow{transform:rotate(90deg)}
+  }
+</style>
+</head>
+<body id="top">
+<header>
+  <div class="wrap">
+    <div class="eyebrow">Express.js • Unit: Templating</div>
+    <h1>Templating with EJS</h1>
+    <p class="lead">
+      Learn how Express.js can generate HTML dynamically using the Embedded JavaScript (EJS)
+      template engine—without filling your server code with long HTML strings.
+    </p>
+    <div class="badge-row">
+      <span class="badge">Student-friendly notes</span>
+      <span class="badge">ELI10 explanations</span>
+      <span class="badge">Visual workflow</span>
+      <span class="badge">Examples + code</span>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="wrap">
+    <a href="#why">Why templating?</a>
+    <a href="#setup">Setup</a>
+    <a href="#render">Render</a>
+    <a href="#flow">How it works</a>
+    <a href="#tags">EJS tags</a>
+    <a href="#dynamic">Dynamic example</a>
+    <a href="#project">Project structure</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<section id="why">
+  <h2>1. Why do we need a template engine?</h2>
+  <div class="eli10">
+    <strong>Think of a template as a form.</strong><br>
+    The HTML gives us the fixed design, while placeholders are empty spaces waiting
+    for values such as a username. EJS fills those spaces before the final HTML reaches the browser.
+  </div>
+
+  <div class="compare">
+    <article class="card bad">
+      <h3>❌ Without a template engine</h3>
+      <p>HTML is written as JavaScript strings and values are joined using string concatenation.</p>
+      <pre><code>app.get("/", (req, res) =&gt; {
+  const username = "Ravi";
+
+  res.send(
+    "&lt;html&gt;" +
+    "&lt;body&gt;" +
+    "&lt;h1&gt;Welcome, " + username + "&lt;/h1&gt;" +
+    "&lt;/body&gt;" +
+    "&lt;/html&gt;"
+  );
+});</code></pre>
+    </article>
+
+    <article class="card good">
+      <h3>✅ With a template engine</h3>
+      <p>Keep HTML in a separate template file and put placeholders where dynamic data should appear.</p>
+      <pre><code>&lt;h1&gt;Welcome, &lt;%= username %&gt;&lt;/h1&gt;</code></pre>
+      <div class="callout green">
+        <strong>Main idea:</strong> Express supplies the data, EJS combines the data with the template,
+        and the browser receives the completed HTML.
+      </div>
+    </article>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h3>Problems solved by templating</h3>
+    <ul>
+      <li>HTML is no longer mixed heavily with JavaScript.</li>
+      <li>String concatenation is easier to avoid.</li>
+      <li>Conditions, loops, and additional HTML can be handled inside the template.</li>
+      <li>Pages are easier to maintain because presentation is kept in template files.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="setup">
+  <h2>2. Install and configure EJS</h2>
+  <div class="steps">
+    <div class="step">
+      <div><h3>Install Express and EJS</h3><p>Run this command in your project directory:</p>
+      <pre><code>npm install express ejs</code></pre></div>
+    </div>
+    <div class="step">
+      <div><h3>Tell Express to use EJS</h3>
+      <pre><code>const express = require("express");
+const app = express();
+
+app.set("view engine", "ejs");
+
+app.listen(3000, () =&gt; {
+  console.log("Server running on port 3000");
+});</code></pre></div>
+    </div>
+    <div class="step">
+      <div><h3>Create the <span class="inline">views</span> folder</h3>
+      <p>Express looks for template files in a directory named <span class="inline">views</span> by default.
+      The views directory can also be configured explicitly using <span class="inline">app.set("views", "...")</span>.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="render">
+  <h2>3. Create and render your first EJS template</h2>
+  <div class="grid">
+    <article class="card">
+      <h3>Template: <span class="inline">views/home.ejs</span></h3>
+      <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;Home&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Welcome, &lt;%= username %&gt;&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+      <p><span class="tag">&lt;%= username %&gt;</span> is the placeholder. Its value will come from the Express route.</p>
+    </article>
+
+    <article class="card">
+      <h3>Express route</h3>
+      <pre><code>app.get("/", (req, res) =&gt; {
+  const username = "Ravi";
+
+  res.render("home", {
+    username: username
+  });
+});</code></pre>
+      <div class="callout">
+        <strong>Result:</strong> EJS replaces <span class="inline">&lt;%= username %&gt;</span> with
+        <span class="inline">Ravi</span>, and the browser receives the completed HTML.
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="flow">
+  <h2>4. Visual learning: what happens internally?</h2>
+  <div class="flow">
+    <div class="flowbox">🌐 Browser<br><span class="mini">requests /</span></div>
+    <div class="arrow">→</div>
+    <div class="flowbox">⚡ Express Route<br><span class="mini">executes</span></div>
+    <div class="arrow">→</div>
+    <div class="flowbox">🎨 <code>res.render()</code><br><span class="mini">starts rendering</span></div>
+    <div class="arrow">→</div>
+    <div class="flowbox template">📄 <code>home.ejs</code><br><span class="mini">template + data</span></div>
+    <div class="arrow">→</div>
+    <div class="flowbox engine">⚙️ EJS<br><span class="mini">inserts values</span></div>
+    <div class="arrow">→</div>
+    <div class="flowbox html">📃 HTML<br><span class="mini">sent to browser</span></div>
+  </div>
+
+  <div class="eli10">
+    <strong>Easy memory trick:</strong>
+    <br><br>
+    <b>Browser → Express → render → EJS template + data → final HTML → Browser</b>
+  </div>
+</section>
+
+<section>
+  <h2>5. Complete basic example</h2>
+  <div class="card">
+    <h3><code>homeApp.js</code></h3>
+    <pre><code>const express = require("express");
+const app = express();
+
+app.set("view engine", "ejs");
+
+app.get("/", (req, res) =&gt; {
+  const username = "Ravi";
+
+  res.render("home", {
+    username: username
+  });
+});
+
+app.listen(3000, () =&gt; {
+  console.log("Server running on port 3000");
+});</code></pre>
+  </div>
+</section>
+
+<section id="tags">
+  <h2>6. EJS tags — your template toolbox</h2>
+  <p class="mini">The source document introduces the following EJS tags and their purposes.</p>
+  <div class="card">
+    <table>
+      <thead><tr><th>Tag</th><th>Purpose</th><th>Simple idea</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag">&lt;%</span></td><td>Scriptlet tag for control flow; produces no output.</td><td>Run template logic</td></tr>
+        <tr><td><span class="tag">&lt;%_</span></td><td>Whitespace-slurping scriptlet; strips whitespace before it.</td><td>Run logic + remove preceding whitespace</td></tr>
+        <tr><td><span class="tag">&lt;%=</span></td><td>Outputs a value into the template with HTML escaping.</td><td>Show a value safely</td></tr>
+        <tr><td><span class="tag">&lt;%-</span></td><td>Outputs an unescaped value into the template.</td><td>Output raw content</td></tr>
+        <tr><td><span class="tag">&lt;%#</span></td><td>Comment tag; no execution and no output.</td><td>Template comment</td></tr>
+        <tr><td><span class="tag">&lt;%%</span></td><td>Outputs a literal <code>&lt;%</code>.</td><td>Show the tag itself</td></tr>
+        <tr><td><span class="tag">%&gt;</span></td><td>Plain ending tag.</td><td>End the EJS block</td></tr>
+        <tr><td><span class="tag">-%&gt;</span></td><td>Trim-mode ending tag; trims the following newline.</td><td>End + trim newline</td></tr>
+        <tr><td><span class="tag">_%&gt;</span></td><td>Whitespace-slurping ending tag; removes whitespace after it.</td><td>End + remove following whitespace</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="dynamic">
+  <h2>7. Dynamic content: conditions, loops, and includes</h2>
+  <div class="grid">
+    <article class="card">
+      <h3>Conditional rendering</h3>
+      <p>If <span class="inline">isAdmin</span> is true, one message is displayed; otherwise another is displayed.</p>
+      <pre><code>&lt;% if (isAdmin) { %&gt;
+  &lt;p&gt;Welcome, Admin!&lt;/p&gt;
+&lt;% } else { %&gt;
+  &lt;p&gt;Welcome, User!&lt;/p&gt;
+&lt;% } %&gt;</code></pre>
+    </article>
+
+    <article class="card">
+      <h3>Looping through items</h3>
+      <p>The template can use <span class="inline">forEach()</span> to create a list dynamically.</p>
+      <pre><code>&lt;ul&gt;
+  &lt;% items.forEach(function(item) { %&gt;
+    &lt;li&gt;
+      &lt;%= item %&gt;
+    &lt;/li&gt;
+  &lt;% }); %&gt;
+&lt;/ul&gt;</code></pre>
+    </article>
+
+    <article class="card">
+      <h3>Including a header</h3>
+      <p>EJS can include another template file such as a header.</p>
+      <pre><code>&lt;%- include('header') %&gt;</code></pre>
+      <div class="callout orange">
+        <strong>Think reusable:</strong> a shared header can be kept in its own file instead of copied into every page.
+      </div>
+    </article>
+
+    <article class="card">
+      <h3>What Express passes</h3>
+      <p>Express can pass values such as a name, admin status, and an array of items to the EJS template.</p>
+      <pre><code>const data = {
+  name: 'Geeks!',
+  isAdmin: true,
+  items: ['Apple', 'Banana', 'Orange',
+          'Grapes', 'Mango']
+};
+
+res.render('index', data);</code></pre>
+    </article>
+  </div>
+</section>
+
+<section id="project">
+  <h2>8. Project structure</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Recommended layout from the example</h3>
+      <div class="folder">
+        <span class="dir">project/</span><br>
+        ├── <span class="file">index.js</span><br>
+        └── <span class="dir">views/</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;├── <span class="file">index.ejs</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;├── <span class="file">home.ejs</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;└── <span class="file">header.ejs</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Explicitly setting the views directory</h3>
+      <pre><code>const path = require('path');
+
+app.set(
+  'views',
+  path.join(__dirname, 'views')
+);</code></pre>
+      <p>This makes the location of the template files explicit.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>9. Full dynamic example</h2>
+  <div class="card">
+    <h3><code>/index.js</code></h3>
+    <pre><code>// Import required modules
+const express = require('express');
+const path = require('path');
+
+// Create an Express application
+const app = express();
+
+// Define the port
+const port = 3000;
+
+// Set EJS as the view engine
+app.set('view engine', 'ejs');
+
+// Set the views directory
+app.set('views', path.join(__dirname, 'views'));
+
+app.get('/', (req, res) =&gt; {
+  // Sending this data from the server
+  const data = {
+    name: 'Geeks!',
+    isAdmin: true,
+    items: [
+      'Apple',
+      'Banana',
+      'Orange',
+      'Grapes',
+      'Mango'
+    ]
+  };
+
+  // Render the EJS template and pass the data
+  res.render('index', data);
+});
+
+// Start the server
+app.listen(port, () =&gt; {
+  console.log(
+    `Server is running at http://localhost:${port}`
+  );
+});</code></pre>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h3><code>views/index.ejs</code></h3>
+    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;EJS Example&lt;/title&gt;
+  &lt;style&gt;
+    h1 { color: green; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;!-- Include Header File --&gt;
+  &lt;%- include('header') %&gt;
+
+  &lt;!-- Conditional Example --&gt;
+  &lt;% if (isAdmin) { %&gt;
+    &lt;p&gt;Welcome, Admin!&lt;/p&gt;
+  &lt;% } else { %&gt;
+    &lt;p&gt;Welcome, User!&lt;/p&gt;
+  &lt;% } %&gt;
+
+  &lt;!-- Loop Example --&gt;
+  &lt;ul&gt;
+    &lt;% items.forEach(function(item) { %&gt;
+      &lt;li&gt;
+        &lt;%= item %&gt;
+      &lt;/li&gt;
+    &lt;% }); %&gt;
+  &lt;/ul&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+  </div>
+</section>
+
+<section>
+  <h2>10. Quick revision mind map</h2>
+  <div class="card">
+    <div class="flow">
+      <div class="flowbox engine">EJS Templating</div>
+      <div class="arrow">→</div>
+      <div class="flowbox template">Template<br><small>HTML + EJS tags</small></div>
+      <div class="arrow">+</div>
+      <div class="flowbox">Server Data<br><small>variables / arrays</small></div>
+      <div class="arrow">→</div>
+      <div class="flowbox html">Final HTML</div>
+    </div>
+    <div class="grid3" style="margin-top:20px">
+      <div class="callout" style="margin:0"><strong>Output:</strong><br><code>&lt;%= value %&gt;</code></div>
+      <div class="callout green" style="margin:0"><strong>Logic:</strong><br><code>&lt;% ... %&gt;</code></div>
+      <div class="callout pink" style="margin:0"><strong>Reuse:</strong><br><code>&lt;%- include(...) %&gt;</code></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>11. Key takeaways</h2>
+  <div class="grid3">
+    <div class="card"><h3>🎯 Separate</h3><p>Keep HTML presentation in EJS templates instead of constructing large HTML strings in routes.</p></div>
+    <div class="card"><h3>🔄 Dynamic</h3><p>Server-side values can be inserted into the template before HTML is sent to the browser.</p></div>
+    <div class="card"><h3>🧩 Reusable</h3><p>Conditions, loops, and included templates make pages easier to organize and reuse.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>12. Reference</h2>
+  <div class="card">
+    <p>The source document points students to these EJS references:</p>
+    <ul>
+      <li><a href="https://ejs.co/#install" target="_blank" rel="noopener">EJS installation/reference</a></li>
+      <li><a href="https://www.npmjs.com/package/ejs" target="_blank" rel="noopener">EJS package on npm</a></li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <strong>Express.js Templating with EJS</strong><br>
+    <span>Student learning page • Self-contained HTML • No external CSS or JavaScript dependencies</span>
+  </div>
+</footer>
+
+<button class="top" title="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+  // Small enhancement: highlight the current navigation section while scrolling.
+  const links = [...document.querySelectorAll('nav a')];
+  const sections = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        links.forEach(link => link.style.background = '');
+        const active = document.querySelector('nav a[href="#' + entry.target.id + '"]');
+        if(active){
+          active.style.background = 'var(--blue-soft)';
+          active.style.color = 'var(--blue)';
+        }
+      }
+    });
+  }, {rootMargin:'-20% 0px -65% 0px'});
+  sections.forEach(section => observer.observe(section));
+</script>
+</body>
+</html>

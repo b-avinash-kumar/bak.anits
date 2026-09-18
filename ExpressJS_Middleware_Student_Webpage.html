@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Express.js Middleware — Student Learning Page</title>
+<style>
+  :root{
+    --bg:#f6f8fc; --card:#ffffff; --text:#172033; --muted:#5d687d;
+    --primary:#315efb; --primary-soft:#eaf0ff; --green:#dff5e5;
+    --green-border:#72bd82; --yellow:#fff4cc; --yellow-border:#e2bd45;
+    --purple:#efe7ff; --purple-border:#9b7bea; --border:#dfe4ee;
+    --code:#101827; --code-text:#e8edf7; --shadow:0 10px 30px rgba(35,50,85,.08);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+  header{background:linear-gradient(135deg,#17306f,#315efb);color:white;padding:48px 20px 56px}
+  .hero{max-width:1100px;margin:auto}
+  .badge{display:inline-block;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.25);padding:6px 12px;border-radius:999px;font-size:.82rem}
+  h1{font-size:clamp(2rem,5vw,3.4rem);margin:14px 0 8px;line-height:1.1}
+  .hero p{max-width:780px;margin:0;color:#e7edff;font-size:1.05rem}
+  nav{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--border);box-shadow:0 4px 16px rgba(0,0,0,.04)}
+  .nav-inner{max-width:1100px;margin:auto;display:flex;gap:8px;overflow:auto;padding:10px 16px}
+  nav a{white-space:nowrap;text-decoration:none;color:var(--muted);padding:8px 12px;border-radius:8px;font-size:.9rem}
+  nav a:hover{background:var(--primary-soft);color:var(--primary)}
+  main{max-width:1100px;margin:34px auto;padding:0 18px}
+  section{margin:0 0 42px;scroll-margin-top:75px}
+  h2{font-size:1.75rem;margin:0 0 16px}
+  h3{margin-top:0;font-size:1.2rem}
+  .intro,.card,.callout,.type-card,.flow{background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow)}
+  .intro{padding:24px}
+  .definition{font-size:1.08rem}
+  .key-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}
+  .key{padding:16px;border-radius:12px;background:var(--primary-soft);border:1px solid #d6e0ff}
+  .key strong{display:block;margin-bottom:4px}
+  .visual{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin:22px 0;padding:26px;background:#f1f4fa;border-radius:14px}
+  .node{padding:14px 18px;border:2px solid #25314a;border-radius:12px;background:white;font-weight:700;text-align:center}
+  .node.client,.node.response{border-radius:50%;padding:20px 16px}
+  .node.middleware{background:var(--green);border-color:var(--green-border)}
+  .arrow{font-size:1.5rem;font-weight:bold;color:var(--primary)}
+  .flow-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}
+  .step{padding:16px;border-radius:12px;background:white;border:1px solid var(--border);position:relative}
+  .step .num{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--primary);color:white;font-weight:700;margin-bottom:8px}
+  .type-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  .type-card{padding:22px}
+  .type-card.application{border-top:5px solid #315efb}
+  .type-card.router{border-top:5px solid #7a55d9}
+  .type-card.error{border-top:5px solid #d45b5b}
+  .type-card.builtin{border-top:5px solid #48a868}
+  .type-card.third{border-top:5px solid #d79b27}
+  ul{padding-left:22px}
+  li{margin:5px 0}
+  code.inline{background:#edf1f7;padding:2px 6px;border-radius:5px;color:#273552}
+  pre{background:var(--code);color:var(--code-text);padding:20px;border-radius:12px;overflow:auto;font-size:.9rem;line-height:1.55;border:1px solid #25314a}
+  .code-title{font-size:.85rem;font-weight:700;color:#647089;margin:16px 0 8px}
+  .note{background:var(--yellow);border-left:5px solid var(--yellow-border);padding:15px 17px;border-radius:10px;margin:18px 0}
+  .remember{background:var(--purple);border-left:5px solid var(--purple-border);padding:15px 17px;border-radius:10px}
+  .chain{padding:24px;background:#f0f5ff;border-radius:16px;border:1px solid #d8e2ff}
+  .chain-row{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin:18px 0}
+  .chain-box{padding:14px 18px;border-radius:10px;background:white;border:2px solid #8297cf;min-width:115px;text-align:center;font-weight:700}
+  .chain-box small{display:block;font-weight:400;color:var(--muted)}
+  .chain-arrow{font-weight:bold;color:var(--primary);font-size:1.3rem}
+  .example-card{padding:24px}
+  .explain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+  .explain{padding:16px;border:1px solid var(--border);border-radius:12px;background:#fbfcff}
+  .output{background:#eef8f0;border:1px solid #b9dfc0;border-radius:12px;padding:18px}
+  .quiz{background:#fff;border:1px solid var(--border);border-radius:16px;padding:24px;box-shadow:var(--shadow)}
+  .question{padding:18px 0;border-bottom:1px solid var(--border)}
+  .question:last-child{border-bottom:0}
+  button{border:0;border-radius:9px;background:var(--primary);color:white;padding:11px 18px;cursor:pointer;font-weight:700}
+  button:hover{filter:brightness(.94)}
+  .answer{display:none;margin-top:10px;padding:10px 12px;background:var(--green);border-radius:8px}
+  footer{text-align:center;color:var(--muted);padding:25px}
+  @media(max-width:800px){
+    .key-grid{grid-template-columns:repeat(2,1fr)}
+    .type-grid{grid-template-columns:1fr}
+    .flow-steps{grid-template-columns:repeat(2,1fr)}
+    .explain-grid{grid-template-columns:1fr}
+  }
+  @media(max-width:520px){
+    header{padding:35px 16px 42px}
+    main{padding:0 12px}
+    .key-grid,.flow-steps{grid-template-columns:1fr}
+    h2{font-size:1.45rem}
+    pre{font-size:.8rem}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hero">
+    <span class="badge">Express.js • Unit Learning Material</span>
+    <h1>Middleware in Express.js</h1>
+    <p>Think of middleware as a set of checkpoints between a client request and the final response. Each checkpoint can inspect, change, stop, or pass the request to the next step.</p>
+  </div>
+</header>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#meaning">Meaning</a>
+    <a href="#working">How it works</a>
+    <a href="#types">Types</a>
+    <a href="#chaining">Chaining</a>
+    <a href="#example">Example</a>
+    <a href="#quiz">Quick Check</a>
+  </div>
+</nav>
+
+<main>
+<section id="meaning">
+  <h2>1. What is Middleware?</h2>
+  <div class="intro">
+    <p class="definition"><strong>Middleware in Express.js</strong> consists of functions that run during the request–response lifecycle. They can process requests, modify responses, and control the application flow.</p>
+    <div class="visual">
+      <div class="node client">Client</div>
+      <div class="arrow">→</div>
+      <div class="node">HTTP<br>Request</div>
+      <div class="arrow">→</div>
+      <div class="node middleware">Middleware</div>
+      <div class="arrow">→</div>
+      <div class="node">HTTP<br>Response</div>
+    </div>
+    <div class="key-grid">
+      <div class="key"><strong>⚙ Custom logic</strong>Runs logic for a request.</div>
+      <div class="key"><strong>🔎 Read / modify</strong>Can read or modify <code class="inline">req</code> and <code class="inline">res</code>.</div>
+      <div class="key"><strong>🛑 End cycle</strong>Can send a response and finish the cycle.</div>
+      <div class="key"><strong>➡ next()</strong>Passes control to the next middleware.</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>2. Basic Middleware Syntax</h2>
+  <div class="card" style="padding:22px">
+    <div class="code-title">Express middleware</div>
+<pre><code>app.use((req, res, next) => {
+  console.log('Middleware executed');
+  next();
+});</code></pre>
+    <div class="note"><strong>Remember:</strong> <code class="inline">next()</code> means “I have finished my work; let the next middleware continue.”</div>
+    <ul>
+      <li><strong>(req, res, next) =&gt; { }</strong> — the middleware function that processes the request and response before the final handler.</li>
+      <li><strong>next()</strong> — passes control to the next middleware if the request–response cycle has not already ended.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="working">
+  <h2>3. How Middleware Works</h2>
+  <div class="flow">
+    <div class="flow-steps">
+      <div class="step"><span class="num">1</span><strong>Request arrives</strong><br>The client sends a request to the server.</div>
+      <div class="step"><span class="num">2</span><strong>Middleware runs</strong><br>Middleware is applied one function at a time.</div>
+      <div class="step"><span class="num">3</span><strong>Decision</strong><br>It either sends a response or calls <code class="inline">next()</code>.</div>
+      <div class="step"><span class="num">4</span><strong>Route handler</strong><br>If the cycle is not ended, the route handler sends the final response.</div>
+    </div>
+    <div class="remember"><strong>Key idea:</strong> Express executes middleware sequentially in the order in which the middleware functions are added to the application.</div>
+  </div>
+</section>
+
+<section id="types">
+  <h2>4. Types of Middleware</h2>
+  <p>ExpressJS provides different types of middleware. Choose the type according to the functionality required.</p>
+  <div class="type-grid">
+
+    <article class="type-card application">
+      <h3>1. Application-level Middleware</h3>
+      <p>Runs across the entire Express application and handles common logic for incoming requests.</p>
+      <ul>
+        <li>Registered using <code class="inline">app.use()</code> or <code class="inline">app.METHOD()</code>.</li>
+        <li>Executes for routes and HTTP methods according to how it is registered.</li>
+        <li>Common uses: logging, authentication, body parsing, and headers.</li>
+      </ul>
+<pre><code>app.use(express.json());
+
+app.use((req, res, next) => {
+  console.log('Request received:', req.method, req.url);
+  next();
+});</code></pre>
+    </article>
+
+    <article class="type-card router">
+      <h3>2. Router-level Middleware</h3>
+      <p>Applies to a specific router, so middleware can be limited to a defined group of routes.</p>
+      <ul>
+        <li>Registered using <code class="inline">router.use()</code> or <code class="inline">router.METHOD()</code>.</li>
+        <li>Runs only for routes within that router.</li>
+        <li>Useful for modular route groups such as user or authentication routes.</li>
+        <li>Helps code organization and maintainability.</li>
+      </ul>
+<pre><code>const router = express.Router();
+
+router.use((req, res, next) => {
+  console.log('Router-specific middleware');
+  next();
+});
+
+router.get('/dashboard', (req, res) => {
+  res.send('Dashboard Page');
+});
+
+app.use('/user', router);</code></pre>
+    </article>
+
+    <article class="type-card error">
+      <h3>3. Error-handling Middleware</h3>
+      <p>Captures and processes runtime errors during the request–response cycle.</p>
+      <ul>
+        <li>Defined with four parameters: <code class="inline">err, req, res, next</code>.</li>
+        <li>Can send consistent error responses.</li>
+        <li>Helps prevent an error from leaving the application without a handled response.</li>
+      </ul>
+<pre><code>app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something went wrong!');
+});</code></pre>
+    </article>
+
+    <article class="type-card builtin">
+      <h3>4. Built-in Middleware</h3>
+      <p>Express provides built-in middleware for common server-side tasks.</p>
+      <ul>
+        <li><code class="inline">express.static()</code> serves static files such as images, CSS, and JS.</li>
+        <li><code class="inline">express.json()</code> parses incoming JSON request bodies.</li>
+      </ul>
+<pre><code>app.use(express.static('public'));
+app.use(express.json());</code></pre>
+    </article>
+
+    <article class="type-card third">
+      <h3>5. Third-party Middleware</h3>
+      <p>Third-party middleware extends an Express application through npm packages.</p>
+      <ul>
+        <li>Developed by external contributors and installed through npm.</li>
+        <li>Adds features such as logging, security, and validation.</li>
+        <li>Examples in the source: <strong>morgan</strong> and <strong>body-parser</strong>.</li>
+      </ul>
+<pre><code>const morgan = require('morgan');
+app.use(morgan('dev'));
+
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: true }));</code></pre>
+    </article>
+
+  </div>
+</section>
+
+<section id="chaining">
+  <h2>5. Middleware Chaining</h2>
+  <div class="chain">
+    <p>Middleware can be connected like a chain. Each function gets a chance to process the request before the next step.</p>
+    <div class="chain-row">
+      <div class="chain-box">Request</div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-box">1<small>Body Parsing</small></div>
+      <div class="chain-arrow">→ next() →</div>
+      <div class="chain-box">2<small>Authentication</small></div>
+      <div class="chain-arrow">→ next() →</div>
+      <div class="chain-box">3<small>Router</small></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-box">Response</div>
+    </div>
+    <ul>
+      <li>Middleware runs in order as a chain.</li>
+      <li>Each middleware can process or modify the request.</li>
+      <li>The final handler sends the response to the client.</li>
+      <li><code class="inline">next()</code> passes control to the next middleware in the chain.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="example">
+  <h2>6. Complete Middleware Chaining Example</h2>
+  <div class="example-card intro">
+<pre><code>const express = require('express');
+const app = express();
+
+// Middleware 1: Log request method and URL
+app.use((req, res, next) => {
+  console.log(`${req.method} request to ${req.url}`);
+  next();
+});
+
+// Middleware 2: Add a custom header
+app.use((req, res, next) => {
+  res.setHeader('X-Custom-Header', 'Middleware Chaining Example');
+  next();
+});
+
+// Route handler
+app.get('/', (req, res) => {
+  res.send('Hello, World!');
+});
+
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
+});</code></pre>
+
+    <div class="explain-grid">
+      <div class="explain"><strong>Middleware 1</strong><br>Logs the HTTP method and URL of the incoming request.</div>
+      <div class="explain"><strong>Middleware 2</strong><br>Sets the response header <code class="inline">X-Custom-Header</code>.</div>
+      <div class="explain"><strong>Route Handler</strong><br>Sends <code class="inline">Hello, World!</code> as the response.</div>
+    </div>
+
+    <h3 style="margin-top:24px">Expected output</h3>
+    <div class="output">
+      When a client makes a <strong>GET</strong> request to <code class="inline">http://localhost:3000/</code>, the server responds:
+      <br><br><strong>Hello, World!</strong>
+    </div>
+  </div>
+</section>
+
+<section id="mindmap">
+  <h2>7. Quick Mind Map</h2>
+  <div class="visual" style="flex-direction:column">
+    <div class="node middleware">MIDDLEWARE</div>
+    <div class="arrow">↓</div>
+    <div class="key-grid" style="width:100%">
+      <div class="key"><strong>Application</strong>Whole application</div>
+      <div class="key"><strong>Router</strong>Specific router</div>
+      <div class="key"><strong>Error-handling</strong>Handles errors</div>
+      <div class="key"><strong>Built-in / Third-party</strong>Ready-made functionality</div>
+    </div>
+    <div class="remember" style="width:100%;text-align:center"><strong>Core flow:</strong> Request → Middleware → <code class="inline">next()</code> → Next Middleware → Route Handler → Response</div>
+  </div>
+</section>
+
+<section id="quiz">
+  <h2>8. Quick Self-Check</h2>
+  <div class="quiz">
+    <div class="question">
+      <strong>1. Which function passes control to the next middleware?</strong><br>
+      <button onclick="showAnswer(this)">Show answer</button>
+      <div class="answer"><strong>Answer:</strong> <code class="inline">next()</code></div>
+    </div>
+    <div class="question">
+      <strong>2. What are the four parameters of error-handling middleware?</strong><br>
+      <button onclick="showAnswer(this)">Show answer</button>
+      <div class="answer"><strong>Answer:</strong> <code class="inline">err, req, res, next</code></div>
+    </div>
+    <div class="question">
+      <strong>3. Which built-in middleware serves static files?</strong><br>
+      <button onclick="showAnswer(this)">Show answer</button>
+      <div class="answer"><strong>Answer:</strong> <code class="inline">express.static()</code></div>
+    </div>
+    <div class="question">
+      <strong>4. In what order does Express execute middleware?</strong><br>
+      <button onclick="showAnswer(this)">Show answer</button>
+      <div class="answer"><strong>Answer:</strong> Sequentially, in the order the middleware is added.</div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  Express.js Middleware • Student Learning Page
+</footer>
+
+<script>
+  function showAnswer(button){
+    const answer = button.nextElementSibling;
+    const visible = answer.style.display === 'block';
+    answer.style.display = visible ? 'none' : 'block';
+    button.textContent = visible ? 'Show answer' : 'Hide answer';
+  }
+</script>
+</body>
+</html>

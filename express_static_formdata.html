@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Express.js — Static Files & Form Data</title>
+<style>
+:root{
+  --bg:#f5f7fb; --card:#fff; --ink:#182230; --muted:#5d6b7a;
+  --accent:#6d4aff; --accent2:#00a884; --border:#dfe5ee;
+  --code:#172033; --note:#fff7d6; --shadow:0 8px 24px rgba(31,42,61,.08);
+}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,Segoe UI,Arial,sans-serif;line-height:1.65}
+header{background:linear-gradient(135deg,#1d2340,#5035b8);color:white;padding:48px 20px}
+.hero{max-width:1100px;margin:auto}
+.badge{display:inline-block;padding:6px 12px;border:1px solid rgba(255,255,255,.3);border-radius:999px;font-size:.85rem}
+h1{font-size:clamp(2rem,5vw,3.6rem);margin:14px 0 8px;line-height:1.1}
+.hero p{max-width:760px;color:#e7e9ff;font-size:1.08rem}
+nav{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.95);border-bottom:1px solid var(--border);backdrop-filter:blur(8px)}
+.navin{max-width:1100px;margin:auto;display:flex;gap:8px;overflow:auto;padding:10px 16px}
+nav a{white-space:nowrap;text-decoration:none;color:var(--ink);padding:8px 12px;border-radius:8px;font-weight:600}
+nav a:hover{background:#eeeafd;color:var(--accent)}
+main{max-width:1100px;margin:30px auto;padding:0 16px}
+section{margin:38px 0}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;box-shadow:var(--shadow);margin:18px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.mini{padding:20px;border:1px solid var(--border);border-radius:14px;background:#fff}
+.mini h3{margin-top:0}
+h2{font-size:2rem;margin-bottom:8px} h3{font-size:1.25rem}
+.lead{color:var(--muted)}
+.callout{border-left:5px solid var(--accent);background:#f0edff;padding:16px 18px;border-radius:10px}
+.note{border-left:5px solid #d9a400;background:var(--note);padding:16px 18px;border-radius:10px}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:18px}
+.node{padding:12px 15px;border:2px solid var(--accent);border-radius:12px;background:#fff;text-align:center;font-weight:700}
+.arrow{font-size:1.5rem;color:var(--muted)}
+pre{background:var(--code);color:#eef3ff;border-radius:12px;padding:18px;overflow:auto;font-size:.9rem;line-height:1.55}
+code{font-family:Consolas,Monaco,monospace}
+.inline{background:#edf0f6;border-radius:5px;padding:2px 6px;font-family:monospace}
+.keyword{color:#d7a9ff}.string{color:#a8e6cf}.comment{color:#9aa7ba}
+table{width:100%;border-collapse:collapse;margin-top:15px}
+th,td{border:1px solid var(--border);padding:11px;text-align:left;vertical-align:top}
+th{background:#f0f2f7}
+ul{padding-left:22px}
+.quiz button{margin:6px 6px 0 0;padding:9px 13px;border:1px solid var(--border);border-radius:8px;background:white;cursor:pointer}
+.quiz button:hover{border-color:var(--accent)}
+.result{font-weight:700;margin-top:10px}
+footer{margin-top:60px;padding:30px 16px;text-align:center;color:var(--muted);border-top:1px solid var(--border)}
+.small{font-size:.9rem;color:var(--muted)}
+@media(max-width:650px){header{padding:36px 16px}.card{padding:18px}h2{font-size:1.65rem}}
+</style>
+</head>
+<body>
+<header>
+  <div class="hero">
+    <span class="badge">Express.js • Student Learning Page</span>
+    <h1>Static Files & Form Data</h1>
+    <p>Learn how Express serves HTML, images and other static resources, and how a simple registration/login application receives and stores form data.</p>
+  </div>
+</header>
+
+<nav>
+  <div class="navin">
+    <a href="#static">Static Files</a>
+    <a href="#implementation">Implementation</a>
+    <a href="#forms">Form Data</a>
+    <a href="#registration">Registration</a>
+    <a href="#login">Login</a>
+    <a href="#flow">Flow</a>
+    <a href="#quiz">Quick Quiz</a>
+  </div>
+</nav>
+
+<main>
+<section id="static">
+  <h2>1. What are Static Files?</h2>
+  <p class="lead">Static files are files that clients download as they are from the server.</p>
+  <div class="grid">
+    <div class="mini"><h3>📄 HTML</h3><p>Pages such as <span class="inline">index.html</span>, <span class="inline">register.html</span> and <span class="inline">login.html</span>.</p></div>
+    <div class="mini"><h3>🎨 CSS</h3><p>Stylesheets used to control how a webpage looks.</p></div>
+    <div class="mini"><h3>🖼️ Images</h3><p>Images can be placed inside the static directory and served to the browser.</p></div>
+  </div>
+  <div class="callout"><strong>ELI10 idea:</strong> Think of <span class="inline">public</span> as a cupboard. <b>express.static()</b> tells Express, “If a visitor asks for a file, look in this cupboard and give it to them.”</div>
+</section>
+
+<section id="implementation">
+  <h2>2. Using <span class="inline">express.static()</span></h2>
+  <div class="card">
+    <h3>Syntax</h3>
+    <pre><code>app.use(express.static('directory_name'));</code></pre>
+    <p><b>directory_name</b> is the path to the folder containing static files, such as <span class="inline">public</span> or <span class="inline">assets</span>.</p>
+    <pre><code>app.use(express.static('public'));</code></pre>
+    <div class="note"><b>Important:</b> Express looks up files relative to the static directory, so the directory name itself is not part of the URL.</div>
+  </div>
+
+  <div class="card">
+    <h3>Step 1 — Create a public folder</h3>
+    <p>Create a folder named <span class="inline">public</span> in the project directory. Put static files such as <span class="inline">index.html</span> and images inside it.</p>
+
+    <h3>Step 2 — Create <span class="inline">server.js</span></h3>
+    <pre><code>const express = require('express');
+const app = express();
+
+// Serve static files from the "public" folder
+app.use(express.static('public'));
+
+// Optional route
+app.get('/', (req, res) =&gt; {
+  res.send('Welcome to my static website!');
+});
+
+// Start the server
+const PORT = 3000;
+app.listen(PORT, () =&gt; {
+  console.log(`Server is running on port ${PORT}`);
+});</code></pre>
+  </div>
+
+  <div class="card">
+    <h3>What happens when a file is requested?</h3>
+    <div class="flow">
+      <div class="node">Browser requests file</div><div class="arrow">→</div>
+      <div class="node">Express checks public/</div><div class="arrow">→</div>
+      <div class="node">File exists?</div><div class="arrow">→</div>
+      <div class="node">Send file</div>
+    </div>
+    <p class="small">If the requested file is not found, Express returns a 404 error indicating that the resource is unavailable.</p>
+  </div>
+
+  <div class="card">
+    <h3>Step 3 & 4 — Run and test</h3>
+    <pre><code>node server.js</code></pre>
+    <p>Then visit:</p>
+    <pre><code>http://localhost:3000/index.html</code></pre>
+  </div>
+
+  <div class="grid">
+    <div class="mini"><b>Middleware Setup</b><p><span class="inline">express.static</span> is built-in Express middleware for serving static files.</p></div>
+    <div class="mini"><b>Directory Path</b><p>It receives the directory containing static assets.</p></div>
+    <div class="mini"><b>Request Handling</b><p>Express searches that directory for the requested file.</p></div>
+    <div class="mini"><b>File Delivery</b><p>If found, Express sends it to the client with the appropriate content type.</p></div>
+  </div>
+</section>
+
+<section id="forms">
+  <h2>3. Handling Form Data in Express</h2>
+  <p class="lead">A form sends information from the browser to the server. Express can read that information and use it in a route.</p>
+  <div class="callout"><b>Core idea:</b> The form submits data → Express reads <span class="inline">req.body</span> → the server can store or process the data.</div>
+
+  <div class="card">
+    <h3>Step 1 — Install the packages</h3>
+    <pre><code>npm install express body-parser</code></pre>
+    <p>The source material then uses Express's URL-encoded middleware to read form data:</p>
+    <pre><code>app.use(express.urlencoded({ extended: true }));</code></pre>
+  </div>
+
+  <div class="card">
+    <h3>Step 2 — Serve the HTML pages</h3>
+    <pre><code>const express = require("express");
+const fs = require("fs");
+const app = express();
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static("public"));</code></pre>
+  </div>
+</section>
+
+<section id="registration">
+  <h2>4. Registration Route</h2>
+  <p>The registration route receives username, password and email, reads existing users from <span class="inline">user.json</span>, checks whether the username already exists, and then stores the new user.</p>
+  <div class="card">
+    <pre><code>app.post("/register", (req, res) =&gt; {
+  const username = req.body.username;
+  const password = req.body.password;
+  const email = req.body.email;
+
+  fs.readFile("user.json", "utf8", (err, data) =&gt; {
+    if (err) {
+      return res.send("Error reading user.json");
+    }
+
+    let users = JSON.parse(data);
+
+    const existingUser = users.find(
+      user =&gt; user.username === username
+    );
+
+    if (existingUser) {
+      return res.send(`
+        &lt;h2&gt;Username already exists!&lt;/h2&gt;
+        &lt;a href="/register.html"&gt;Go Back&lt;/a&gt;
+      `);
+    }
+
+    const newUser = {
+      username: username,
+      password: password,
+      email: email
+    };
+
+    users.push(newUser);
+
+    fs.writeFile(
+      "user.json",
+      JSON.stringify(users, null, 4),
+      (err) =&gt; {
+        if (err) {
+          return res.send("Error storing user data");
+        }
+
+        res.send(`
+          &lt;h2&gt;Registration Successful!&lt;/h2&gt;
+          &lt;p&gt;Welcome, ${username}&lt;/p&gt;
+          &lt;p&gt;Please login using your username and password.&lt;/p&gt;
+          &lt;a href="/login.html"&gt;Go to Login&lt;/a&gt;
+        `);
+      }
+    );
+  });
+});</code></pre>
+  </div>
+
+  <div class="card">
+    <h3>Registration page: <span class="inline">public/register.html</span></h3>
+    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;title&gt;User Registration and Login&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;User Registration&lt;/h1&gt;
+
+  &lt;form action="/register" method="POST"&gt;
+    &lt;label&gt;Username:&lt;/label&gt;
+    &lt;input type="text" name="username" required&gt;
+
+    &lt;label&gt;Password:&lt;/label&gt;
+    &lt;input type="password" name="password" required&gt;
+
+    &lt;label&gt;Email:&lt;/label&gt;
+    &lt;input type="email" name="email" required&gt;
+
+    &lt;button type="submit"&gt;Register&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+  </div>
+</section>
+
+<section id="login">
+  <h2>5. Login Route</h2>
+  <p>The login route reads the submitted username and password, loads <span class="inline">user.json</span>, and searches for a matching user.</p>
+  <div class="card">
+    <pre><code>app.post("/login", (req, res) =&gt; {
+  const username = req.body.username;
+  const password = req.body.password;
+
+  fs.readFile("user.json", "utf8", (err, data) =&gt; {
+    if (err) {
+      return res.send("Error reading user.json");
+    }
+
+    const users = JSON.parse(data);
+
+    const user = users.find(
+      user =&gt;
+        user.username === username &amp;&amp;
+        user.password === password
+    );
+
+    if (user) {
+      res.send(`
+        &lt;h2&gt;Login Successful!&lt;/h2&gt;
+        &lt;p&gt;Welcome ${user.username}&lt;/p&gt;
+        &lt;p&gt;Email: ${user.email}&lt;/p&gt;
+      `);
+    } else {
+      res.send(`
+        &lt;h2&gt;Login Failed!&lt;/h2&gt;
+        &lt;p&gt;Invalid username or password.&lt;/p&gt;
+        &lt;a href="/"&gt;Try Again&lt;/a&gt;
+      `);
+    }
+  });
+});
+
+app.listen(3000, () =&gt; {
+  console.log("Server started on port 3000");
+});</code></pre>
+  </div>
+
+  <div class="card">
+    <h3>Login page: <span class="inline">public/login.html</span></h3>
+    <pre><code>&lt;html&gt;
+&lt;body&gt;
+  &lt;h1&gt;User Login&lt;/h1&gt;
+
+  &lt;form action="/login" method="POST"&gt;
+    &lt;label&gt;Username:&lt;/label&gt;
+    &lt;input type="text" name="username" required&gt;
+
+    &lt;label&gt;Password:&lt;/label&gt;
+    &lt;input type="password" name="password" required&gt;
+
+    &lt;button type="submit"&gt;Login&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+  </div>
+
+  <div class="note"><b>Learning note:</b> The source example stores passwords directly in <span class="inline">user.json</span>. This is suitable for understanding the request/response flow, but a real application should not store plain-text passwords.</div>
+</section>
+
+<section id="flow">
+  <h2>6. Complete Application Flow</h2>
+  <div class="card">
+    <div class="flow">
+      <div class="node">localhost:3000</div><div class="arrow">→</div>
+      <div class="node">register.html<br>or login.html</div>
+    </div>
+    <div class="flow">
+      <div class="node">Registration</div><div class="arrow">→</div>
+      <div class="node">POST /register</div><div class="arrow">→</div>
+      <div class="node">Read user.json</div><div class="arrow">→</div>
+      <div class="node">Add user</div><div class="arrow">→</div>
+      <div class="node">Write user.json</div>
+    </div>
+    <div class="flow">
+      <div class="node">Login</div><div class="arrow">→</div>
+      <div class="node">POST /login</div><div class="arrow">→</div>
+      <div class="node">Read user.json</div><div class="arrow">→</div>
+      <div class="node">Find username</div><div class="arrow">→</div>
+      <div class="node">Check password</div>
+    </div>
+    <div class="flow">
+      <div class="node">Match → Login Success</div>
+      <div class="arrow">or</div>
+      <div class="node">No Match → Login Failed</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📁 Suggested project structure from the source example</h3>
+    <pre><code>project/
+├── server.js
+├── user.json
+└── public/
+    ├── register.html
+    └── login.html</code></pre>
+  </div>
+
+  <div class="card">
+    <h3>🧠 Mind Map</h3>
+    <div class="grid">
+      <div class="mini"><b>Express.js</b><p>Server application</p></div>
+      <div class="mini"><b>express.static()</b><p>Serves static files</p></div>
+      <div class="mini"><b>express.urlencoded()</b><p>Reads URL-encoded form data</p></div>
+      <div class="mini"><b>POST /register</b><p>Creates and stores a user</p></div>
+      <div class="mini"><b>POST /login</b><p>Checks submitted credentials</p></div>
+      <div class="mini"><b>user.json</b><p>Stores the example's user data</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="quiz">
+  <h2>7. Quick Self-Check</h2>
+  <div class="card quiz">
+    <p><b>1. Which Express middleware serves static files?</b></p>
+    <button onclick="answer(this,false)">express.urlencoded()</button>
+    <button onclick="answer(this,true)">express.static()</button>
+    <button onclick="answer(this,false)">express.json()</button>
+    <div class="result"></div>
+
+    <p><b>2. Which property is used in the example to read submitted form fields?</b></p>
+    <button onclick="answer(this,false)">req.params</button>
+    <button onclick="answer(this,true)">req.body</button>
+    <button onclick="answer(this,false)">req.files</button>
+    <div class="result"></div>
+
+    <p><b>3. Which HTTP method is used by the registration form?</b></p>
+    <button onclick="answer(this,true)">POST</button>
+    <button onclick="answer(this,false)">GET</button>
+    <button onclick="answer(this,false)">PUT</button>
+    <div class="result"></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <p><b>Express.js: Static Files & Form Data</b></p>
+  <p>Student-friendly presentation based on the supplied course document.</p>
+</footer>
+
+<script>
+function answer(button, correct){
+  const box = button.parentElement;
+  const result = button.nextElementSibling;
+  result.textContent = correct ? "✓ Correct!" : "✗ Try again.";
+  result.style.color = correct ? "#087f5b" : "#b42318";
+}
+</script>
+</body>
+</html>
