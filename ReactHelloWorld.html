@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hello World in React.js</title>
+<style>
+  :root{
+    --bg:#f5f7fb;
+    --card:#ffffff;
+    --text:#172033;
+    --muted:#5d687d;
+    --accent:#2563eb;
+    --accent-soft:#eaf1ff;
+    --border:#dfe5ef;
+    --code:#111827;
+    --code-text:#e5e7eb;
+    --success:#15803d;
+    --shadow:0 10px 30px rgba(23,32,51,.08);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.65;
+  }
+  .hero{
+    background:linear-gradient(135deg,#172554,#2563eb);
+    color:#fff;
+    padding:56px 20px 48px;
+  }
+  .hero-inner{max-width:1050px;margin:auto}
+  .eyebrow{
+    display:inline-block;
+    padding:5px 11px;
+    border:1px solid rgba(255,255,255,.3);
+    border-radius:999px;
+    font-size:.82rem;
+    letter-spacing:.04em;
+    margin-bottom:14px;
+  }
+  h1{font-size:clamp(2rem,5vw,3.5rem);line-height:1.1;margin:0 0 12px}
+  .hero p{max-width:720px;margin:0;color:#dbeafe;font-size:1.08rem}
+  .layout{
+    max-width:1050px;
+    margin:28px auto 60px;
+    padding:0 20px;
+    display:grid;
+    grid-template-columns:230px 1fr;
+    gap:24px;
+  }
+  .toc{
+    position:sticky;
+    top:20px;
+    align-self:start;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:18px;
+    box-shadow:var(--shadow);
+  }
+  .toc strong{display:block;margin-bottom:10px}
+  .toc a{
+    display:block;
+    color:var(--muted);
+    text-decoration:none;
+    padding:7px 8px;
+    border-radius:8px;
+    font-size:.92rem;
+  }
+  .toc a:hover{background:var(--accent-soft);color:var(--accent)}
+  main{min-width:0}
+  section,.callout{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:26px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+  }
+  h2{margin-top:0;font-size:1.55rem}
+  h3{font-size:1.12rem;margin-bottom:8px}
+  .step{
+    display:grid;
+    grid-template-columns:42px 1fr;
+    gap:15px;
+    margin:20px 0;
+  }
+  .num{
+    width:42px;height:42px;
+    border-radius:12px;
+    display:grid;place-items:center;
+    background:var(--accent-soft);
+    color:var(--accent);
+    font-weight:800;
+  }
+  code:not(pre code){
+    background:#eef2f7;
+    padding:2px 6px;
+    border-radius:5px;
+    font-size:.92em;
+  }
+  pre{
+    position:relative;
+    overflow:auto;
+    background:var(--code);
+    color:var(--code-text);
+    padding:20px;
+    border-radius:12px;
+    margin:14px 0;
+    font: .92rem/1.6 Consolas,Monaco,"Courier New",monospace;
+  }
+  .copy{
+    position:absolute;
+    top:10px;right:10px;
+    border:1px solid #4b5563;
+    background:#1f2937;
+    color:#fff;
+    padding:5px 9px;
+    border-radius:7px;
+    cursor:pointer;
+    font-size:.78rem;
+  }
+  .copy:hover{background:#374151}
+  .note{
+    border-left:4px solid var(--accent);
+    background:var(--accent-soft);
+    padding:14px 16px;
+    border-radius:0 10px 10px 0;
+    margin:16px 0;
+  }
+  .mindmap{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    margin:20px 0 4px;
+  }
+  .node{
+    padding:10px 14px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    background:#fff;
+    text-align:center;
+  }
+  .node.main{
+    background:#dbeafe;
+    border-color:#93c5fd;
+    font-weight:800;
+  }
+  .arrow{color:var(--muted);font-weight:700}
+  .browser{
+    border:1px solid var(--border);
+    border-radius:14px;
+    overflow:hidden;
+    margin-top:18px;
+  }
+  .browser-bar{background:#eef2f7;padding:9px 13px;font-size:.85rem;color:var(--muted)}
+  .browser-screen{text-align:center;padding:34px 20px;background:#fff}
+  .browser-screen h1{font-size:2rem;margin:0}
+  .summary{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+  }
+  .summary div{
+    background:#f8fafc;
+    border:1px solid var(--border);
+    padding:15px;
+    border-radius:12px;
+  }
+  .summary strong{display:block}
+  footer{text-align:center;color:var(--muted);padding:0 20px 35px;font-size:.88rem}
+  @media(max-width:800px){
+    .layout{grid-template-columns:1fr}
+    .toc{position:static}
+    .summary{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <span class="eyebrow">React.js • Beginner Learning Page</span>
+    <h1>Hello World in React.js</h1>
+    <p>Build your first React application, understand the <strong>App</strong> component, and see how React turns a component's returned JSX into content in the browser.</p>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="toc">
+    <strong>On this page</strong>
+    <a href="#create">1. Create a React Project</a>
+    <a href="#app">2. Open App.jsx</a>
+    <a href="#meaning">3. What Does It Mean?</a>
+    <a href="#flow">The Complete Flow</a>
+    <a href="#idea">Important React Idea</a>
+    <a href="#remember">Quick Revision</a>
+  </aside>
+
+  <main>
+    <section id="create">
+      <h2>1. Create a React Project</h2>
+      <p>Open the terminal and create a new React project using Vite.</p>
+
+      <div class="step">
+        <div class="num">1</div>
+        <div>
+          <h3>Create the project</h3>
+          <pre><button class="copy">Copy</button><code>npm create vite@latest hello-react -- --template react</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="num">2</div>
+        <div>
+          <h3>Move into the project folder</h3>
+          <pre><button class="copy">Copy</button><code>cd hello-react</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="num">3</div>
+        <div>
+          <h3>Install the required packages</h3>
+          <pre><button class="copy">Copy</button><code>npm install</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="num">4</div>
+        <div>
+          <h3>Start the development server</h3>
+          <pre><button class="copy">Copy</button><code>npm run dev</code></pre>
+        </div>
+      </div>
+
+      <div class="note">
+        <strong>Open the app:</strong> Open the URL shown in the terminal. It is usually
+        <code>http://localhost:5173</code>.
+      </div>
+    </section>
+
+    <section id="app">
+      <h2>2. Open <code>src/App.jsx</code></h2>
+      <p>Replace the contents of <code>src/App.jsx</code> with this simple component:</p>
+
+      <pre><button class="copy">Copy</button><code>function App() {
+  return (
+    &lt;h1&gt;Hello World!&lt;/h1&gt;
+  );
+}
+
+export default App;</code></pre>
+
+      <div class="browser">
+        <div class="browser-bar">http://localhost:5173</div>
+        <div class="browser-screen">
+          <h1>Hello World!</h1>
+        </div>
+      </div>
+    </section>
+
+    <section id="meaning">
+      <h2>3. What Does This Mean?</h2>
+      <p>Let's understand the code in a very simple way.</p>
+
+      <h3><code>function App() { ... }</code></h3>
+      <p>We create a function called <code>App</code>.</p>
+      <div class="note">Think of <strong>App</strong> as a box containing our webpage.</div>
+
+      <h3><code>return ( ... )</code></h3>
+      <p><code>return</code> says: <strong>"Show this on the webpage."</strong></p>
+
+      <pre><code>&lt;h1&gt;Hello World!&lt;/h1&gt;</code></pre>
+      <p><code>&lt;h1&gt;</code> is an HTML heading, so React displays:</p>
+      <div class="browser-screen" style="border:1px solid var(--border);border-radius:12px">
+        <h1>Hello World!</h1>
+      </div>
+
+      <h3><code>export default App;</code></h3>
+      <p>This tells React: <strong>"Make the App component available to other files."</strong></p>
+    </section>
+
+    <section id="flow">
+      <h2>The Complete Flow</h2>
+      <p>Think of the process as a small pipeline:</p>
+
+      <div class="mindmap">
+        <div class="node main">App.jsx</div>
+        <div class="arrow">↓</div>
+        <div class="node">function App()</div>
+        <div class="arrow">↓</div>
+        <div class="node">return &lt;h1&gt;Hello World!&lt;/h1&gt;</div>
+        <div class="arrow">↓</div>
+        <div class="node main">React displays it in the browser</div>
+      </div>
+
+      <div class="note">
+        <strong>ELI10 idea:</strong> You can think of <code>App</code> as a reusable box.
+        The <code>return</code> statement describes what should appear inside that box.
+      </div>
+    </section>
+
+    <section id="idea">
+      <h2>Important React Idea</h2>
+      <p>In React, we usually create <strong>components</strong>.</p>
+
+      <pre><button class="copy">Copy</button><code>function App() {
+  return &lt;h1&gt;Hello World!&lt;/h1&gt;;
+}</code></pre>
+
+      <p>This is our first React component: <strong>App</strong>.</p>
+
+      <div class="summary">
+        <div>
+          <strong>Component</strong>
+          A reusable piece of UI.
+        </div>
+        <div>
+          <strong>App</strong>
+          Our first React component.
+        </div>
+        <div>
+          <strong>JSX</strong>
+          The HTML-like UI returned by the component.
+        </div>
+      </div>
+    </section>
+
+    <section id="remember">
+      <h2>Quick Revision</h2>
+      <ul>
+        <li>Create a React project with Vite.</li>
+        <li>Move into the project folder and run <code>npm install</code>.</li>
+        <li>Start the development server with <code>npm run dev</code>.</li>
+        <li>Open <code>src/App.jsx</code>.</li>
+        <li>Create the <code>App</code> function component.</li>
+        <li>Use <code>return</code> to specify what is displayed.</li>
+        <li><code>export default App</code> makes the component available to other files.</li>
+        <li><strong>Component = a reusable piece of UI.</strong></li>
+      </ul>
+    </section>
+  </main>
+</div>
+
+<footer>
+  React.js learning material • Hello World example
+</footer>
+
+<script>
+  document.querySelectorAll(".copy").forEach(button => {
+    button.addEventListener("click", async () => {
+      const code = button.parentElement.querySelector("code").innerText;
+      try {
+        await navigator.clipboard.writeText(code);
+        const old = button.textContent;
+        button.textContent = "Copied!";
+        setTimeout(() => button.textContent = old, 1200);
+      } catch {
+        button.textContent = "Select & copy";
+        setTimeout(() => button.textContent = "Copy", 1200);
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
