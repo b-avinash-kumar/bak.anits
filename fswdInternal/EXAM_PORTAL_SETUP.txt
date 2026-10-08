@@ -1,0 +1,35 @@
+LAB INTERNAL EXAMINATION PORTAL - SETUP
+
+1. Put these two files in the same folder:
+   - react_exam_lockdown_portal.html
+   - exam-paper.pdf
+
+2. The PDF must be named exactly:
+   exam-paper.pdf
+
+3. Start the page using a local web server (for example VS Code Live Server) or your college web server.
+   Prefer serving the page over http:// or https:// rather than opening the HTML directly with file://.
+
+4. Click Start Examination.
+   The page requests fullscreen and displays the PDF.
+
+5. The webpage provides best-effort monitoring:
+   - visibility/tab changes are detected
+   - browser-window focus loss is detected
+   - fullscreen exit is detected
+   - several common browser shortcuts are intercepted where the browser permits it
+   - right-click and text selection are disabled on the exam shell
+   - a local violation count is displayed
+
+IMPORTANT SECURITY LIMITATION
+A normal webpage cannot securely lock the Windows operating system. JavaScript cannot reliably prevent:
+- Alt+Tab / switching applications
+- Windows key
+- Ctrl+Alt+Delete / secure attention sequence
+- Task Manager or administrator actions
+- another computer or phone
+- all browser/system shortcuts
+
+For a real locked exam environment, combine this webpage with a kiosk/lockdown solution such as Windows Assigned Access or an approved exam-browser solution (for example, Safe Exam Browser), according to your college's IT policy.
+
+Do NOT treat the JavaScript monitoring in this page as a complete anti-cheating/security mechanism.

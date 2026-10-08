@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lab Internal Examination</title>
+<style>
+:root{--bg:#0f172a;--panel:#111827;--text:#e5e7eb;--muted:#94a3b8;--primary:#4f46e5;--danger:#dc2626;--warn:#d97706;--ok:#059669}
+*{box-sizing:border-box}html,body{margin:0;height:100%;font-family:Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}body{overflow:hidden}
+#app{height:100%;display:flex;flex-direction:column}header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px;background:#020617;border-bottom:1px solid #334155}.title{font-weight:800}.statusbar{display:flex;align-items:center;gap:10px;font-size:.88rem}.badge{padding:5px 9px;border-radius:999px;background:#1e293b;color:#cbd5e1}.badge.warn{background:#7c2d12;color:#fed7aa}.badge.danger{background:#7f1d1d;color:#fecaca}.badge.ok{background:#064e3b;color:#a7f3d0}
+#startScreen{height:100%;display:flex;align-items:center;justify-content:center;padding:24px}.start-card{width:min(760px,100%);background:#fff;color:#0f172a;border-radius:20px;padding:30px;box-shadow:0 20px 60px rgba(0,0,0,.35)}.start-card h1{margin-top:0}.start-card p{color:#475569}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:20px 0}.info{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px}.info strong{display:block;margin-bottom:5px}.primary{border:0;background:var(--primary);color:#fff;border-radius:10px;padding:12px 18px;font-weight:800;cursor:pointer}.primary:hover{filter:brightness(.95)}
+#examScreen{display:none;height:100%;min-height:0;flex-direction:column}#pdfFrame{flex:1;width:100%;border:0;background:#fff}
+#violationPanel{position:fixed;right:14px;bottom:14px;z-index:30;background:rgba(2,6,23,.95);border:1px solid #475569;border-radius:12px;padding:12px;width:min(340px,calc(100% - 28px));box-shadow:0 10px 30px rgba(0,0,0,.35);font-size:.86rem}#violationPanel strong{display:block;color:#fca5a5}#eventLog{max-height:120px;overflow:auto;margin-top:8px;color:#cbd5e1}.event{padding:3px 0;border-bottom:1px solid #1e293b}
+#fullscreenGate,#warningModal{position:fixed;inset:0;background:rgba(2,6,23,.97);display:none;align-items:center;justify-content:center;padding:24px}#fullscreenGate{z-index:50}#warningModal{z-index:60}.gate-card,.warning-card{width:min(620px,100%);background:#fff;color:#0f172a;padding:28px;border-radius:18px}.warning-card h2{color:#b91c1c;margin-top:0}.small{font-size:.83rem;color:#64748b}
+@media(max-width:700px){header{flex-direction:column;align-items:flex-start}}
+</style>
+</head>
+<body>
+<div id="app">
+<section id="startScreen">
+<div class="start-card">
+<h1>Lab Internal Examination</h1>
+<p>This portal displays the examination paper as a PDF and monitors common browser focus changes during the examination.</p>
+<div class="grid">
+<div class="info"><strong>Exam Paper</strong><span>Place <code>exam-paper.pdf</code> in the same folder as this HTML file.</span></div>
+<div class="info"><strong>Fullscreen</strong><span>The portal requests browser fullscreen before starting.</span></div>
+<div class="info"><strong>Monitoring</strong><span>Tab/window visibility changes and fullscreen exits are logged locally.</span></div>
+</div>
+<div class="info"><strong>Important limitation</strong><span>A normal website cannot securely block Windows Alt+Tab, the Windows key, Task Manager, Ctrl+Alt+Del, another application, or every browser shortcut. True Windows lockdown requires kiosk/assigned-access software.</span></div>
+<br>
+<button class="primary" id="startExamBtn">Start Examination</button>
+<p class="small">Test the page on the exact browser and Windows configuration used in your lab before the exam.</p>
+</div></section>
+
+<section id="examScreen">
+<header>
+<div><div class="title">LAB INTERNAL EXAMINATION</div><div class="small" style="color:#94a3b8">Exam paper: exam-paper.pdf</div></div>
+<div class="statusbar"><span id="fullscreenBadge" class="badge">Fullscreen: checking…</span><span id="violationBadge" class="badge ok">Violations: 0</span></div>
+</header>
+<iframe id="pdfFrame" src="exam-paper.pdf#toolbar=0&navpanes=0&scrollbar=1" title="Examination Question Paper"></iframe>
+<div id="violationPanel"><strong>Exam Monitoring</strong><div>Focus changes and fullscreen exits are recorded locally.</div><div id="eventLog">No events recorded.</div></div>
+</section>
+
+<div id="fullscreenGate"><div class="gate-card"><h2>Fullscreen Required</h2><p>Return to fullscreen to continue the examination.</p><button class="primary" id="returnFullscreenBtn">Return to Fullscreen</button></div></div>
+<div id="warningModal"><div class="warning-card"><h2>Exam Focus Warning</h2><p id="warningText">A focus/fullscreen change was detected.</p><p>Please return to the examination window. The event has been recorded.</p><button class="primary" id="closeWarningBtn">Continue Exam</button></div></div>
+</div>
+<script>
+'use strict';
+const startScreen=document.getElementById('startScreen');
+const examScreen=document.getElementById('examScreen');
+const startExamBtn=document.getElementById('startExamBtn');
+const fullscreenGate=document.getElementById('fullscreenGate');
+const warningModal=document.getElementById('warningModal');
+const warningText=document.getElementById('warningText');
+const closeWarningBtn=document.getElementById('closeWarningBtn');
+const returnFullscreenBtn=document.getElementById('returnFullscreenBtn');
+const violationBadge=document.getElementById('violationBadge');
+const fullscreenBadge=document.getElementById('fullscreenBadge');
+const eventLog=document.getElementById('eventLog');
+let examStarted=false,violations=0,lastEventTime=0;const events=[];
+function escapeHtml(value){return String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));}
+function addEvent(type,detail){const now=Date.now();if(type===events[0]?.type&&now-lastEventTime<700)return;lastEventTime=now;violations++;events.unshift({time:new Date().toLocaleTimeString(),type,detail});violationBadge.textContent='Violations: '+violations;violationBadge.className='badge '+(violations>=3?'danger':'warn');eventLog.innerHTML=events.slice(0,8).map(e=>'<div class="event"><b>'+escapeHtml(e.time)+'</b> — '+escapeHtml(e.type)+': '+escapeHtml(e.detail)+'</div>').join('');warningText.textContent=detail+' This event has been recorded.';warningModal.style.display='flex';}
+async function enterFullscreen(){try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();}catch(e){fullscreenGate.style.display='flex';}}
+function updateFullscreenUI(){const active=!!document.fullscreenElement;if(active){fullscreenBadge.textContent='Fullscreen: ON';fullscreenBadge.className='badge ok';fullscreenGate.style.display='none';}else{fullscreenBadge.textContent='Fullscreen: OFF';fullscreenBadge.className='badge danger';if(examStarted){fullscreenGate.style.display='flex';addEvent('Fullscreen exit','Fullscreen mode was exited.');}}}
+startExamBtn.addEventListener('click',async()=>{examStarted=true;startScreen.style.display='none';examScreen.style.display='flex';await enterFullscreen();updateFullscreenUI();});
+returnFullscreenBtn.addEventListener('click',async()=>{await enterFullscreen();updateFullscreenUI();});
+closeWarningBtn.addEventListener('click',()=>warningModal.style.display='none');
+document.addEventListener('fullscreenchange',updateFullscreenUI);
+document.addEventListener('visibilitychange',()=>{if(examStarted&&document.visibilityState!=='visible')addEvent('Tab/window hidden','The examination page became hidden.');});
+window.addEventListener('blur',()=>{if(examStarted)addEvent('Window lost focus','The examination window lost focus.');});
+document.addEventListener('contextmenu',e=>{if(examStarted)e.preventDefault();});
+document.addEventListener('selectstart',e=>{if(examStarted)e.preventDefault();});
+document.addEventListener('keydown',e=>{if(!examStarted)return;const key=e.key.toLowerCase(),ctrl=e.ctrlKey||e.metaKey,alt=e.altKey,shift=e.shiftKey;const blocked=key==='f12'||(ctrl&&['t','n','w','l','p','u'].includes(key))||(ctrl&&shift&&['i','j','c'].includes(key))||(alt&&['arrowleft','arrowright'].includes(key));if(blocked){e.preventDefault();e.stopPropagation();addEvent('Shortcut attempt','A restricted browser shortcut was pressed.');}});
+window.addEventListener('beforeunload',e=>{if(examStarted){e.preventDefault();e.returnValue='';}});
+setInterval(()=>{if(examStarted)updateFullscreenUI();},1000);
+</script>
+</body></html>
