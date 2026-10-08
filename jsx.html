@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JSX — Interactive Learning Resource</title>
+<style>
+:root{
+  --bg:#f5f7fb;
+  --card:#ffffff;
+  --ink:#172033;
+  --muted:#64748b;
+  --border:#e2e8f0;
+  --primary:#4f46e5;
+  --primary-dark:#3730a3;
+  --soft:#eef2ff;
+  --success:#0f766e;
+  --success-bg:#ecfdf5;
+  --warning:#b45309;
+  --warning-bg:#fff7ed;
+  --danger:#b91c1c;
+  --danger-bg:#fef2f2;
+  --code:#0b1220;
+  --shadow:0 10px 28px rgba(15,23,42,.08);
+  --radius:18px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;
+  line-height:1.65;
+}
+button,input,select{font:inherit}
+.layout{display:grid;grid-template-columns:285px 1fr;min-height:100vh}
+.sidebar{
+  position:sticky;top:0;height:100vh;overflow:auto;
+  background:#111827;color:#e5e7eb;padding:24px 18px;
+}
+.brand{font-weight:800;font-size:1.28rem}
+.brand small{display:block;font-size:.76rem;color:#94a3b8;font-weight:500}
+.progress{
+  margin:18px 0;background:#1f2937;border-radius:14px;padding:14px
+}
+.progress-track{height:8px;border-radius:99px;background:#374151;overflow:hidden}
+.progress-fill{
+  height:100%;width:0;
+  background:linear-gradient(90deg,#818cf8,#c084fc);
+  transition:width .25s;
+}
+.progress-text{font-size:.76rem;color:#cbd5e1;margin-top:7px}
+.nav{display:flex;flex-direction:column;gap:5px}
+.nav button{
+  background:transparent;color:#cbd5e1;border:0;border-radius:10px;
+  text-align:left;padding:10px 11px;cursor:pointer
+}
+.nav button:hover,.nav button.active{background:#312e81;color:white}
+.main{width:100%;max-width:1140px;margin:auto;padding:34px 30px 70px}
+.hero{
+  background:linear-gradient(135deg,#312e81,#6d28d9);
+  color:white;border-radius:25px;padding:40px;box-shadow:var(--shadow);
+  margin-bottom:24px
+}
+.hero h1{font-size:clamp(2.2rem,5vw,3.8rem);line-height:1.05;margin:0 0 10px}
+.hero p{max-width:900px;color:#ede9fe;margin:0}
+.pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}
+.pill{
+  padding:7px 11px;border-radius:999px;background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.2);font-size:.82rem
+}
+.toolbar{display:flex;gap:10px;margin:0 0 24px}
+.search{
+  flex:1;padding:12px 14px;border:1px solid #cbd5e1;border-radius:11px;
+  background:white
+}
+.section{scroll-margin-top:18px;margin:30px 0}
+.section h2{font-size:1.9rem;line-height:1.25;margin:0 0 7px}
+.section h3{margin-top:24px}
+.lead{color:var(--muted);max-width:920px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:16px}
+.card,.demo{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:20px;box-shadow:var(--shadow)
+}
+.card h3{margin-top:0}
+.callout{
+  margin:16px 0;padding:15px 17px;border-radius:13px;
+  background:var(--soft);border-left:5px solid var(--primary)
+}
+.callout.success{background:var(--success-bg);border-left-color:var(--success)}
+.callout.warning{background:var(--warning-bg);border-left-color:#ea580c}
+.callout.danger{background:var(--danger-bg);border-left-color:var(--danger)}
+.code-wrap{position:relative;margin:16px 0}
+pre{
+  margin:0;background:var(--code);color:#e5e7eb;border-radius:14px;
+  padding:20px;overflow:auto;font:14px/1.65 Consolas,Monaco,"Courier New",monospace
+}
+.copy{
+  position:absolute;top:10px;right:10px;background:#1e293b;color:#e2e8f0;
+  border:1px solid #475569;border-radius:8px;padding:5px 9px;cursor:pointer;font-size:.78rem
+}
+.copy:hover{background:#334155}
+table{
+  width:100%;border-collapse:collapse;background:white;
+  border:1px solid var(--border);border-radius:14px;overflow:hidden
+}
+th,td{
+  padding:12px 14px;border-bottom:1px solid var(--border);
+  text-align:left;vertical-align:top
+}
+th{background:#f1f5f9}
+.flow{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  flex-wrap:wrap;margin:18px 0
+}
+.flowbox{
+  background:white;border:2px solid #c7d2fe;border-radius:12px;
+  padding:11px 16px;text-align:center;font-weight:700
+}
+.arrow{font-size:1.35rem;color:var(--primary)}
+.actions{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin-top:12px}
+.btn{
+  border:0;border-radius:10px;padding:10px 14px;background:var(--primary);
+  color:white;font-weight:700;cursor:pointer
+}
+.btn:hover{background:var(--primary-dark)}
+.btn.secondary{background:#e2e8f0;color:#1e293b}
+.btn.success{background:#0f766e}
+.status{
+  margin-top:14px;padding:12px;border-radius:10px;
+  background:#f8fafc;border:1px solid var(--border);font-weight:650
+}
+.example{
+  border:1px solid var(--border);background:#fff;border-radius:16px;padding:18px
+}
+.jsx-card{
+  border:1px solid #cbd5e1;border-radius:14px;padding:16px;
+  background:#f8fafc
+}
+.jsx-output{
+  min-height:80px;padding:16px;border:2px dashed #cbd5e1;border-radius:12px;
+  background:#fff
+}
+.field label{display:block;font-weight:700;margin-bottom:5px}
+.field input,.field select{
+  width:100%;padding:11px 12px;border:1px solid #cbd5e1;border-radius:10px
+}
+.input-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.tab{
+  border:1px solid var(--border);background:#fff;padding:9px 13px;
+  border-radius:10px;cursor:pointer
+}
+.tab.active{background:#312e81;color:#fff;border-color:#312e81}
+.tab-content{display:none}.tab-content.active{display:block}
+.quiz-q{
+  background:white;border:1px solid var(--border);border-radius:14px;
+  padding:16px;margin:12px 0
+}
+.quiz-q label{display:block;margin:7px 0}
+.result{font-weight:800;margin-top:14px}
+.reference-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.reference-item{
+  background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px
+}
+.reference-item code{display:block;font-weight:750}
+.footer{text-align:center;color:var(--muted);font-size:.9rem;margin-top:50px}
+.hidden{display:none!important}
+.mini-label{color:var(--muted);font-size:.86rem}
+.badge-source{
+  display:inline-block;padding:6px 10px;background:#f1f5f9;border-radius:999px;
+  color:#475569;font-size:.8rem;font-weight:700
+}
+@media(max-width:900px){
+  .layout{display:block}
+  .sidebar{position:relative;height:auto}
+  .nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .main{padding:20px 14px 55px}
+  .hero{padding:28px}
+}
+@media(max-width:520px){
+  .nav{grid-template-columns:1fr}
+  .main{padding:14px 10px 50px}
+  .hero{padding:23px}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+  <div class="brand">JSX<small>Interactive Learning Resource • 3rd Year B.Tech</small></div>
+  <div class="progress">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-text" id="progressText">0% viewed</div>
+  </div>
+  <nav class="nav" id="nav">
+    <button data-target="overview">1. JSX & Setup</button>
+    <button data-target="elements">2. Elements & Nesting</button>
+    <button data-target="attributes">3. Attributes</button>
+    <button data-target="expressions">4. Expressions</button>
+    <button data-target="values">5. Values & Styles</button>
+    <button data-target="comments">6. Comments</button>
+    <button data-target="conditions">7. Conditional Rendering</button>
+    <button data-target="lists">8. Lists & Keys</button>
+    <button data-target="children">9. Children & Composition</button>
+    <button data-target="fragments">10. Fragments</button>
+    <button data-target="forms">11. JSX Forms</button>
+    <button data-target="project">12. Mini-Project</button>
+    <button data-target="debug">13. Debugging</button>
+    <button data-target="practice">14. Practice</button>
+    <button data-target="quiz">15. Quick Check</button>
+  </nav>
+</aside>
+
+<main class="main">
+<section class="hero" id="overview">
+  <span class="pill">Complete Learning Resource • Under Review</span>
+  <h1>JSX</h1>
+  <p>Learn JSX as a readable way to describe React UI inside JavaScript. Move from basic syntax to expressions, conditions, lists, children, fragments, forms, and a small student dashboard.</p>
+  <div class="pills">
+    <span class="pill">3rd Year B.Tech</span>
+    <span class="pill">Beginner-friendly</span>
+    <span class="pill">Classroom + Self-study</span>
+    <span class="pill">Copy-paste practice</span>
+    <span class="pill">React + Vite</span>
+  </div>
+</section>
+
+<div class="toolbar">
+  <input id="search" class="search" placeholder="Search this lesson: e.g. className, map(), Fragment, form, ternary">
+</div>
+
+<section class="section">
+<h2>How to Use This Resource</h2>
+<p class="lead">The source describes JSX as an XML-based syntax extension to JavaScript. It lets developers use HTML-like tags inside JavaScript while still using JavaScript expressions for dynamic values. JSX is not HTML; a transpiler converts it into browser-readable JavaScript during the build process.</p>
+<div class="flow">
+  <div class="flowbox">JSX source</div><div class="arrow">→</div>
+  <div class="flowbox">Transpilation</div><div class="arrow">→</div>
+  <div class="flowbox">JavaScript</div><div class="arrow">→</div>
+  <div class="flowbox">Browser UI</div>
+</div>
+<div class="callout">
+  <strong>Transpiling:</strong> converting source code from one high-level language or language version into another equivalent source code. The source calls a transpiler a source-to-source compiler.
+</div>
+</section>
+
+<section class="section">
+<h2>Prerequisites & Setup</h2>
+<div class="grid">
+  <div class="card"><h3>JavaScript basics</h3><p>Variables, strings, arrays, objects, functions, arrow functions, <code>map()</code> and conditional expressions.</p></div>
+  <div class="card"><h3>Tools</h3><p>VS Code, a modern browser and Node.js with npm.</p></div>
+  <div class="card"><h3>Web basics</h3><p>Comfort with HTML tags and CSS properties.</p></div>
+  <div class="card"><h3>Practice folder</h3><p>A folder where you can create React projects.</p></div>
+</div>
+<div class="code-wrap"><button class="copy">Copy</button><pre>node -v
+npm -v
+
+npm create vite@latest jsx-classroom -- --template react
+cd jsx-classroom
+npm install
+npm run dev</pre></div>
+<p>Open the local address shown by the terminal, usually <code>http://localhost:5173</code>. In a Vite project, edit <code>src/App.jsx</code> and save; the browser normally updates through hot reloading.</p>
+
+<table>
+<tr><th>Feature</th><th>Hot reloading</th><th>Live reloading</th></tr>
+<tr><td>Updated content</td><td>Usually only changed modules or components</td><td>The entire page or application</td></tr>
+<tr><td>Application state</td><td>Usually preserved</td><td>Usually reset</td></tr>
+<tr><td>Speed</td><td>Faster</td><td>Slower</td></tr>
+<tr><td>Typical use</td><td>React, Vue, Vite, Webpack</td><td>Simple HTML, CSS and JavaScript projects</td></tr>
+</table>
+</section>
+
+<section class="section" id="elements">
+<h2>2. JSX Elements, Closing Tags & Nesting</h2>
+<p class="lead">JSX follows XML-like rules more strictly than ordinary HTML. Every element must be closed, including empty elements such as <code>input</code>, <code>img</code> and <code>br</code>.</p>
+<div class="code-wrap"><button class="copy">Copy</button><pre>&lt;div className="card"&gt;
+  &lt;img src="photo.png" alt="Student project" /&gt;
+  &lt;input type="text" /&gt;
+&lt;/div&gt;</pre></div>
+
+<h3>Nested campus card</h3>
+<div class="example">
+  <h2>Computer Science Department</h2>
+  <p>Today: JSX practice</p>
+</div>
+<div class="code-wrap"><button class="copy">Copy</button><pre>function App() {
+  return (
+    &lt;section&gt;
+      &lt;h1&gt;Computer Science Department&lt;/h1&gt;
+      &lt;p&gt;Today: JSX practice&lt;/p&gt;
+    &lt;/section&gt;
+  );
+}
+
+export default App;</pre></div>
+
+<h3>Form controls</h3>
+<div class="example">
+  <form onsubmit="demoFormSubmit(event)">
+    <div class="field">
+      <label for="studentNameDemo">Student name</label>
+      <input id="studentNameDemo" type="text" placeholder="Enter your name">
+    </div>
+    <div class="actions">
+      <button class="btn" type="submit">Save name</button>
+    </div>
+  </form>
+  <div id="demoFormMessage" class="status">This is a browser demonstration of the JSX structure.</div>
+</div>
+<div class="callout warning"><strong>Common mistakes:</strong> returning sibling elements without a wrapper, placing a JavaScript statement such as <code>if</code> directly inside returned markup, forgetting to close a tag, or overlapping tags.</div>
+</section>
+
+<section class="section" id="attributes">
+<h2>3. JSX Attributes & Reserved Words</h2>
+<p>JSX attributes resemble HTML attributes, but their names follow JavaScript conventions.</p>
+<table>
+<tr><th>HTML style</th><th>JSX style</th><th>Why?</th></tr>
+<tr><td><code>class</code></td><td><code>className</code></td><td><code>class</code> has a special meaning in JavaScript.</td></tr>
+<tr><td><code>for</code></td><td><code>htmlFor</code></td><td><code>for</code> has a special meaning in JavaScript.</td></tr>
+<tr><td><code>tabindex</code></td><td><code>tabIndex</code></td><td>Multiword attributes use camelCase.</td></tr>
+<tr><td><code>onclick</code></td><td><code>onClick</code></td><td>React event props use camelCase.</td></tr>
+</table>
+<div class="code-wrap"><button class="copy">Copy</button><pre>&lt;button className="primary" tabIndex={0} disabled={isSaving}&gt;
+  Save
+&lt;/button&gt;</pre></div>
+
+<h3>Live attribute demo</h3>
+<div class="example">
+  <div id="profileDemo" class="jsx-card">
+    <h2>Library Assistant</h2>
+    <p>Selection: <strong id="onlineStatus">Online</strong></p>
+  </div>
+  <div class="actions">
+    <button class="btn" type="button" onclick="toggleOnline()">Toggle status</button>
+  </div>
+</div>
+<div class="code-wrap"><button class="copy">Copy</button><pre>function App() {
+  const isOnline = true;
+
+  return (
+    &lt;div className="profile-card"&gt;
+      &lt;h2&gt;Library Assistant&lt;/h2&gt;
+      &lt;p aria-label="online status"&gt;
+        Status: {isOnline ? "Online" : "Offline"}
+      &lt;/p&gt;
+    &lt;/div&gt;
+  );
+}</pre></div>
+
+<h3>Data attributes</h3>
+<div class="code-wrap"><button class="copy">Copy</button><pre>&lt;button data-course="react" data-level="third-year"&gt;
+  Open React course
+&lt;/button&gt;</pre></div>
+<div class="callout warning"><strong>Common mistakes:</strong> use <code>className</code> rather than <code>class</code>; use <code>onClick</code> rather than <code>onclick</code>; use a variable directly rather than putting its name in quotes when you need its value.</div>
+</section>
+
+<section class="section" id="expressions">
+<h2>4. JavaScript Expressions in JSX</h2>
+<p>Curly braces tell JSX to evaluate a JavaScript <strong>expression</strong> instead of treating the content as literal text.</p>
+<div class="grid">
+  <div class="card"><h3>Can use</h3><p>Variables, arithmetic, function calls, logical operations and conditional expressions.</p></div>
+  <div class="card"><h3>Cannot place directly</h3><p>Statements such as <code>if</code> and <code>for</code> do not produce a value. Prepare complex logic before <code>return</code>.</p></div>
+</div>
+<div class="code-wrap"><button class="copy">Copy</button><pre>const total = price * quantity;
+return &lt;p&gt;Total: ₹{total}&lt;/p&gt;;</pre></div>
+
+<h3>Interactive marks calculation</h3>
+<div class="demo">
+  <div class="input-grid">
+    <div class="field">
+      <label for="internalMarks">Internal marks</label>
+      <input id="internalMarks" type="number" value="42" min="0" max="100" oninput="updateMarks()">
+    </div>
+    <div class="field">
+      <label for="externalMarks">External marks</label>
+      <input id="externalMarks" type="number" value="45" min="0" max="100" oninput="updateMarks()">
+    </div>
+  </div>
+  <div id="marksOutput" class="jsx-output" style="margin-top:14px">
+    <h3>Assessment Result</h3>
+    <p>Total: 87/100</p>
+    <p>Percentage: 87%</p>
+  </div>
+</div>
+<div class="code-wrap"><button class="copy">Copy</button><pre>function App() {
+  const internal = 42;
+  const external = 45;
+  const total = internal + external;
+  const percentage = (total / 100) * 100;
+
+  return (
+    &lt;main&gt;
+      &lt;h2&gt;Assessment Result&lt;/h2&gt;
+      &lt;p&gt;Total: {total}/100&lt;/p&gt;
+      &lt;p&gt;Percentage: {percentage}%&lt;/p&gt;
+    &lt;/main&gt;
+  );
+}</pre></div>
+
+<h3>Reusable greeting</h3>
+<div class="demo">
+  <div class="field">
+    <label for="greetingName">Student name</label>
+    <input id="greetingName" type="text" value="Asha" oninput="updateGreeting()">
+  </div>
+  <div id="greetingOutput" class="status">Good morning, Asha</div>
+</div>
+<div class="code-wrap"><button class="copy">Copy</button><pre>function getGreeting(name) {
+  return `Good morning, ${name}`;
+}
+
+function App() {
+  const student = "Asha";
+  return &lt;h1&gt;{getGreeting(student)}&lt;/h1&gt;;
+}</pre></div>
+</section>
+
+<section class="section" id="values">
+<h2>5. JSX Strings, Numbers, Booleans & Objects</h2>
+<table>
+<tr><th>Value</th><th>What JSX does</th></tr>
+<tr><td>String / number</td><td>Can be displayed directly inside curly braces.</td></tr>
+<tr><td><code>true</code>, <code>false</code>, <code>null</code>, <code>undefined</code></td><td>Usually render nothing.</td></tr>
+<tr><td>Object</td><td>Cannot be rendered directly as a child; select a property or deliberately convert it.</td></tr>
+</table>
+
+<h3>Inline style object</h3>
+<div class="code-wrap"><button class="copy">Copy</button><pre>const cardStyle = {
+  backgroundColor: "#eef6ff",
+  padding: "16px"
+};
+
+return &lt;section style={cardStyle}&gt;Content&lt;/section&gt;;</pre></div>
+
+<div class="demo">
+  <div id="styleCard" class="jsx-card">
+    <h2>Placement Preparation</h2>
+    <p>Practice one JSX concept every day.</p>
+  </div>
+  <div class="actions">
+    <button class="btn" onclick="toggleStyle()">Toggle source-style example</button>
+  </div>
+</div>
+
+<h3>Object property display</h3>
+<div class="code-wrap"><button class="copy">Copy</button><pre>const student = { name: "Ravi", branch: "CSE", year: 3 };
+
+return (
+  &lt;div&gt;
+    &lt;h2&gt;{student.name}&lt;/h2&gt;
+    &lt;p&gt;{student.branch} — Year {student.year}&lt;/p&gt;
+  &lt;/div&gt;
+);</pre></div>
+<div class="callout warning"><strong>Common mistakes:</strong> write <code>backgroundColor</code> in a JavaScript style object, not <code>background-color</code>; do not render <code>{student}</code> directly when <code>student</code> is an object.</div>
+</section>
+
+<section class="section" id="comments">
+<h2>6. JSX Comments</h2>
+<p>JSX comments are JavaScript comments placed inside a JSX expression container. HTML comment syntax is not valid inside a component's returned JSX.</p>
+<div class="code-wrap"><button class="copy">Copy</button><pre>return (
+  &lt;div&gt;
+    {/* This note is visible only in source code. */}
+    &lt;h1&gt;Dashboard&lt;/h1&gt;
+  &lt;/div&gt;
+);</pre></div>
+<div class="example">
+  <h2>Wednesday Lab Schedule</h2>
+  <p>09:00 — JSX fundamentals</p>
+  <p>11:00 — Component practice</p>
+  <span class="badge-source">The source comments are not displayed as page text.</span>
+</div>
+<div class="callout warning"><strong>Remember:</strong> use <code>{/* ... */}</code>, not <code>&lt;!-- ... --&gt;</code>.</div>
+</section>
+
+<section class="section" id="conditions">
+<h2>7. Conditional Rendering in JSX</h2>
+<p>Conditional rendering means displaying different UI based on data. The source presents three common approaches: prepare an element variable with <code>if/else</code>, use logical AND for optional content, or use a ternary for two alternatives.</p>
+<div class="code-wrap"><button class="copy">Copy</button><pre>{isSubmitted && &lt;p&gt;Submitted successfully.&lt;/p&gt;}
+
+{isPaid ? &lt;Receipt /&gt; : &lt;PayNowButton /&gt;}</pre></div>
+
+<h3>Interactive assignment status</h3>
+<div class="demo">
+  <div class="actions">
+    <button class="btn" type="button" onclick="setSubmission(true)">Submitted = true</button>
+    <button class="btn secondary" type="button" onclick="setSubmission(false)">Submitted = false</button>
+  </div>
+  <div id="assignmentStatus" class="jsx-output" style="margin-top:14px">
+    <p>Assignment submitted successfully.</p>
+  </div>
+</div>
+<div class="code-wrap"><button class="copy">Copy</button><pre>function App() {
+  const submitted = true;
+  let statusMessage;
+
+  if (submitted) {
+    statusMessage = &lt;p&gt;Assignment submitted successfully.&lt;/p&gt;;
+  } else {
+    statusMessage = &lt;p&gt;Please upload your assignment.&lt;/p&gt;;
+  }
+
+  return (
+    &lt;section&gt;
+      &lt;h2&gt;Web Technologies Assignment&lt;/h2&gt;
+      {statusMessage}
+    &lt;/section&gt;
+  );
+}</pre></div>
+
+<h3>Login greeting</h3>
+<div class="demo">
+  <label><input id="loginToggle" type="checkbox" onchange="updateLogin()"> Student logged in</label>
+  <div id="loginOutput" class="status">Please log in.</div>
+</div>
+<div class="callout warning"><strong>Pitfall from the source:</strong> <code>{count && &lt;p&gt;...&lt;/p&gt;}</code> can render <code>0</code>. When zero matters, use a clearer check such as <code>count &gt; 0</code>.</div>
+</section>
+
+<section class="section" id="lists">
+<h2>8. Rendering Lists with map() and Keys</h2>
+<p>JavaScript arrays are often converted into repeated JSX using <code>map()</code>. Each sibling produced by <code>map()</code> should have a stable <code>key</code>. The source recommends a database ID as a better key than an array index when items can change.</p>
+<div class="code-wrap"><button class="copy">Copy</button><pre>items.map(item =&gt; (
+  &lt;li key={item.id}&gt;{item.name}&lt;/li&gt;
+))</pre></div>
+
+<h3>Interactive course list</h3>
+<div class="demo">
+  <ul id="courseList"></ul>
+  <div class="mini-label">The list is generated from an array in the page script.</div>
+</div>
+<div class="code-wrap"><button class="copy">Copy</button><pre>const courses = [
+  { id: 1, name: "JavaScript", hours: 6 },
+  { id: 2, name: "React JSX", hours: 5 },
+  { id: 3, name: "Node.js", hours: 7 }
+];
+
+return (
+  &lt;section&gt;
+    &lt;h2&gt;Today’s Learning Plan&lt;/h2&gt;
+    &lt;ul&gt;
+      {courses.map(course =&gt; (
+        &lt;li key={course.id}&gt;
+          {course.name} — {course.hours} hours
+        &lt;/li&gt;
+      ))}
+    &lt;/ul&gt;
+  &lt;/section&gt;
+);</pre></div>
+
+<h3>Completed-task filter</h3>
+<div class="demo">
+  <div class="actions">
+    <button class="btn" onclick="toggleCompleted(true)">Show completed</button>
+    <button class="btn secondary" onclick="toggleCompleted(false)">Show all tasks</button>
+  </div>
+  <ul id="taskList"></ul>
+</div>
+<div class="callout warning"><strong>Common mistakes:</strong> missing keys, duplicate keys, using an index as a key for a changing list, or forgetting to return JSX from a <code>map()</code> callback when braces are used.</div>
+</section>
+
+<section class="section" id="children">
+<h2>9. Children & Component Composition</h2>
+<p>A JSX element can contain children between its opening and closing tags. A custom component receives these through <code>props.children</code>. Composition builds specialized interfaces by placing reusable components inside a general component.</p>
+<div class="code-wrap"><button class="copy">Copy</button><pre>function Panel({ title, children }) {
+  return (
+    &lt;section className="panel"&gt;
+      &lt;h2&gt;{title}&lt;/h2&gt;
+      &lt;div&gt;{children}&lt;/div&gt;
+    &lt;/section&gt;
+  );
+}</pre></div>
+
+<div class="grid">
+  <div class="card">
+    <h3>Notice</h3>
+    <p>Bring your laptop to the React lab.</p>
+  </div>
+  <div class="card">
+    <h3>Checklist</h3>
+    <ul><li>Install Node.js</li><li>Open VS Code</li></ul>
+  </div>
+</div>
+<div class="callout success"><strong>Composition idea:</strong> the reusable component controls the container/layout; the parent supplies the inner content through <code>children</code>.</div>
+
+<h3>Composition with an action</h3>
+<div class="demo">
+  <div class="jsx-card">
+    <h2>React Workshop</h2>
+    <p>Seats are available for the afternoon session.</p>
+    <button class="btn" type="button" onclick="registerWorkshop()">Register</button>
+    <div id="workshopStatus" class="status">No action yet.</div>
+  </div>
+</div>
+<div class="code-wrap"><button class="copy">Copy</button><pre>function Card({ title, children, action }) {
+  return (
+    &lt;article&gt;
+      &lt;h2&gt;{title}&lt;/h2&gt;
+      {children}
+      {action}
+    &lt;/article&gt;
+  );
+}
+
+function App() {
+  return (
+    &lt;Card
+      title="React Workshop"
+      action={&lt;button&gt;Register&lt;/button&gt;}
+    &gt;
+      &lt;p&gt;Seats are available for the afternoon session.&lt;/p&gt;
+    &lt;/Card&gt;
+  );
+}</pre></div>
+</section>
+
+<section class="section" id="fragments">
+<h2>10. React Fragments</h2>
+<p>A component must return one top-level value, but adding a meaningless <code>div</code> only to satisfy that rule can make the DOM larger. A Fragment groups multiple elements without adding an HTML element to the browser DOM.</p>
+<div class="code-wrap"><button class="copy">Copy</button><pre>return (
+  &lt;&gt;
+    &lt;h1&gt;Title&lt;/h1&gt;
+    &lt;p&gt;Description&lt;/p&gt;
+  &lt;/&gt;
+);</pre></div>
+
+<h3>Table rows without an extra div</h3>
+<div class="demo">
+  <table>
+    <tbody>
+      <tr><td>JSX</td><td>Markup syntax</td></tr>
+      <tr><td>Props</td><td>Component input</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h3>Mapped fragments</h3>
+<div class="code-wrap"><button class="copy">Copy</button><pre>import { Fragment } from "react";
+
+function App() {
+  const facts = [
+    { id: 1, label: "JSX", value: "Readable UI syntax" },
+    { id: 2, label: "Babel", value: "Transpilation tool" }
+  ];
+
+  return (
+    &lt;dl&gt;
+      {facts.map(fact =&gt; (
+        &lt;Fragment key={fact.id}&gt;
+          &lt;dt&gt;{fact.label}&lt;/dt&gt;
+          &lt;dd&gt;{fact.value}&lt;/dd&gt;
+        &lt;/Fragment&gt;
+      ))}
+    &lt;/dl&gt;
+  );
+}</pre></div>
+<div class="callout warning"><strong>Pitfall:</strong> shorthand <code>&lt;&gt;...&lt;/&gt;</code> cannot receive a key when mapping multiple sibling elements. Use the explicit <code>Fragment</code> form when a key is required.</div>
+</section>
+
+<section class="section" id="forms">
+<h2>11. JSX & HTML Forms</h2>
+<p>JSX uses normal form elements, but attributes follow JSX naming rules. A label connects to an input through <code>htmlFor</code> and <code>id</code>. A button inside a form defaults to submit behavior unless its type is specified.</p>
+<div class="code-wrap"><button class="copy">Copy</button><pre>&lt;form onSubmit={handleSubmit}&gt;
+  &lt;label htmlFor="email"&gt;Email&lt;/label&gt;
+  &lt;input id="email" name="email" type="email" /&gt;
+  &lt;button type="submit"&gt;Send&lt;/button&gt;
+&lt;/form&gt;</pre></div>
+
+<h3>Accessible registration form</h3>
+<div class="demo">
+<form onsubmit="registrationDemo(event)">
+  <div class="input-grid">
+    <div class="field">
+      <label for="fullNameDemo">Full name</label>
+      <input id="fullNameDemo" name="name" type="text" required>
+    </div>
+    <div class="field">
+      <label for="trackDemo">Track</label>
+      <select id="trackDemo" name="track" required>
+        <option value="jsx">JSX fundamentals</option>
+        <option value="components">Components</option>
+      </select>
+    </div>
+  </div>
+  <div class="actions">
+    <button class="btn" type="submit">Register</button>
+  </div>
+</form>
+<div id="registrationStatus" class="status">Try submitting with the name left empty to see browser validation.</div>
+</div>
+
+<h3>Checkbox and boolean attribute</h3>
+<div class="demo">
+  <label><input type="checkbox" checked> Receive lab reminders</label>
+  <div class="actions"><button class="btn secondary" type="button" disabled>Saved</button></div>
+</div>
+<div class="callout warning"><strong>Common mistakes:</strong> use <code>defaultChecked</code> for an initial uncontrolled checkbox, use <code>defaultValue</code>/<code>value</code> on <code>select</code>, and do not forget <code>type="button"</code> for a non-submit button inside a form.</div>
+</section>
+
+<section class="section" id="project">
+<h2>12. A Complete JSX Mini-Project</h2>
+<p class="lead">The source combines expressions, attributes, conditional rendering, lists, children and fragments into a small student dashboard that can be extended one feature at a time.</p>
+<div class="code-wrap"><button class="copy">Copy</button><pre>import { Fragment } from "react";
+
+function StatusBadge({ active }) {
+  return &lt;span&gt;{active ? "Active" : "Completed"}&lt;/span&gt;;
+}
+
+function StudyCard({ course }) {
+  return (
+    &lt;article style={{ border: "1px solid #ccc", padding: 12, margin: 8 }}&gt;
+      &lt;h2&gt;{course.title}&lt;/h2&gt;
+      &lt;p&gt;Instructor: {course.instructor}&lt;/p&gt;
+      &lt;StatusBadge active={!course.completed} /&gt;
+      {course.completed && &lt;p&gt;Certificate available.&lt;/p&gt;}
+    &lt;/article&gt;
+  );
+}
+
+function App() {
+  const courses = [
+    { id: 1, title: "JSX Foundations", instructor: "Dr. Meera", completed: true },
+    { id: 2, title: "React Components", instructor: "Mr. Arjun", completed: false }
+  ];
+
+  return (
+    &lt;&gt;
+      &lt;header&gt;
+        &lt;h1&gt;Student Learning Dashboard&lt;/h1&gt;
+        &lt;p&gt;{courses.length} courses assigned&lt;/p&gt;
+      &lt;/header&gt;
+
+      &lt;main&gt;
+        {courses.map(course =&gt; (
+          &lt;Fragment key={course.id}&gt;
+            &lt;StudyCard course={course} /&gt;
+          &lt;/Fragment&gt;
+        ))}
+      &lt;/main&gt;
+    &lt;/&gt;
+  );
+}
+
+export default App;</pre></div>
+
+<div class="demo">
+  <div class="jsx-card">
+    <h2>Student Learning Dashboard</h2>
+    <p>2 courses assigned</p>
+    <hr>
+    <div id="miniProjectCards"></div>
+  </div>
+</div>
+<div class="callout success"><strong>Expected output:</strong> Two course cards with statuses and a certificate message for the completed course.</div>
+</section>
+
+<section class="section" id="debug">
+<h2>13. Debugging Checklist</h2>
+<div class="grid">
+  <div class="card"><h3>Unexpected token</h3><p>Check for a missing closing tag, parenthesis, brace or quote.</p></div>
+  <div class="card"><h3>Adjacent JSX elements</h3><p>Wrap siblings in a semantic element or Fragment.</p></div>
+  <div class="card"><h3>Object error</h3><p>Render a property such as <code>object.name</code> rather than the whole object.</p></div>
+  <div class="card"><h3>Unknown prop</h3><p>Check camelCase names such as <code>tabIndex</code>, <code>readOnly</code> and <code>onClick</code>.</p></div>
+  <div class="card"><h3>Missing key</h3><p>Add a stable key to the outermost mapped element.</p></div>
+  <div class="card"><h3>Blank page</h3><p>Inspect the browser console and terminal for the first error, not the last cascade of errors.</p></div>
+  <div class="card"><h3>No hot reload</h3><p>Save the file, confirm the correct project folder, and restart <code>npm run dev</code> if needed.</p></div>
+</div>
+</section>
+
+<section class="section" id="practice">
+<h2>14. Practice Exercises</h2>
+<div class="grid">
+  <div class="card"><h3>1. Campus notice</h3><p>Create a notice component with title, date and message passed through expressions.</p></div>
+  <div class="card"><h3>2. Timetable</h3><p>Build a timetable from an array using <code>map()</code> and stable keys.</p></div>
+  <div class="card"><h3>3. Empty state</h3><p>Create a message that appears when an array has length zero.</p></div>
+  <div class="card"><h3>4. Fragment</h3><p>Replace an unnecessary <code>div</code> with a Fragment and inspect the DOM difference.</p></div>
+  <div class="card"><h3>5. Reusable Card</h3><p>Create a Card component that receives title, children and a button through props.</p></div>
+  <div class="card"><h3>6. Accessible form</h3><p>Add name, email, branch select and a required checkbox.</p></div>
+  <div class="card"><h3>7. Completed only</h3><p>Extend the dashboard with a “Show completed only” Boolean and conditional rendering.</p></div>
+</div>
+</section>
+
+<section class="section">
+<h2>Quick Reference</h2>
+<div class="reference-grid">
+  <div class="reference-item"><code>className="card"</code><span>Not <code>class</code></span></div>
+  <div class="reference-item"><code>htmlFor="email"</code><span>Not <code>for</code></span></div>
+  <div class="reference-item"><code>{student.name}</code><span>JavaScript expression</span></div>
+  <div class="reference-item"><code>style={{ color: "blue" }}</code><span>Object uses camelCase</span></div>
+  <div class="reference-item"><code>{ok ? &lt;A /&gt; : &lt;B /&gt;}</code><span>Both branches</span></div>
+  <div class="reference-item"><code>{ok && &lt;Note /&gt;}</code><span>Optional content; beware of 0</span></div>
+  <div class="reference-item"><code>items.map(x =&gt; &lt;li key={x.id}&gt;...&lt;/li&gt;)</code><span>Stable key</span></div>
+  <div class="reference-item"><code>&lt;&gt;...&lt;/&gt;</code><span>No extra DOM node</span></div>
+  <div class="reference-item"><code>{/* explanation */}</code><span>JSX comment</span></div>
+</div>
+</section>
+
+<section class="section" id="quiz">
+<h2>15. Quick Check</h2>
+<div class="quiz-q">
+<strong>1. JSX is:</strong>
+<label><input type="radio" name="q1" value="a"> HTML itself</label>
+<label><input type="radio" name="q1" value="b"> A JavaScript syntax extension used to describe UI</label>
+<label><input type="radio" name="q1" value="c"> A database language</label>
+</div>
+<div class="quiz-q">
+<strong>2. Which attribute replaces HTML <code>class</code> in JSX?</strong>
+<label><input type="radio" name="q2" value="a"> cssClass</label>
+<label><input type="radio" name="q2" value="b"> className</label>
+<label><input type="radio" name="q2" value="c"> classNameAttr</label>
+</div>
+<div class="quiz-q">
+<strong>3. Which syntax inserts a JavaScript expression into JSX?</strong>
+<label><input type="radio" name="q3" value="a"> [ ]</label>
+<label><input type="radio" name="q3" value="b"> { }</label>
+<label><input type="radio" name="q3" value="c"> ( ) only</label>
+</div>
+<div class="quiz-q">
+<strong>4. Why is a stable key used with items rendered by <code>map()</code>?</strong>
+<label><input type="radio" name="q4" value="a"> To add CSS</label>
+<label><input type="radio" name="q4" value="b"> To help React identify list items</label>
+<label><input type="radio" name="q4" value="c"> To make an item clickable</label>
+</div>
+<div class="quiz-q">
+<strong>5. Which is the JSX comment form?</strong>
+<label><input type="radio" name="q5" value="a"> &lt;!-- comment --&gt;</label>
+<label><input type="radio" name="q5" value="b"> {/* comment */}</label>
+<label><input type="radio" name="q5" value="c"> // comment directly in returned markup</label>
+</div>
+<button class="btn" onclick="checkQuiz()">Check Answers</button>
+<div id="quizResult" class="result"></div>
+</section>
+
+<footer class="footer">
+  <p>Interactive student version of the uploaded “JSX Complete Learning Resource”. Core terminology, sequence, examples and practice focus follow the source document.</p>
+</footer>
+</main>
+</div>
+
+<script>
+const navButtons=[...document.querySelectorAll('#nav button')];
+
+navButtons.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const id=btn.dataset.target;
+    const map={
+      overview:'overview',elements:'elements',attributes:'attributes',
+      expressions:'expressions',values:'values',comments:'comments',
+      conditions:'conditions',lists:'lists',children:'children',
+      fragments:'fragments',forms:'forms',project:'project',
+      debug:'debug',practice:'practice',quiz:'quiz'
+    };
+    const el=document.getElementById(map[id]);
+    if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+
+function updateProgress(){
+  const max=document.documentElement.scrollHeight-window.innerHeight;
+  const pct=max<=0?100:Math.max(0,Math.min(100,Math.round(window.scrollY/max*100)));
+  document.getElementById('progressFill').style.width=pct+'%';
+  document.getElementById('progressText').textContent=pct+'% viewed';
+}
+window.addEventListener('scroll',updateProgress);
+updateProgress();
+
+document.querySelectorAll('.copy').forEach(btn=>{
+  btn.addEventListener('click',async()=>{
+    const code=btn.nextElementSibling.innerText;
+    try{
+      await navigator.clipboard.writeText(code);
+      const old=btn.textContent;
+      btn.textContent='Copied!';
+      setTimeout(()=>btn.textContent=old,1100);
+    }catch{
+      btn.textContent='Copy manually';
+      setTimeout(()=>btn.textContent='Copy',1100);
+    }
+  });
+});
+
+function demoFormSubmit(e){
+  e.preventDefault();
+  const value=document.getElementById('studentNameDemo').value.trim();
+  document.getElementById('demoFormMessage').textContent=
+    value ? 'Saved name: '+value+' (demo only)' : 'Name is required.';
+}
+
+let online=true;
+function toggleOnline(){
+  online=!online;
+  document.getElementById('onlineStatus').textContent=online?'Online':'Offline';
+}
+
+function updateMarks(){
+  const i=Number(document.getElementById('internalMarks').value||0);
+  const e=Number(document.getElementById('externalMarks').value||0);
+  const total=i+e;
+  const percentage=total;
+  document.getElementById('marksOutput').innerHTML=
+    '<h3>Assessment Result</h3><p>Total: '+total+'/100</p><p>Percentage: '+percentage+'%</p>';
+}
+
+function updateGreeting(){
+  const name=document.getElementById('greetingName').value.trim()||'Student';
+  document.getElementById('greetingOutput').textContent='Good morning, '+name;
+}
+
+let styled=true;
+function toggleStyle(){
+  styled=!styled;
+  const card=document.getElementById('styleCard');
+  if(styled){
+    card.style.backgroundColor='#eef6ff';
+    card.style.border='1px solid #4b83c4';
+  }else{
+    card.style.backgroundColor='#fff';
+    card.style.border='1px solid #cbd5e1';
+  }
+}
+
+function setSubmission(value){
+  document.getElementById('assignmentStatus').innerHTML=value
+    ? '<p>Assignment submitted successfully.</p>'
+    : '<p>Please upload your assignment.</p>';
+}
+
+function updateLogin(){
+  const loggedIn=document.getElementById('loginToggle').checked;
+  document.getElementById('loginOutput').innerHTML=loggedIn
+    ? '<h3>Welcome back, student!</h3><button class="btn" type="button">Open dashboard</button>'
+    : '<h3>Please log in.</h3>';
+}
+
+const courses=[
+  {id:1,name:'JavaScript',hours:6},
+  {id:2,name:'React JSX',hours:5},
+  {id:3,name:'Node.js',hours:7}
+];
+document.getElementById('courseList').innerHTML=
+  courses.map(c=>'<li>'+c.name+' — '+c.hours+' hours</li>').join('');
+
+const tasks=[
+  {id:1,title:'Read JSX notes',done:true},
+  {id:2,title:'Run the examples',done:false},
+  {id:3,title:'Submit lab record',done:true}
+];
+function renderTasks(onlyCompleted){
+  const list=document.getElementById('taskList');
+  const shown=onlyCompleted?tasks.filter(t=>t.done):tasks;
+  list.innerHTML=shown.length
+    ? shown.map(t=>'<li style="margin:7px 0">'+t.title+'</li>').join('')
+    : '<li>No tasks completed yet.</li>';
+}
+function toggleCompleted(onlyCompleted){renderTasks(onlyCompleted)}
+renderTasks(true);
+
+function registerWorkshop(){
+  document.getElementById('workshopStatus').textContent='Registration selected. Event handling can be added later in React.';
+}
+
+function registrationDemo(e){
+  e.preventDefault();
+  const name=document.getElementById('fullNameDemo').value.trim();
+  const track=document.getElementById('trackDemo').value;
+  document.getElementById('registrationStatus').textContent=
+    'Registered '+name+' for '+(track==='jsx'?'JSX fundamentals':'Components')+' (demo only).';
+}
+
+const miniCourses=[
+  {title:'JSX Foundations',instructor:'Dr. Meera',completed:true},
+  {title:'React Components',instructor:'Mr. Arjun',completed:false}
+];
+document.getElementById('miniProjectCards').innerHTML=miniCourses.map(c=>{
+  const status=c.completed?'Completed':'Active';
+  const certificate=c.completed?'<p><strong>Certificate available.</strong></p>':'';
+  return '<div class="jsx-card" style="margin:10px 0">'+
+    '<h3>'+c.title+'</h3>'+
+    '<p>Instructor: '+c.instructor+'</p>'+
+    '<p>Status: <strong>'+status+'</strong></p>'+
+    certificate+
+    '</div>';
+}).join('');
+
+document.getElementById('search').addEventListener('input',function(){
+  const q=this.value.toLowerCase().trim();
+  const searchable=[...document.querySelectorAll('.main .section')];
+  searchable.forEach(sec=>{
+    if(!q){sec.classList.remove('hidden');return;}
+    sec.classList.toggle('hidden',!sec.innerText.toLowerCase().includes(q));
+  });
+});
+
+function checkQuiz(){
+  const answers={q1:'b',q2:'b',q3:'b',q4:'b',q5:'b'};
+  let score=0;
+  for(const [name,ans] of Object.entries(answers)){
+    const el=document.querySelector('input[name="'+name+'"]:checked');
+    if(el?.value===ans) score++;
+  }
+  const result=document.getElementById('quizResult');
+  result.textContent='Your score: '+score+'/5';
+  result.style.color=score===5?'#0f766e':'#b45309';
+}
+</script>
+</body>
+</html>

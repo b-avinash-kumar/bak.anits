@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>React Routing — Interactive Learning Resource</title>
+<style>
+:root{
+  --bg:#f5f7fb;
+  --card:#ffffff;
+  --ink:#172033;
+  --muted:#64748b;
+  --border:#e2e8f0;
+  --primary:#4f46e5;
+  --primary-dark:#3730a3;
+  --soft:#eef2ff;
+  --success:#0f766e;
+  --success-bg:#ecfdf5;
+  --warning:#b45309;
+  --warning-bg:#fff7ed;
+  --danger:#b91c1c;
+  --danger-bg:#fef2f2;
+  --code:#0b1220;
+  --shadow:0 10px 28px rgba(15,23,42,.08);
+  --radius:18px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;
+  line-height:1.65;
+}
+button,input{font:inherit}
+.layout{display:grid;grid-template-columns:290px 1fr;min-height:100vh}
+.sidebar{
+  position:sticky;top:0;height:100vh;overflow:auto;
+  background:#111827;color:#e5e7eb;padding:24px 18px;
+}
+.brand{font-weight:800;font-size:1.28rem}
+.brand small{display:block;color:#94a3b8;font-size:.76rem;font-weight:500}
+.progress{margin:18px 0;background:#1f2937;border-radius:14px;padding:14px}
+.progress-track{height:8px;border-radius:999px;background:#374151;overflow:hidden}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,#818cf8,#c084fc);transition:width .25s}
+.progress-text{font-size:.76rem;color:#cbd5e1;margin-top:7px}
+.nav{display:flex;flex-direction:column;gap:5px}
+.nav button{
+  background:transparent;color:#cbd5e1;border:0;border-radius:10px;
+  text-align:left;padding:10px 11px;cursor:pointer
+}
+.nav button:hover,.nav button.active{background:#312e81;color:#fff}
+.main{width:100%;max-width:1160px;margin:auto;padding:34px 30px 70px}
+.hero{
+  background:linear-gradient(135deg,#312e81,#6d28d9);
+  color:white;border-radius:25px;padding:40px;box-shadow:var(--shadow);margin-bottom:24px
+}
+.hero h1{font-size:clamp(2.2rem,5vw,3.8rem);line-height:1.05;margin:0 0 10px}
+.hero p{max-width:900px;color:#ede9fe;margin:0}
+.pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}
+.pill{
+  padding:7px 11px;border-radius:999px;background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.2);font-size:.82rem
+}
+.toolbar{display:flex;gap:10px;margin:0 0 24px}
+.search{
+  flex:1;padding:12px 14px;border:1px solid #cbd5e1;border-radius:11px;background:#fff
+}
+.section{scroll-margin-top:18px;margin:30px 0}
+.section h2{font-size:1.9rem;line-height:1.25;margin:0 0 7px}
+.section h3{margin-top:24px}
+.lead{color:var(--muted);max-width:940px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:16px}
+.card,.demo{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:20px;box-shadow:var(--shadow)
+}
+.card h3{margin-top:0}
+.callout{
+  margin:16px 0;padding:15px 17px;border-radius:13px;
+  background:var(--soft);border-left:5px solid var(--primary)
+}
+.callout.success{background:var(--success-bg);border-left-color:var(--success)}
+.callout.warning{background:var(--warning-bg);border-left-color:#ea580c}
+.callout.danger{background:var(--danger-bg);border-left-color:var(--danger)}
+.code-wrap{position:relative;margin:16px 0}
+pre{
+  margin:0;background:var(--code);color:#e5e7eb;border-radius:14px;padding:20px;
+  overflow:auto;font:14px/1.65 Consolas,Monaco,"Courier New",monospace
+}
+.copy{
+  position:absolute;top:10px;right:10px;background:#1e293b;color:#e2e8f0;
+  border:1px solid #475569;border-radius:8px;padding:5px 9px;cursor:pointer;font-size:.78rem
+}
+.copy:hover{background:#334155}
+table{
+  width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--border);
+  border-radius:14px;overflow:hidden
+}
+th,td{padding:12px 14px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+th{background:#f1f5f9}
+.flow{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:18px 0}
+.flowbox{
+  background:#fff;border:2px solid #c7d2fe;border-radius:12px;padding:11px 16px;
+  text-align:center;font-weight:700
+}
+.arrow{font-size:1.35rem;color:var(--primary)}
+.actions{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin-top:12px}
+.btn{
+  border:0;border-radius:10px;padding:10px 14px;background:var(--primary);
+  color:#fff;font-weight:700;cursor:pointer
+}
+.btn:hover{background:var(--primary-dark)}
+.btn.secondary{background:#e2e8f0;color:#1e293b}
+.btn.success{background:var(--success)}
+.btn.warning{background:#d97706}
+.status{
+  margin-top:14px;padding:12px;border-radius:10px;background:#f8fafc;
+  border:1px solid var(--border);font-weight:650
+}
+.route-demo{
+  border:1px solid var(--border);border-radius:16px;background:#fff;
+  padding:18px
+}
+.route-nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.route-link{
+  border:1px solid #cbd5e1;background:#fff;color:#334155;
+  border-radius:10px;padding:9px 13px;cursor:pointer
+}
+.route-link.active{background:#312e81;color:#fff;border-color:#312e81}
+.route-screen{
+  border:2px dashed #cbd5e1;border-radius:14px;padding:22px;min-height:130px;
+  background:#f8fafc
+}
+.param-chip,.query-chip{
+  display:inline-block;padding:4px 8px;border-radius:999px;
+  background:#e0e7ff;color:#3730a3;font-weight:700;font-size:.82rem
+}
+.outlet{
+  margin-top:12px;padding:16px;border-left:4px solid var(--primary);
+  background:#eef2ff;border-radius:10px
+}
+.code-note{font-size:.84rem;color:var(--muted);margin-top:6px}
+.quiz-q{
+  background:#fff;border:1px solid var(--border);border-radius:14px;
+  padding:16px;margin:12px 0
+}
+.quiz-q label{display:block;margin:7px 0}
+.result{font-weight:800;margin-top:14px}
+.reference-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+.reference{
+  background:#fff;border:1px solid var(--border);border-radius:12px;padding:13px
+}
+.reference code{display:block;font-weight:800;margin-bottom:5px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.hidden{display:none!important}
+.footer{text-align:center;color:var(--muted);font-size:.9rem;margin-top:50px}
+@media(max-width:900px){
+  .layout{display:block}.sidebar{position:relative;height:auto}
+  .nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .main{padding:20px 14px 55px}.hero{padding:28px}.two-col{grid-template-columns:1fr}
+}
+@media(max-width:520px){
+  .nav{grid-template-columns:1fr}
+  .main{padding:14px 10px 50px}.hero{padding:23px}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+  <div class="brand">React Routing<small>Interactive Learning Resource • Under Revision</small></div>
+  <div class="progress">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-text" id="progressText">0% viewed</div>
+  </div>
+  <nav class="nav" id="nav">
+    <button data-target="overview">1. What is Routing?</button>
+    <button data-target="install">2. Installation</button>
+    <button data-target="basic">3. Basic Routing</button>
+    <button data-target="link">4. Link</button>
+    <button data-target="navlink">5. NavLink</button>
+    <button data-target="fallback">6. Page Not Found</button>
+    <button data-target="params">7. URL Parameters</button>
+    <button data-target="query">8. Query Strings</button>
+    <button data-target="nested">9. Nested Routes</button>
+    <button data-target="complete">10. Complete Example</button>
+    <button data-target="reference">11. Quick Reference</button>
+    <button data-target="quiz">12. Quick Check</button>
+  </nav>
+</aside>
+
+<main class="main">
+<section class="hero" id="overview">
+  <span class="pill">Based on the uploaded 11-page “Finalrouting” notes</span>
+  <h1>React Routing</h1>
+  <p>Learn how URLs connect to React pages and components using React Router — from basic routes and navigation to parameters, query strings, nested routes, and a 404 fallback.</p>
+  <div class="pills">
+    <span class="pill">BrowserRouter</span>
+    <span class="pill">Routes</span>
+    <span class="pill">Route</span>
+    <span class="pill">Link</span>
+    <span class="pill">NavLink</span>
+    <span class="pill">useParams</span>
+    <span class="pill">useSearchParams</span>
+    <span class="pill">Outlet</span>
+  </div>
+</section>
+
+<div class="toolbar">
+  <input id="search" class="search" placeholder="Search this lesson: e.g. NavLink, parameter, query, Outlet, 404">
+</div>
+
+<section class="section" id="what">
+<h2>1. What Is Routing?</h2>
+<p class="lead">Routing means connecting a URL with a particular page or component.</p>
+<table>
+<tr><th>URL</th><th>Page</th></tr>
+<tr><td><code>/</code></td><td>Home page</td></tr>
+<tr><td><code>/about</code></td><td>About page</td></tr>
+<tr><td><code>/courses</code></td><td>Courses page</td></tr>
+</table>
+<div class="callout success"><strong>Main idea:</strong> In a React application, routing lets users move between pages without loading a completely new web page.</div>
+<div class="flow">
+  <div class="flowbox">URL</div><div class="arrow">→</div>
+  <div class="flowbox">Route match</div><div class="arrow">→</div>
+  <div class="flowbox">React component</div>
+  <div class="arrow">→</div><div class="flowbox">Screen</div>
+</div>
+</section>
+
+<section class="section" id="install">
+<h2>2. Installing React Router</h2>
+<p>The source uses React Router as the library for creating routes in React applications.</p>
+<div class="code-wrap"><button class="copy">Copy</button><pre>npm install react-router-dom</pre></div>
+
+<h3>Creating the project</h3>
+<div class="code-wrap"><button class="copy">Copy</button><pre>npm create vite@latest routing-app -- --template react
+cd routing-app
+npm install
+npm install react-router-dom
+npm run dev</pre></div>
+<div class="callout">Open the URL shown in the terminal after starting the development server.</div>
+</section>
+
+<section class="section" id="basic">
+<h2>3. Basic Routing</h2>
+<p>Use <code>BrowserRouter</code>, <code>Routes</code>, and <code>Route</code> to create pages.</p>
+<div class="code-wrap"><button class="copy">Copy</button><pre>import {
+  BrowserRouter,
+  Routes,
+  Route
+} from "react-router-dom";
+
+function Home() {
+  return &lt;h1&gt;Home&lt;/h1&gt;;
+}
+
+function About() {
+  return &lt;h1&gt;About&lt;/h1&gt;;
+}
+
+export default function App() {
+  return (
+    &lt;BrowserRouter&gt;
+      &lt;Routes&gt;
+        &lt;Route path="/" element={&lt;Home /&gt;} /&gt;
+        &lt;Route path="/about" element={&lt;About /&gt;} /&gt;
+      &lt;/Routes&gt;
+    &lt;/BrowserRouter&gt;
+  );
+}</pre></div>
+
+<div class="demo route-demo">
+  <h3>Interactive basic router simulation</h3>
+  <div class="route-nav">
+    <button class="route-link active" onclick="basicRoute('/')">/</button>
+    <button class="route-link" onclick="basicRoute('/about')">/about</button>
+  </div>
+  <div class="route-screen" id="basicScreen">
+    <h2>Home</h2>
+    <p>Current route: <span class="param-chip">/</span></p>
+  </div>
+</div>
+<div class="callout success"><strong>What happens?</strong> Selecting <code>/about</code> changes the URL state in the example and displays the About component.</div>
+</section>
+
+<section class="section" id="link">
+<h2>4. Navigation with Link</h2>
+<p>Use <code>Link</code> to move between pages without reloading.</p>
+<div class="code-wrap"><button class="copy">Copy</button><pre>import { Link } from "react-router-dom";
+
+function Navigation() {
+  return (
+    &lt;nav&gt;
+      &lt;Link to="/"&gt;Home&lt;/Link&gt;
+      &lt;Link to="/about"&gt;About&lt;/Link&gt;
+    &lt;/nav&gt;
+  );
+}</pre></div>
+<div class="demo">
+  <h3>Link concept</h3>
+  <div class="route-nav">
+    <button class="route-link" onclick="linkDemo('Home')">Home</button>
+    <button class="route-link" onclick="linkDemo('About')">About</button>
+  </div>
+  <div id="linkResult" class="status">Choose a link.</div>
+</div>
+<div class="callout warning"><strong>Source rule:</strong> Do not use <code>&lt;a href="..."&gt;</code> for internal React pages in this lesson. Use <code>Link</code>.</div>
+</section>
+
+<section class="section" id="navlink">
+<h2>5. Active Link with NavLink</h2>
+<p><code>NavLink</code> adds an active-state class when the link is active.</p>
+<div class="code-wrap"><button class="copy">Copy</button><pre>import { NavLink } from "react-router-dom";
+
+function Menu() {
+  return (
+    &lt;nav&gt;
+      &lt;NavLink
+        to="/"
+        className={({ isActive }) =&gt;
+          isActive ? "active" : ""
+        }
+      &gt;
+        Home
+      &lt;/NavLink&gt;
+
+      &lt;NavLink
+        to="/about"
+        className={({ isActive }) =&gt;
+          isActive ? "active" : ""
+        }
+      &gt;
+        About
+      &lt;/NavLink&gt;
+    &lt;/nav&gt;
+  );
+}</pre></div>
+<div class="code-wrap"><button class="copy">Copy</button><pre>.active {
+  color: red;
+  font-weight: bold;
+}</pre></div>
+
+<div class="demo">
+  <h3>Try the active-link idea</h3>
+  <div class="route-nav">
+    <button id="navHome" class="route-link active" onclick="activateNav('Home')">Home</button>
+    <button id="navAbout" class="route-link" onclick="activateNav('About')">About</button>
+    <button id="navDash" class="route-link" onclick="activateNav('Dashboard')">Dashboard</button>
+  </div>
+  <div class="status" id="navResult">Active link: Home</div>
+</div>
+</section>
+
+<section class="section" id="fallback">
+<h2>6. Page Not Found — Fallback Route</h2>
+<p>Use <code>path="*"</code> for unknown URLs.</p>
+<div class="code-wrap"><button class="copy">Copy</button><pre>function NotFound() {
+  return &lt;h1&gt;Page Not Found&lt;/h1&gt;;
+}
+
+&lt;Routes&gt;
+  &lt;Route path="/" element={&lt;Home /&gt;} /&gt;
+  &lt;Route path="*" element={&lt;NotFound /&gt;} /&gt;
+&lt;/Routes&gt;</pre></div>
+<div class="demo">
+  <h3>Fallback route simulator</h3>
+  <div class="input-grid">
+    <div class="field"><label for="fallbackPath">Enter a path</label><input id="fallbackPath" value="/unknown" oninput="previewFallback()"></div>
+  </div>
+  <div class="route-screen" id="fallbackScreen" style="margin-top:14px">
+    <h2>Page Not Found</h2><p>No route matched <code>/unknown</code>.</p>
+  </div>
+</div>
+</section>
+
+<section class="section" id="params">
+<h2>7. URL Parameters</h2>
+<p>Use <code>:paramName</code> in the path and <code>useParams()</code> to read it.</p>
+<div class="code-wrap"><button class="copy">Copy</button><pre>import { useParams } from "react-router-dom";
+
+function Student() {
+  const { id } = useParams();
+  return &lt;h1&gt;Student {id}&lt;/h1&gt;;
+}
+
+&lt;Routes&gt;
+  &lt;Route
+    path="/students/:id"
+    element={&lt;Student /&gt;}
+  /&gt;
+&lt;/Routes&gt;</pre></div>
+<div class="demo route-demo">
+  <h3>Interactive URL parameter</h3>
+  <div class="input-grid">
+    <div class="field"><label for="studentId">Student ID</label><input id="studentId" value="101" oninput="showStudentParam()"></div>
+  </div>
+  <div id="studentParamResult" class="status">URL: /students/101 → Student 101</div>
+</div>
+<div class="callout">The source also presents a route with two parameters: <code>/students/:id/:name</code>, where both values are read with <code>useParams()</code>.</div>
+</section>
+
+<section class="section" id="query">
+<h2>8. Query Strings</h2>
+<p>Query strings look like <code>/courses?branch=CSE</code>. Use <code>useSearchParams()</code> to read them.</p>
+<div class="code-wrap"><button class="copy">Copy</button><pre>import { useSearchParams } from "react-router-dom";
+
+function Courses() {
+  const [params] = useSearchParams();
+  const branch = params.get("branch") || "All";
+  return &lt;h1&gt;Branch: {branch}&lt;/h1&gt;;
+}</pre></div>
+<div class="demo">
+  <h3>Interactive query-string reader</h3>
+  <div class="input-grid">
+    <div class="field"><label for="branchQuery">branch</label><input id="branchQuery" value="CSE" oninput="showQuery()"></div>
+  </div>
+  <div class="route-screen" id="queryResult" style="margin-top:14px">
+    <h2>Branch: CSE</h2>
+    <p>Example URL: <span class="query-chip">/courses?branch=CSE</span></p>
+  </div>
+</div>
+</section>
+
+<section class="section" id="nested">
+<h2>9. Nested Routes and Outlet</h2>
+<p>Use nested routes when pages share a layout. The child route appears where the parent renders <code>&lt;Outlet /&gt;</code>.</p>
+<div class="code-wrap"><button class="copy">Copy</button><pre>function DashboardLayout() {
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;Dashboard&lt;/h1&gt;
+
+      &lt;nav&gt;
+        &lt;NavLink to="/dashboard"&gt;Overview&lt;/NavLink&gt;
+        &lt;NavLink to="/dashboard/reports"&gt;Reports&lt;/NavLink&gt;
+      &lt;/nav&gt;
+
+      &lt;hr /&gt;
+      &lt;Outlet /&gt;
+    &lt;/div&gt;
+  );
+}</pre></div>
+
+<div class="demo route-demo">
+  <h3>Interactive nested route simulator</h3>
+  <div class="route-nav">
+    <button id="nestedOverview" class="route-link active" onclick="nestedRoute('overview')">Overview</button>
+    <button id="nestedReports" class="route-link" onclick="nestedRoute('reports')">Reports</button>
+  </div>
+  <div class="route-screen">
+    <h2>Dashboard</h2>
+    <div class="outlet" id="outletContent">
+      <h3>Overview</h3><p>Welcome to the Dashboard Overview.</p>
+    </div>
+  </div>
+</div>
+
+<h3>Complete nested route structure</h3>
+<div class="code-wrap"><button class="copy">Copy</button><pre>&lt;Route path="/dashboard" element={&lt;DashboardLayout /&gt;}&gt;
+  &lt;Route index element={&lt;Overview /&gt;} /&gt;
+  &lt;Route path="reports" element={&lt;Reports /&gt;} /&gt;
+&lt;/Route&gt;</pre></div>
+<div class="callout success"><strong>Think of Outlet as a placeholder:</strong> the parent layout stays on screen while the matched child component appears inside the <code>&lt;Outlet /&gt;</code>.</div>
+</section>
+
+<section class="section" id="complete">
+<h2>10. Complete Routing Example</h2>
+<p>The source combines normal routes, URL parameters, query parameters, nested routes, active navigation, and a 404 fallback in one application.</p>
+
+<div class="two-col">
+<div class="card">
+<h3>Routes in the source</h3>
+<ul>
+  <li><code>/</code> → Home</li>
+  <li><code>/about</code> → About</li>
+  <li><code>/students/:id/:name</code> → Student</li>
+  <li><code>/courses</code> → Courses</li>
+  <li><code>/dashboard</code> → Dashboard layout + Overview child</li>
+  <li><code>/dashboard/reports</code> → Reports child</li>
+  <li><code>*</code> → NotFound</li>
+</ul>
+</div>
+<div class="card">
+<h3>Hooks / components used</h3>
+<ul>
+  <li><code>BrowserRouter</code></li>
+  <li><code>Routes</code> and <code>Route</code></li>
+  <li><code>NavLink</code></li>
+  <li><code>useParams</code></li>
+  <li><code>useSearchParams</code></li>
+  <li><code>Outlet</code></li>
+</ul>
+</div>
+</div>
+
+<div class="code-wrap"><button class="copy">Copy</button><pre>export default function App() {
+  return (
+    &lt;BrowserRouter&gt;
+      &lt;Menu /&gt;
+
+      &lt;Routes&gt;
+        &lt;Route path="/" element={&lt;Home /&gt;} /&gt;
+        &lt;Route path="/about" element={&lt;About /&gt;} /&gt;
+
+        &lt;Route
+          path="/students/:id/:name"
+          element={&lt;Student /&gt;}
+        /&gt;
+
+        &lt;Route
+          path="/courses"
+          element={&lt;Courses /&gt;}
+        /&gt;
+
+        &lt;Route
+          path="/dashboard"
+          element={&lt;DashboardLayout /&gt;}
+        &gt;
+          &lt;Route index element={&lt;Overview /&gt;} /&gt;
+          &lt;Route
+            path="reports"
+            element={&lt;Reports /&gt;}
+          /&gt;
+        &lt;/Route&gt;
+
+        &lt;Route path="*" element={&lt;NotFound /&gt;} /&gt;
+      &lt;/Routes&gt;
+    &lt;/BrowserRouter&gt;
+  );
+}</pre></div>
+
+<div class="demo route-demo">
+  <h3>Try the complete route map</h3>
+  <div class="route-nav">
+    <button class="route-link" onclick="completeRoute('/')">Home</button>
+    <button class="route-link" onclick="completeRoute('/about')">About</button>
+    <button class="route-link" onclick="completeRoute('/students/101/Anita')">Student</button>
+    <button class="route-link" onclick="completeRoute('/courses?branch=CSE')">Courses</button>
+    <button class="route-link" onclick="completeRoute('/dashboard')">Dashboard</button>
+    <button class="route-link" onclick="completeRoute('/dashboard/reports')">Reports</button>
+    <button class="route-link" onclick="completeRoute('/unknown')">404</button>
+  </div>
+  <div class="route-screen" id="completeScreen">
+    <h2>Home</h2><p>Current path: <code>/</code></p>
+  </div>
+</div>
+</section>
+
+<section class="section" id="reference">
+<h2>11. Quick Reference</h2>
+<div class="reference-grid">
+  <div class="reference"><code>BrowserRouter</code><span>Provides routing context to the React app.</span></div>
+  <div class="reference"><code>Routes</code><span>Contains the route definitions.</span></div>
+  <div class="reference"><code>Route</code><span>Connects a path to an element.</span></div>
+  <div class="reference"><code>Link</code><span>Internal navigation without a full reload.</span></div>
+  <div class="reference"><code>NavLink</code><span>Navigation link that can receive active styling.</span></div>
+  <div class="reference"><code>path="*"</code><span>Fallback route for unknown URLs.</span></div>
+  <div class="reference"><code>useParams()</code><span>Reads URL parameters such as <code>:id</code>.</span></div>
+  <div class="reference"><code>useSearchParams()</code><span>Reads query-string values.</span></div>
+  <div class="reference"><code>Outlet</code><span>Renders the matched child route inside a parent layout.</span></div>
+</div>
+<div class="callout warning"><strong>Installation reminder:</strong> The actual React examples in the source require the <code>react-router-dom</code> package in a React project.</div>
+</section>
+
+<section class="section" id="quiz">
+<h2>12. Quick Check</h2>
+<div class="quiz-q">
+<strong>1. What is the main purpose of routing?</strong>
+<label><input type="radio" name="q1" value="a"> Styling a button</label>
+<label><input type="radio" name="q1" value="b"> Connecting URLs to pages/components</label>
+<label><input type="radio" name="q1" value="c"> Connecting React to MongoDB</label>
+</div>
+<div class="quiz-q">
+<strong>2. Which component provides the routing context?</strong>
+<label><input type="radio" name="q2" value="a"> BrowserRouter</label>
+<label><input type="radio" name="q2" value="b"> Outlet</label>
+<label><input type="radio" name="q2" value="c"> NavLink</label>
+</div>
+<div class="quiz-q">
+<strong>3. Which should be used for internal React navigation in this lesson?</strong>
+<label><input type="radio" name="q3" value="a"> Link</label>
+<label><input type="radio" name="q3" value="b"> alert()</label>
+<label><input type="radio" name="q3" value="c"> console.log()</label>
+</div>
+<div class="quiz-q">
+<strong>4. Which Hook reads <code>/students/101</code> when the route uses <code>:id</code>?</strong>
+<label><input type="radio" name="q4" value="a"> useEffect</label>
+<label><input type="radio" name="q4" value="b"> useParams</label>
+<label><input type="radio" name="q4" value="c"> useState</label>
+</div>
+<div class="quiz-q">
+<strong>5. Which Hook reads <code>?branch=CSE</code>?</strong>
+<label><input type="radio" name="q5" value="a"> useSearchParams</label>
+<label><input type="radio" name="q5" value="b"> useParams</label>
+<label><input type="radio" name="q5" value="c"> useRef</label>
+</div>
+<div class="quiz-q">
+<strong>6. What does <code>Outlet</code> represent in nested routes?</strong>
+<label><input type="radio" name="q6" value="a"> A database connection</label>
+<label><input type="radio" name="q6" value="b"> A placeholder for the matched child route</label>
+<label><input type="radio" name="q6" value="c"> A 404 page</label>
+</div>
+<button class="btn" onclick="checkQuiz()">Check Answers</button>
+<div id="quizResult" class="result"></div>
+</section>
+
+<footer class="footer">
+  <p>Interactive student version of the uploaded “Finalrouting” document. Core concepts, terminology, examples and route structure follow the source material.</p>
+</footer>
+</main>
+</div>
+
+<script>
+const navButtons=[...document.querySelectorAll('#nav button')];
+navButtons.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const el=document.getElementById(btn.dataset.target);
+    if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+
+function updateProgress(){
+  const max=document.documentElement.scrollHeight-window.innerHeight;
+  const pct=max<=0?100:Math.max(0,Math.min(100,Math.round(window.scrollY/max*100)));
+  document.getElementById('progressFill').style.width=pct+'%';
+  document.getElementById('progressText').textContent=pct+'% viewed';
+}
+window.addEventListener('scroll',updateProgress);
+updateProgress();
+
+document.querySelectorAll('.copy').forEach(btn=>{
+  btn.addEventListener('click',async()=>{
+    const code=btn.nextElementSibling.innerText;
+    try{
+      await navigator.clipboard.writeText(code);
+      const old=btn.textContent;btn.textContent='Copied!';
+      setTimeout(()=>btn.textContent=old,1100);
+    }catch{
+      btn.textContent='Copy manually';
+      setTimeout(()=>btn.textContent='Copy',1100);
+    }
+  });
+});
+
+function basicRoute(path){
+  const screen=document.getElementById('basicScreen');
+  screen.innerHTML=path==='/'?
+    '<h2>Home</h2><p>Current route: <span class="param-chip">/</span></p>':
+    '<h2>About</h2><p>Current route: <span class="param-chip">/about</span></p>';
+  document.querySelectorAll('#basicScreen').forEach(()=>{});
+  document.querySelectorAll('.route-demo .route-link').forEach((b,i)=>{
+    if(i<2) b.classList.toggle('active',(i===0&&path==='/')||(i===1&&path==='/about'));
+  });
+}
+function linkDemo(page){
+  document.getElementById('linkResult').textContent=
+    'Link selected: '+page+'. React Router changes the route without a full page reload.';
+}
+function activateNav(page){
+  ['Home','About','Dashboard'].forEach(name=>{
+    const id='nav'+name;
+    document.getElementById(id)?.classList.toggle('active',name===page);
+  });
+  document.getElementById('navResult').textContent='Active link: '+page;
+}
+function previewFallback(){
+  const path=document.getElementById('fallbackPath').value.trim()||'/';
+  const known=['/','/about','/courses','/dashboard'];
+  const ok=known.includes(path)||path.startsWith('/students/');
+  document.getElementById('fallbackScreen').innerHTML=ok
+    ? '<h2>Matched Route</h2><p>The path <code>'+escapeHtml(path)+'</code> could match a defined route.</p>'
+    : '<h2>Page Not Found</h2><p>No route matched <code>'+escapeHtml(path)+'</code>.</p>';
+}
+function showStudentParam(){
+  const id=document.getElementById('studentId').value.trim()||'';
+  document.getElementById('studentParamResult').innerHTML=
+    'URL: <code>/students/'+escapeHtml(id)+'</code> → Student <strong>'+escapeHtml(id)+'</strong>';
+}
+function showQuery(){
+  const branch=document.getElementById('branchQuery').value.trim();
+  const text=branch||'All';
+  document.getElementById('queryResult').innerHTML=
+    '<h2>Branch: '+escapeHtml(text)+'</h2>'+
+    '<p>Example URL: <span class="query-chip">/courses?branch='+escapeHtml(text)+'</span></p>';
+}
+function nestedRoute(which){
+  const overview=which==='overview';
+  document.getElementById('nestedOverview').classList.toggle('active',overview);
+  document.getElementById('nestedReports').classList.toggle('active',!overview);
+  document.getElementById('outletContent').innerHTML=overview
+    ? '<h3>Overview</h3><p>Welcome to the Dashboard Overview.</p>'
+    : '<h3>Reports</h3><p>Here you can see your reports.</p>';
+}
+function completeRoute(path){
+  const screen=document.getElementById('completeScreen');
+  let html='';
+  if(path==='/') html='<h2>Home</h2><p>Current path: <code>/</code></p>';
+  else if(path==='/about') html='<h2>About</h2><p>Current path: <code>/about</code></p>';
+  else if(path.startsWith('/students/')){
+    const parts=path.split('/');
+    html='<h2>Student '+escapeHtml(parts[2])+' and '+escapeHtml(parts[3]||'')+'</h2><p>URL parameter route matched.</p>';
+  } else if(path.startsWith('/courses')){
+    const branch=(new URLSearchParams(path.split('?')[1]||'')).get('branch')||'No Branch in your url query parameter';
+    html='<h2>Branch: '+escapeHtml(branch)+'</h2><p>Query parameter route matched.</p>';
+  } else if(path==='/dashboard'){
+    html='<h2>Dashboard</h2><div class="outlet"><h3>Overview</h3><p>Welcome to the Dashboard Overview.</p></div>';
+  } else if(path==='/dashboard/reports'){
+    html='<h2>Dashboard</h2><div class="outlet"><h3>Reports</h3><p>Here you can see your reports.</p></div>';
+  } else {
+    html='<h2>Page Not Found</h2><p>No route matched <code>'+escapeHtml(path)+'</code>.</p>';
+  }
+  screen.innerHTML=html+'<p class="muted">Simulated current path: '+escapeHtml(path)+'</p>';
+}
+function escapeHtml(text){
+  return text.replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));
+}
+function checkQuiz(){
+  const answers={q1:'b',q2:'a',q3:'a',q4:'b',q5:'a',q6:'b'};
+  let score=0;
+  for(const [name,ans] of Object.entries(answers)){
+    const selected=document.querySelector('input[name="'+name+'"]:checked');
+    if(selected&&selected.value===ans)score++;
+  }
+  const r=document.getElementById('quizResult');
+  r.textContent='Your score: '+score+'/6';
+  r.style.color=score===6?'#0f766e':'#b45309';
+}
+
+document.getElementById('search').addEventListener('input',function(){
+  const q=this.value.toLowerCase().trim();
+  document.querySelectorAll('.main .section').forEach(sec=>{
+    if(!q){sec.classList.remove('hidden');return}
+    sec.classList.toggle('hidden',!sec.innerText.toLowerCase().includes(q));
+  });
+});
+</script>
+</body>
+</html>

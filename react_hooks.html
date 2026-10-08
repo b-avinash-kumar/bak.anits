@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>React Hooks — Interactive Learning Resource</title>
+<style>
+:root{
+  --bg:#f5f7fb;
+  --card:#fff;
+  --ink:#172033;
+  --muted:#64748b;
+  --border:#e2e8f0;
+  --primary:#4f46e5;
+  --primary-dark:#3730a3;
+  --soft:#eef2ff;
+  --success:#0f766e;
+  --success-bg:#ecfdf5;
+  --warning:#b45309;
+  --warning-bg:#fff7ed;
+  --danger:#b91c1c;
+  --danger-bg:#fef2f2;
+  --code:#0b1220;
+  --shadow:0 10px 28px rgba(15,23,42,.08);
+  --radius:18px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;
+  line-height:1.65;
+}
+button,input,select{font:inherit}
+.layout{display:grid;grid-template-columns:285px 1fr;min-height:100vh}
+.sidebar{
+  position:sticky;top:0;height:100vh;overflow:auto;
+  background:#111827;color:#e5e7eb;padding:24px 18px;
+}
+.brand{font-weight:800;font-size:1.28rem}
+.brand small{display:block;font-size:.76rem;color:#94a3b8;font-weight:500}
+.progress{margin:18px 0;background:#1f2937;border-radius:14px;padding:14px}
+.progress-track{height:8px;border-radius:99px;background:#374151;overflow:hidden}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,#818cf8,#c084fc);transition:width .25s}
+.progress-text{font-size:.76rem;color:#cbd5e1;margin-top:7px}
+.nav{display:flex;flex-direction:column;gap:5px}
+.nav button{
+  background:transparent;color:#cbd5e1;border:0;border-radius:10px;
+  text-align:left;padding:10px 11px;cursor:pointer
+}
+.nav button:hover,.nav button.active{background:#312e81;color:white}
+.main{width:100%;max-width:1140px;margin:auto;padding:34px 30px 70px}
+.hero{
+  background:linear-gradient(135deg,#312e81,#6d28d9);
+  color:white;border-radius:25px;padding:40px;box-shadow:var(--shadow);
+  margin-bottom:24px
+}
+.hero h1{font-size:clamp(2.2rem,5vw,3.8rem);line-height:1.05;margin:0 0 10px}
+.hero p{max-width:900px;color:#ede9fe;margin:0}
+.pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}
+.pill{
+  padding:7px 11px;border-radius:999px;background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.2);font-size:.82rem
+}
+.toolbar{display:flex;gap:10px;margin:0 0 24px}
+.search{
+  flex:1;padding:12px 14px;border:1px solid #cbd5e1;border-radius:11px;
+  background:white
+}
+.section{scroll-margin-top:18px;margin:30px 0}
+.section h2{font-size:1.9rem;line-height:1.25;margin:0 0 7px}
+.section h3{margin-top:24px}
+.lead{color:var(--muted);max-width:920px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:16px}
+.card,.demo{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:20px;box-shadow:var(--shadow)
+}
+.card h3{margin-top:0}
+.callout{
+  margin:16px 0;padding:15px 17px;border-radius:13px;
+  background:var(--soft);border-left:5px solid var(--primary)
+}
+.callout.success{background:var(--success-bg);border-left-color:var(--success)}
+.callout.warning{background:var(--warning-bg);border-left-color:#ea580c}
+.callout.danger{background:var(--danger-bg);border-left-color:var(--danger)}
+.code-wrap{position:relative;margin:16px 0}
+pre{
+  margin:0;background:var(--code);color:#e5e7eb;border-radius:14px;
+  padding:20px;overflow:auto;font:14px/1.65 Consolas,Monaco,"Courier New",monospace
+}
+.copy{
+  position:absolute;top:10px;right:10px;background:#1e293b;color:#e2e8f0;
+  border:1px solid #475569;border-radius:8px;padding:5px 9px;cursor:pointer;font-size:.78rem
+}
+.copy:hover{background:#334155}
+table{
+  width:100%;border-collapse:collapse;background:white;
+  border:1px solid var(--border);border-radius:14px;overflow:hidden
+}
+th,td{
+  padding:12px 14px;border-bottom:1px solid var(--border);
+  text-align:left;vertical-align:top
+}
+th{background:#f1f5f9}
+.flow{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  flex-wrap:wrap;margin:18px 0
+}
+.flowbox{
+  background:white;border:2px solid #c7d2fe;border-radius:12px;
+  padding:11px 16px;text-align:center;font-weight:700
+}
+.arrow{font-size:1.35rem;color:var(--primary)}
+.actions{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin-top:12px}
+.btn{
+  border:0;border-radius:10px;padding:10px 14px;background:var(--primary);
+  color:white;font-weight:700;cursor:pointer
+}
+.btn:hover{background:var(--primary-dark)}
+.btn.secondary{background:#e2e8f0;color:#1e293b}
+.btn.success{background:var(--success)}
+.btn.warning{background:#d97706}
+.status{
+  margin-top:14px;padding:12px;border-radius:10px;
+  background:#f8fafc;border:1px solid var(--border);font-weight:650
+}
+.output{
+  padding:18px;border:2px dashed #cbd5e1;border-radius:14px;
+  background:#fff;min-height:92px
+}
+.big-value{text-align:center;font-size:3rem;font-weight:850;line-height:1.1;margin:8px 0}
+.field label{display:block;font-weight:700;margin-bottom:5px}
+.field input,.field select{
+  width:100%;padding:11px 12px;border:1px solid #cbd5e1;border-radius:10px
+}
+.input-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.muted{color:var(--muted);font-size:.88rem}
+.ref-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+.ref{
+  background:#fff;border:1px solid var(--border);border-radius:12px;padding:13px
+}
+.ref code{display:block;font-weight:800;margin-bottom:5px}
+.quiz-q{
+  background:white;border:1px solid var(--border);border-radius:14px;
+  padding:16px;margin:12px 0
+}
+.quiz-q label{display:block;margin:7px 0}
+.result{font-weight:800;margin-top:14px}
+.hidden{display:none!important}
+.footer{text-align:center;color:var(--muted);font-size:.9rem;margin-top:50px}
+.timer-ring{
+  width:110px;height:110px;border-radius:50%;border:10px solid #c7d2fe;
+  display:flex;align-items:center;justify-content:center;margin:10px auto;font-weight:800;font-size:1.5rem
+}
+.media-box{background:#0f172a;border-radius:14px;padding:22px;color:#e2e8f0;text-align:center}
+details{background:white;border:1px solid var(--border);border-radius:12px;margin:10px 0;padding:12px 15px}
+summary{cursor:pointer;font-weight:750}
+@media(max-width:900px){
+  .layout{display:block}.sidebar{position:relative;height:auto}
+  .nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .main{padding:20px 14px 55px}.hero{padding:28px}
+}
+@media(max-width:520px){
+  .nav{grid-template-columns:1fr}.main{padding:14px 10px 50px}.hero{padding:23px}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+  <div class="brand">React Hooks<small>Interactive Learning Resource • Under Revision</small></div>
+  <div class="progress">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-text" id="progressText">0% viewed</div>
+  </div>
+  <nav class="nav" id="nav">
+    <button data-target="overview">1. What are Hooks?</button>
+    <button data-target="useState">2. useState</button>
+    <button data-target="updater">3. Updater Function</button>
+    <button data-target="objects">4. Objects & Arrays</button>
+    <button data-target="useEffect">5. useEffect</button>
+    <button data-target="deps">6. Dependency Array</button>
+    <button data-target="timer">7. Timer</button>
+    <button data-target="api">8. API Calls</button>
+    <button data-target="compare">9. useState vs useEffect</button>
+    <button data-target="useRef">10. useRef</button>
+    <button data-target="media">11. Media Controls</button>
+    <button data-target="reference">12. Quick Reference</button>
+    <button data-target="quiz">13. Quick Check</button>
+  </nav>
+</aside>
+
+<main class="main">
+<section class="hero" id="overview">
+  <span class="pill">Based on the uploaded 12-page React Hooks notes</span>
+  <h1>React Hooks</h1>
+  <p>Understand how function components work with state, effects, refs and reusable behavior — through small examples that are easy to run and explain in class.</p>
+  <div class="pills">
+    <span class="pill">useState</span>
+    <span class="pill">useEffect</span>
+    <span class="pill">useRef</span>
+    <span class="pill">Updater function</span>
+    <span class="pill">Dependency array</span>
+    <span class="pill">API calls</span>
+  </div>
+</section>
+
+<div class="toolbar">
+  <input id="search" class="search" placeholder="Search this lesson: e.g. useState, dependency, ref, timer">
+</div>
+
+<section class="section">
+<h2>1. What are Hooks?</h2>
+<p class="lead">Hooks are React functions that let function components use capabilities that historically belonged mainly to class components.</p>
+<div class="grid">
+  <div class="card"><h3>State</h3><p>Store data that can change and update the UI.</p></div>
+  <div class="card"><h3>Effects</h3><p>Perform extra work after rendering, such as timers or API requests.</p></div>
+  <div class="card"><h3>Refs</h3><p>Persist a value between renders or access a DOM element through <code>current</code>.</p></div>
+  <div class="card"><h3>Reusable behavior</h3><p>Hooks also support context, reducers and memoization, and make custom Hooks easier to create.</p></div>
+</div>
+<div class="callout success"><strong>Simple idea:</strong> Hooks let function components “remember, react, and reach outside the normal UI” without needing class syntax.</div>
+</section>
+
+<section class="section" id="useState">
+<h2>2. useState</h2>
+<p><code>useState</code> returns an array containing the current state value and a setter function.</p>
+<div class="code-wrap"><button class="copy">Copy</button><pre>import { useState } from "react";
+
+export default function App() {
+  const [count, setCount] = useState(0);
+
+  return (
+    &lt;&gt;
+      &lt;h1&gt;{count}&lt;/h1&gt;
+      &lt;button onClick={() =&gt; setCount(count + 1)}&gt;
+        Increase
+      &lt;/button&gt;
+    &lt;/&gt;
+  );
+}</pre></div>
+
+<div class="demo">
+  <h3>Try it: Counter</h3>
+  <div class="big-value" id="counterValue">0</div>
+  <div class="actions">
+    <button class="btn" onclick="incrementCounter()">Increase</button>
+    <button class="btn secondary" onclick="resetCounter()">Reset</button>
+  </div>
+  <div class="status">The initial value is used on the first render; later renders use the latest state.</div>
+</div>
+
+<h3>Changing a value directly</h3>
+<div class="code-wrap"><button class="copy">Copy</button><pre>const [name, setName] = useState("Avinash");
+
+setName("Rahul");</pre></div>
+<div class="demo">
+  <h3>Try it: Change Name</h3>
+  <div class="big-value" style="font-size:2rem" id="nameValue">Avinash</div>
+  <div class="actions"><button class="btn" onclick="changeName()">Change Name</button></div>
+</div>
+<div class="callout"><strong>Rule:</strong> Passing a direct value is suitable when the next value does not depend on the previous state.</div>
+</section>
+
+<section class="section" id="updater">
+<h2>3. Updater Function</h2>
+<p>The source recommends an updater function when the next state depends on the previous state, especially when several updates may be batched.</p>
+<div class="code-wrap"><button class="copy">Copy</button><pre>function increase() {
+  setCount(previousCount =&gt; previousCount + 1);
+}</pre></div>
+<h3>Why is it useful?</h3>
+<div class="grid">
+  <div class="card">
+    <h3>May be unreliable for “add 2”</h3>
+    <pre style="padding:12px">setCount(count + 1);
+setCount(count + 1);</pre>
+    <p>Both updates may use the same <code>count</code> value from that render.</p>
+  </div>
+  <div class="card">
+    <h3>Functional updater</h3>
+    <pre style="padding:12px">setCount(previousCount =&gt; previousCount + 1);
+setCount(previousCount =&gt; previousCount + 1);</pre>
+    <p>Each updater receives the latest previous value for the update.</p>
+  </div>
+</div>
+<div class="demo">
+  <h3>Try it: Reserve Two</h3>
+  <div class="big-value" id="seatsValue">0</div>
+  <div class="actions">
+    <button class="btn" onclick="reserveTwo()">Reserve two</button>
+    <button class="btn secondary" onclick="resetSeats()">Reset</button>
+  </div>
+  <p class="muted">This page simulates the functional-updater result: two seats are added per click.</p>
+</div>
+</section>
+
+<section class="section" id="objects">
+<h2>4. Objects and Arrays in State</h2>
+<p>For objects and arrays, the setter replaces the stored value. Preserve existing properties when updating an object with the spread operator.</p>
+<div class="code-wrap"><button class="copy">Copy</button><pre>const [student, setStudent] = useState({
+  name: "Avinash",
+  age: 25
+});
+
+function changeName() {
+  setStudent({
+    ...student,
+    name: "Rahul"
+  });
+}</pre></div>
+
+<div class="flow">
+  <div class="flowbox">Old object</div><div class="arrow">→</div>
+  <div class="flowbox">...student</div><div class="arrow">→</div>
+  <div class="flowbox">Overwrite one property</div><div class="arrow">→</div>
+  <div class="flowbox">New object</div>
+</div>
+
+<div class="demo">
+  <h3>Try it: Student Profile</h3>
+  <div class="output" id="studentObjectOutput">
+    <strong>Name:</strong> Avinash<br>
+    <strong>Age:</strong> 25
+  </div>
+  <div class="actions"><button class="btn" onclick="changeStudentName()">Change Name</button></div>
+</div>
+
+<h3>Updating one property from an input</h3>
+<div class="demo">
+  <div class="field">
+    <label for="branchSelect">Branch</label>
+    <select id="branchSelect" onchange="changeBranch(this.value)">
+      <option>CSE</option>
+      <option>ECE</option>
+      <option>IT</option>
+    </select>
+  </div>
+  <div class="status" id="profileState">Bob — CSE</div>
+</div>
+<div class="code-wrap"><button class="copy">Copy</button><pre>function changeBranch(event) {
+  setProfile(old =&gt; ({
+    ...old,
+    branch: event.target.value
+  }));
+}</pre></div>
+</section>
+
+<section class="section" id="useEffect">
+<h2>5. useEffect and Side Effects</h2>
+<p><code>useEffect</code> is used when React should perform extra work after rendering the screen / UI.</p>
+<div class="grid">
+  <div class="card"><h3>Browser title</h3><p>Change the browser tab title.</p></div>
+  <div class="card"><h3>Timer</h3><p>Start a timer and clean it up when needed.</p></div>
+  <div class="card"><h3>API request</h3><p>Get data from an API after rendering.</p></div>
+  <div class="card"><h3>External connection</h3><p>Add a browser event listener or connect to an external service.</p></div>
+</div>
+<div class="callout success"><strong>Remember the two questions:</strong> “What should I do?” and “When should I do it?”</div>
+<div class="code-wrap"><button class="copy">Copy</button><pre>useEffect(() =&gt; {
+  // work to do
+
+  return () =&gt; {
+    // cleanup work
+  };
+}, [dependencies]);</pre></div>
+
+<h3>Example: Changing the browser title</h3>
+<div class="code-wrap"><button class="copy">Copy</button><pre>import { useEffect, useState } from 'react';
+
+export default function App() {
+  const [topic, setTopic] = useState('Components');
+
+  useEffect(() =&gt; {
+    document.title = `Study: ${topic}`;
+  }, [topic]);
+
+  return (
+    &lt;&gt;
+      &lt;p&gt;Current topic: {topic}&lt;/p&gt;
+      &lt;button onClick={() =&gt; setTopic('Hooks')}&gt;
+        Change Topic
+      &lt;/button&gt;
+    &lt;/&gt;
+  );
+}</pre></div>
+
+<div class="demo">
+  <h3>Try it: Topic & Browser Title</h3>
+  <div class="status">Current topic: <strong id="topicValue">Components</strong></div>
+  <div class="actions">
+    <button class="btn" onclick="setTopic('Hooks')">Change Topic to Hooks</button>
+    <button class="btn secondary" onclick="setTopic('Components')">Back to Components</button>
+  </div>
+  <p class="muted">This HTML page also changes its browser tab title to demonstrate the idea.</p>
+</div>
+<div class="callout"><strong>Why useEffect here?</strong> The paragraph is part of React’s UI, but <code>document.title = ...</code> changes something outside that UI.</div>
+</section>
+
+<section class="section" id="deps">
+<h2>6. Dependency Array</h2>
+<p>The second part of <code>useEffect</code> is the dependency array. It tells React when the effect should run again.</p>
+<table>
+<tr><th>Form</th><th>Meaning in the source</th></tr>
+<tr><td><code>useEffect(() =&gt; { ... })</code></td><td>Runs after every render.</td></tr>
+<tr><td><code>useEffect(() =&gt; { ... }, [])</code></td><td>Runs after the component appears; cleanup runs on unmount.</td></tr>
+<tr><td><code>useEffect(() =&gt; { ... }, [topic])</code></td><td>Runs when <code>topic</code> changes.</td></tr>
+</table>
+<div class="flow">
+  <div class="flowbox"><code>[]</code><br>component starts</div>
+  <div class="arrow">→</div>
+  <div class="flowbox"><code>[topic]</code><br>topic changes</div>
+  <div class="arrow">→</div>
+  <div class="flowbox">no array<br>every render</div>
+</div>
+<div class="callout warning"><strong>Classroom shortcut:</strong> Ask “When should this extra work happen?” Then choose the dependency form that matches that answer.</div>
+</section>
+
+<section class="section" id="timer">
+<h2>7. useEffect Timer</h2>
+<p>The source uses a timer to demonstrate an effect with setup and cleanup.</p>
+<div class="code-wrap"><button class="copy">Copy</button><pre>function Clock() {
+  const [seconds, setSeconds] = useState(0);
+
+  useEffect(() =&gt; {
+    const id = setInterval(() =&gt; {
+      setSeconds(s =&gt; s + 1);
+    }, 1000);
+
+    return () =&gt; clearInterval(id);
+  }, []);
+
+  return &lt;p&gt;Seconds: {seconds}&lt;/p&gt;;
+}</pre></div>
+
+<div class="demo">
+  <h3>Try it: Clock</h3>
+  <div class="timer-ring" id="timerValue">0</div>
+  <div class="actions">
+    <button class="btn" onclick="toggleTimer()" id="timerButton">Start Clock</button>
+    <button class="btn secondary" onclick="resetTimer()">Reset</button>
+  </div>
+  <p class="muted">The conceptual equivalent in React uses <code>setInterval</code> inside <code>useEffect</code> and <code>clearInterval</code> during cleanup.</p>
+</div>
+
+<div class="callout success"><strong>Cleanup matters:</strong> When a component using the timer is removed, cleanup prevents the old interval from continuing to run.</div>
+</section>
+
+<section class="section" id="api">
+<h2>8. useEffect with API Calls</h2>
+<p>The source demonstrates loading temperature data from an API with <code>fetch()</code>, storing the result with <code>useState</code>, and showing “Loading...” until the result arrives.</p>
+<div class="code-wrap"><button class="copy">Copy</button><pre>import { useEffect, useState } from 'react';
+
+export default function App() {
+  const [temperature, setTemperature] = useState(null);
+
+  useEffect(() =&gt; {
+    fetch(
+      'https://api.open-meteo.com/v1/forecast?latitude=18.7762&amp;longitude=84.095&amp;current=rain,temperature_2m&amp;forecast_days=1'
+    )
+      .then(response =&gt; response.json())
+      .then(data =&gt; {
+        setTemperature(data.current.temperature_2m);
+      });
+  }, []);
+
+  return (
+    &lt;&gt;
+      &lt;h1&gt;Current Temperature&lt;/h1&gt;
+      &lt;p&gt;
+        {temperature === null ? 'Loading...' : `${temperature} °C`}
+      &lt;/p&gt;
+    &lt;/&gt;
+  );
+}</pre></div>
+
+<div class="demo">
+  <h3>API Call Concept Demo</h3>
+  <div id="apiOutput" class="output">Click “Simulate API call” to see the loading → result flow.</div>
+  <div class="actions">
+    <button class="btn" onclick="simulateApi()">Simulate API call</button>
+    <button class="btn secondary" onclick="resetApi()">Reset</button>
+  </div>
+  <p class="muted">This demonstration is local, so the interactive page remains self-contained. The React source example above shows the real network call from the notes.</p>
+</div>
+
+<table>
+<tr><th>Concept</th><th>Meaning</th></tr>
+<tr><td><code>useEffect</code></td><td>Run side-effect work after rendering.</td></tr>
+<tr><td><code>async</code></td><td>A function can perform asynchronous work.</td></tr>
+<tr><td><code>await</code></td><td>Wait for an asynchronous result inside that function.</td></tr>
+<tr><td><code>fetch()</code></td><td>Makes a network request.</td></tr>
+<tr><td><code>useState</code></td><td>Stores the result.</td></tr>
+</table>
+</section>
+
+<section class="section" id="compare">
+<h2>9. useState vs useEffect</h2>
+<table>
+<tr><th>useState</th><th>useEffect</th></tr>
+<tr><td>Stores data</td><td>Performs side effects</td></tr>
+<tr><td>Example: name</td><td>Example: API request</td></tr>
+<tr><td>Example: count</td><td>Example: timer</td></tr>
+<tr><td>State changes can cause a re-render</td><td>Runs after rendering</td></tr>
+<tr><td><code>setState()</code> changes state</td><td>Effect synchronizes with the outside world</td></tr>
+</table>
+<div class="callout success"><strong>Easy distinction:</strong> useState answers “What data should this component remember?” useEffect answers “What extra work should happen after rendering?”</div>
+</section>
+
+<section class="section" id="useRef">
+<h2>10. useRef</h2>
+<p><code>useRef</code> stores a value that persists between renders without causing a re-render when that value changes. It can also directly access a DOM element through its <code>current</code> property.</p>
+<div class="code-wrap"><button class="copy">Copy</button><pre>import { useRef } from "react";
+
+export default function App() {
+  const inputRef = useRef(null);
+
+  function focusInput() {
+    inputRef.current.focus();
+  }
+
+  return (
+    &lt;&gt;
+      &lt;input ref={inputRef} placeholder="Enter your name" /&gt;
+      &lt;button onClick={focusInput}&gt;
+        Focus Input
+      &lt;/button&gt;
+    &lt;/&gt;
+  );
+}</pre></div>
+
+<div class="demo">
+  <h3>Try it: Focus Input</h3>
+  <div class="field">
+    <label for="refInput">Name</label>
+    <input id="refInput" placeholder="Enter your name">
+  </div>
+  <div class="actions">
+    <button class="btn" onclick="focusRefInput()">Focus Input</button>
+    <button class="btn secondary" onclick="blurRefInput()">Remove Focus</button>
+  </div>
+  <div class="status" id="refStatus">Click a button to control the input focus.</div>
+</div>
+
+<h3>How it works</h3>
+<div class="flow">
+  <div class="flowbox">useRef(null)</div><div class="arrow">→</div>
+  <div class="flowbox">ref={inputRef}</div><div class="arrow">→</div>
+  <div class="flowbox">inputRef.current</div><div class="arrow">→</div>
+  <div class="flowbox">focus()</div>
+</div>
+<div class="grid">
+  <div class="card"><h3>1</h3><p><code>useRef(null)</code> creates a ref object.</p></div>
+  <div class="card"><h3>2</h3><p><code>ref={inputRef}</code> connects the ref to the input.</p></div>
+  <div class="card"><h3>3</h3><p><code>inputRef.current</code> refers to the input element.</p></div>
+  <div class="card"><h3>4</h3><p><code>inputRef.current.focus()</code> puts the cursor inside the input.</p></div>
+</div>
+<div class="callout">The notes emphasize that <code>useRef</code> is commonly used for direct HTML-element access without causing a re-render.</div>
+</section>
+
+<section class="section" id="media">
+<h2>11. Video / Media Controls with useRef</h2>
+<p>The source uses a ref to call media methods such as <code>play()</code> and <code>pause()</code>.</p>
+<div class="code-wrap"><button class="copy">Copy</button><pre>const videoRef = useRef(null);
+
+function playVideo() {
+  videoRef.current.play();
+}
+
+function pauseVideo() {
+  videoRef.current.pause();
+}</pre></div>
+
+<div class="media-box">
+  <div style="font-size:3rem">▶︎ 🎬</div>
+  <h3>Media-control concept</h3>
+  <p>In a React app, a ref can point to a <code>&lt;video&gt;</code> or <code>&lt;audio&gt;</code> element, then commands can be called through <code>ref.current</code>.</p>
+  <div class="actions">
+    <button class="btn" onclick="mediaStatus('Play requested')">Play</button>
+    <button class="btn secondary" onclick="mediaStatus('Pause requested')">Pause</button>
+  </div>
+  <div class="status" id="mediaStatus">No media command selected.</div>
+</div>
+
+<table>
+<tr><th>Purpose</th><th>Code</th><th>What it does</th></tr>
+<tr><td>Focus</td><td><code>ref.current.focus()</code></td><td>Puts cursor/focus on an element</td></tr>
+<tr><td>Remove focus</td><td><code>ref.current.blur()</code></td><td>Removes focus</td></tr>
+<tr><td>Select text</td><td><code>ref.current.select()</code></td><td>Selects text in an input</td></tr>
+<tr><td>Scroll</td><td><code>ref.current.scrollIntoView()</code></td><td>Scrolls to the element</td></tr>
+<tr><td>Smooth scroll</td><td><code>ref.current.scrollIntoView({ behavior: "smooth" })</code></td><td>Smoothly scrolls to the element</td></tr>
+<tr><td>Play media</td><td><code>ref.current.play()</code></td><td>Starts playback</td></tr>
+<tr><td>Pause media</td><td><code>ref.current.pause()</code></td><td>Pauses playback</td></tr>
+<tr><td>Change position</td><td><code>ref.current.currentTime = 30</code></td><td>Moves media to 30 seconds</td></tr>
+<tr><td>Change volume</td><td><code>ref.current.volume = 0.5</code></td><td>Sets volume to 50%</td></tr>
+<tr><td>Mute</td><td><code>ref.current.muted = true</code></td><td>Mutes video/audio</td></tr>
+<tr><td>Scroll to top</td><td><code>ref.current.scrollTop = 0</code></td><td>Moves a scrollable element to the top</td></tr>
+</table>
+</section>
+
+<section class="section" id="reference">
+<h2>12. Quick Reference</h2>
+<div class="ref-grid">
+  <div class="ref"><code>const [value, setValue] = useState(0)</code><span>Current value + setter</span></div>
+  <div class="ref"><code>setValue("Avinash")</code><span>Direct next value</span></div>
+  <div class="ref"><code>setValue(previous =&gt; previous + 1)</code><span>Previous-state updater</span></div>
+  <div class="ref"><code>{ ...old, branch: newBranch }</code><span>Preserve object properties</span></div>
+  <div class="ref"><code>useEffect(() =&gt; { ... }, [])</code><span>Effect after component appears</span></div>
+  <div class="ref"><code>useEffect(() =&gt; { ... }, [topic])</code><span>Effect when topic changes</span></div>
+  <div class="ref"><code>useRef(null)</code><span>Persistent ref object</span></div>
+  <div class="ref"><code>ref.current.focus()</code><span>Direct element control</span></div>
+</div>
+
+<details open>
+<summary>One-minute memory map</summary>
+<div class="flow">
+  <div class="flowbox">useState<br><small>remember data</small></div>
+  <div class="arrow">→</div>
+  <div class="flowbox">useEffect<br><small>do extra work</small></div>
+  <div class="arrow">→</div>
+  <div class="flowbox">useRef<br><small>hold / access</small></div>
+</div>
+</details>
+</section>
+
+<section class="section" id="quiz">
+<h2>13. Quick Check</h2>
+<div class="quiz-q">
+<strong>1. What does <code>useState</code> return?</strong>
+<label><input type="radio" name="q1" value="a"> A string and an object</label>
+<label><input type="radio" name="q1" value="b"> The current state value and a setter function</label>
+<label><input type="radio" name="q1" value="c"> Only the initial value</label>
+</div>
+<div class="quiz-q">
+<strong>2. When is an updater function especially useful?</strong>
+<label><input type="radio" name="q2" value="a"> When the next value depends on previous state</label>
+<label><input type="radio" name="q2" value="b"> When writing CSS</label>
+<label><input type="radio" name="q2" value="c"> Only for strings</label>
+</div>
+<div class="quiz-q">
+<strong>3. What is the main purpose of <code>useEffect</code> in these notes?</strong>
+<label><input type="radio" name="q3" value="a"> Create CSS classes</label>
+<label><input type="radio" name="q3" value="b"> Run side-effect work after rendering</label>
+<label><input type="radio" name="q3" value="c"> Replace all state</label>
+</div>
+<div class="quiz-q">
+<strong>4. What does an empty dependency array <code>[]</code> generally mean in the source?</strong>
+<label><input type="radio" name="q4" value="a"> Run after every render</label>
+<label><input type="radio" name="q4" value="b"> Run after the component appears</label>
+<label><input type="radio" name="q4" value="c"> Never run</label>
+</div>
+<div class="quiz-q">
+<strong>5. What is <code>inputRef.current</code> used for in the focus example?</strong>
+<label><input type="radio" name="q5" value="a"> Refers to the input element</label>
+<label><input type="radio" name="q5" value="b"> Stores CSS styles</label>
+<label><input type="radio" name="q5" value="c"> Triggers a re-render automatically</label>
+</div>
+<button class="btn" onclick="checkQuiz()">Check Answers</button>
+<div id="quizResult" class="result"></div>
+</section>
+
+<footer class="footer">
+  <p>Interactive student version of the uploaded “finalReactHooks” document. Core concepts, examples and distinctions follow the source material.</p>
+</footer>
+</main>
+</div>
+
+<script>
+const navButtons=[...document.querySelectorAll('#nav button')];
+navButtons.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const el=document.getElementById(btn.dataset.target);
+    if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+
+function updateProgress(){
+  const max=document.documentElement.scrollHeight-window.innerHeight;
+  const pct=max<=0?100:Math.max(0,Math.min(100,Math.round(window.scrollY/max*100)));
+  document.getElementById('progressFill').style.width=pct+'%';
+  document.getElementById('progressText').textContent=pct+'% viewed';
+}
+window.addEventListener('scroll',updateProgress);
+updateProgress();
+
+document.querySelectorAll('.copy').forEach(btn=>{
+  btn.addEventListener('click',async()=>{
+    const code=btn.nextElementSibling.innerText;
+    try{
+      await navigator.clipboard.writeText(code);
+      const old=btn.textContent; btn.textContent='Copied!';
+      setTimeout(()=>btn.textContent=old,1100);
+    }catch{
+      btn.textContent='Copy manually';
+      setTimeout(()=>btn.textContent='Copy',1100);
+    }
+  });
+});
+
+let count=0;
+function renderCounter(){document.getElementById('counterValue').textContent=count}
+function incrementCounter(){count++;renderCounter()}
+function resetCounter(){count=0;renderCounter()}
+
+function changeName(){document.getElementById('nameValue').textContent='Rahul'}
+
+let seats=0;
+function reserveTwo(){seats+=2;document.getElementById('seatsValue').textContent=seats}
+function resetSeats(){seats=0;document.getElementById('seatsValue').textContent=seats}
+
+let studentName='Avinash', studentAge=25;
+function changeStudentName(){
+  studentName='Rahul';
+  document.getElementById('studentObjectOutput').innerHTML=
+    '<strong>Name:</strong> '+studentName+'<br><strong>Age:</strong> '+studentAge;
+}
+function changeBranch(branch){
+  document.getElementById('profileState').textContent='Bob — '+branch;
+}
+
+function setTopic(topic){
+  document.getElementById('topicValue').textContent=topic;
+  document.title='Study: '+topic;
+}
+
+let timer=0, timerId=null;
+function tickTimer(){
+  timer++;
+  document.getElementById('timerValue').textContent=timer;
+}
+function toggleTimer(){
+  const b=document.getElementById('timerButton');
+  if(timerId){
+    clearInterval(timerId); timerId=null; b.textContent='Start Clock';
+  }else{
+    timerId=setInterval(tickTimer,1000); b.textContent='Pause Clock';
+  }
+}
+function resetTimer(){
+  if(timerId){clearInterval(timerId);timerId=null}
+  timer=0;document.getElementById('timerValue').textContent=timer;
+  document.getElementById('timerButton').textContent='Start Clock';
+}
+
+function simulateApi(){
+  const o=document.getElementById('apiOutput');
+  o.textContent='Loading...';
+  setTimeout(()=>{
+    o.innerHTML='<strong>Current Temperature:</strong> 28 °C<br><span class="muted">Simulated result for a self-contained classroom demo.</span>';
+  },1200);
+}
+function resetApi(){
+  document.getElementById('apiOutput').textContent='Click “Simulate API call” to see the loading → result flow.';
+}
+
+function focusRefInput(){
+  const input=document.getElementById('refInput'); input.focus();
+  document.getElementById('refStatus').textContent='Focus moved to the input.';
+}
+function blurRefInput(){
+  document.getElementById('refInput').blur();
+  document.getElementById('refStatus').textContent='Input focus removed.';
+}
+function mediaStatus(message){document.getElementById('mediaStatus').textContent=message}
+
+document.getElementById('search').addEventListener('input',function(){
+  const q=this.value.toLowerCase().trim();
+  document.querySelectorAll('.main .section').forEach(sec=>{
+    if(!q){sec.classList.remove('hidden');return}
+    sec.classList.toggle('hidden',!sec.innerText.toLowerCase().includes(q));
+  });
+});
+
+function checkQuiz(){
+  const answers={q1:'b',q2:'a',q3:'b',q4:'b',q5:'a'};
+  let score=0;
+  for(const [name,answer] of Object.entries(answers)){
+    const selected=document.querySelector('input[name="'+name+'"]:checked');
+    if(selected && selected.value===answer) score++;
+  }
+  const r=document.getElementById('quizResult');
+  r.textContent='Your score: '+score+'/5';
+  r.style.color=score===5?'#0f766e':'#b45309';
+}
+</script>
+</body>
+</html>
